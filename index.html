@@ -3,38 +3,49 @@
     <meta charset="UTF=8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./blog_styles.css" />
-
     <link href="link" rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet" />
     <title>The Fox blog</title>
     <link rel="icon" href="./fox.svg" type="image/x-icon" />
   </head>
 
   <body>
     <!--header-->
-    <header id="header">
-      <div id="header_text"><b> The Fox blog</b></div>
+    <header>
+      <div><b> The Fox blog</b></div>
     </header>
 
-    <div id="border_sides">
+    <div class="border_sides">
       <!--submit_part-->
-      <div id="submit_main">
-        <span id="add_post_title"> Add new fox </span>
+      <div class="submit_main">
+        <span class="add_post_title"> Add new fox </span>
 
         <!--form_input-->
         <div>
-          <form id="post">
-            <!--content-->
-            <div class="label_slot">
-              <label for="title_post" class="submit_labels">Title</label>
+          <form class="post">
+            <div class="label_slot" err-text="Please add author's name.">
+              <label for="author_post" class="submit_labels">Author</label>
             </div>
-            <div>
+            <div class="text-area">
               <input
                 type="text"
-                id="title_post"
+                class="author_post"
+                name="author_post"
+                maxlength="25"
+                size="25"
+                placeholder="Your name or nickname"
+                input
+                type="submit"
+              />
+            </div>
+
+            <div class="label_slot" err-text="Please add a title.">
+              <label for="title_post" class="submit_labels">Title</label>
+            </div>
+            <div class="text-area">
+              <input
+                type="text"
+                class="title_post"
                 name="title_post"
                 maxlength="25"
                 size="25"
@@ -43,17 +54,15 @@
                 type="submit"
               />
             </div>
-
             <!--content-->
-            <div class="label_slot">
+            <div class="label_slot err" err-text="Please add some content.">
               <label for="content_post" class="submit_labels">Content </label>
             </div>
-            <div>
+            <div class="text-area err">
               <textarea
                 name="content_post"
-                id="content_post"
-                cols="30"
-                rows="10"
+                class="content_post"
+                maxlength="1500"
                 placeholder="Write something about your favourite fox."
                 input
                 type="submit"
@@ -62,40 +71,37 @@
           </form>
 
           <!--button-->
-          <div id="button_holder">
-            <button type="button" form="post" id="button_submit">
-              <img src="./fox.svg" alt="Fox head" id="fox_head" />
-              <div id="button_text">Submit your fox</div>
+          <div class="button_holder">
+            <button type="button" form="post" class="button_submit">
+              <img src="./fox.svg" alt="Fox head" class="fox_head" />
+              <div class="button_text">Submit fox</div>
             </button>
           </div>
         </div>
       </div>
 
       <!--posted_part-->
-      <div id="posted_main">
-        <h2 id="posts_title_main">Posts</h2>
+      <div class="posted_main">
+        <h2>Posts</h2>
 
         <div class="posted_slot">
           <div class="posted_title">Canis</div>
           <div class="posted_content">
-            Canis is a genus of the Caninae containing multiple extant species,
-            such as wolves, dogs, coyotes and jackals. Species of this genus are
-            distinguished by their moderate to large size, their massive,
-            well-developed skulls and dentition, long legs, and comparatively
-            short ears and tails.
+            Canis is a genus of the Caninae containing multiple extant species, such as wolves, dogs, coyotes and
+            jackals. Species of this genus are distinguished by their moderate to large size, their massive,
+            well-developed skulls and dentition, long legs, and comparatively short ears and tails.
+          </div>
+          <div class="posted_misc">
+            <div class="posted_author">Posted by: Flomm</div>
+            <div class="posted_date">06.03.2021</div>
           </div>
         </div>
       </div>
-
-      <!--footer-->
-      <footer>
-        <div id="footer_text">2020 All foxes reserved</div>
-      </footer>
     </div>
+    <footer>
+      <div>2020 All foxes reserved</div>
+    </footer>
 
-    <!--Scripts-->
-    <script type="text/typescript" src="blogPost.ts"></script>
-    <script src="https://rawgit.com/Microsoft/TypeScript/master/lib/typescriptServices.js"></script>
-    <script src="https://rawgit.com/basarat/typescript-script/master/transpiler.js"></script>
+    <script src="blogPost.js"></script>
   </body>
 </html>

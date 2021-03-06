@@ -1,38 +1,43 @@
-function postBlog(): void {
-  if (
-    (document.getElementById("title_post") as HTMLInputElement).value === "" ||
-    (document.getElementById("content_post") as HTMLInputElement).value === ""
-  ) {
-    alert(
-      "Please add a title and a text as well! You cannot add an empty post!"
-    );
+function postBlog() {
+  const authorPost: HTMLInputElement = document.querySelector('.author_post') as HTMLInputElement;
+  const titlePost: HTMLInputElement = document.querySelector('.title_post') as HTMLInputElement;
+  const contentPost: HTMLInputElement = document.querySelector('.content_post') as HTMLInputElement;
+  if (titlePost.value === '' || contentPost.value === '' || authorPost.value === '') {
+    alert('Please add a title and a text as well! You cannot add an empty post!');
   } else {
-    let xPost: HTMLDivElement = document.createElement("div");
-    let xTitle: HTMLDivElement = document.createElement("div");
-    let xContent: HTMLDivElement = document.createElement("div");
+    const xPost: HTMLDivElement = document.createElement('div');
+    const xAuthor: HTMLDivElement = document.createElement('div');
+    const xDate: HTMLDivElement = document.createElement('div');
+    const xMisc: HTMLDivElement = document.createElement('div');
+    const xTitle: HTMLDivElement = document.createElement('div');
+    const xContent: HTMLDivElement = document.createElement('div');
 
-    xTitle.classList.add("posted_title");
-    xContent.classList.add("posted_content");
-    xPost.classList.add("posted_slot");
+    xTitle.classList.add('posted_title');
+    xAuthor.classList.add('posted_author');
+    xDate.classList.add('posted_date');
+    xMisc.classList.add('posted_misc');
+    xContent.classList.add('posted_content');
+    xPost.classList.add('posted_slot');
 
-    let titleNew: string = (document.getElementById(
-      "title_post"
-    ) as HTMLInputElement).value;
-    let textNew: string = (document.getElementById(
-      "content_post"
-    ) as HTMLInputElement).value;
+    xAuthor.innerHTML = `Posted by: ${authorPost.value}`;
+    xDate.innerHTML = `On: ${new Date().toLocaleString().split(',')[0]}`;
+    xTitle.innerHTML = titlePost.value;
+    xContent.innerHTML = contentPost.value;
 
-    xTitle.innerHTML += titleNew;
-    xContent.innerHTML += textNew;
+    const postedMain = document.querySelector('.posted_main');
 
     xPost.appendChild(xTitle);
     xPost.appendChild(xContent);
+    xMisc.appendChild(xAuthor);
+    xMisc.appendChild(xDate);
+    xPost.appendChild(xMisc);
+    postedMain.appendChild(xPost);
 
-    document.getElementById("posted_main").appendChild(xPost);
-
-    (document.getElementById("title_post") as HTMLInputElement).value = "";
-    (document.getElementById("content_post") as HTMLInputElement).value = "";
+    authorPost.value = '';
+    titlePost.value = '';
+    contentPost.value = '';
   }
 }
-let subButton = document.getElementById("button_submit");
-subButton.addEventListener("click", postBlog);
+
+const subButton = document.querySelector('.button_submit');
+subButton.addEventListener('click', postBlog);
