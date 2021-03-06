@@ -24,7 +24,7 @@ header {
   overflow: hidden;
 }
 
-.border_sides {
+.border-sides {
   border-left-color: rgb(7, 116, 61);
   border-right-color: rgb(7, 116, 61);
   border-left-style: solid;
@@ -32,28 +32,28 @@ header {
   border-width: 40px;
 }
 
-.submit_main {
+.submit-main {
   padding-top: 60px;
   padding-left: 10%;
   padding-right: 10%;
 }
 
-.add_post_title {
+.add-post-title {
   font-size: 150%;
   font-weight: bold;
   color: rgb(7, 116, 61);
 }
 
-.submit_labels {
+.submit-labels {
   font-weight: bold;
   color: rgb(7, 116, 61);
 }
 
-.label_slot {
+.label-slot {
   margin-top: 3%;
 }
 
-.label_slot.err:after {
+.label-slot.err:after {
   content: attr(err-text);
   color: red;
   font-size: small;
@@ -69,26 +69,26 @@ textarea {
   resize: none;
 }
 
-.author_post {
+.author-post {
   outline: none;
 }
-.title_post {
+.title-post {
   outline: none;
 }
 
-.content_post {
+.content-post {
   width: 100%;
   height: 20%;
   outline: none;
 }
 
-.button_holder {
+.button-holder {
   margin-top: 3%;
   display: flex;
   justify-content: center;
 }
 
-.button_submit {
+.button-submit {
   width: 20%;
   height: 5%;
   outline: none;
@@ -102,18 +102,18 @@ textarea {
 }
 
 @media screen and (max-width: 768px) {
-  .button_submit {
+  .button-submit {
     width: 30%;
     height: 7%;
   }
 }
 
-.button_submit:hover {
+.button-submit:hover {
   background-color: beige;
   color: rgb(7, 116, 61);
 }
 
-.button_text {
+.button-text {
   font-weight: bold;
   float: right;
   height: 75%;
@@ -121,13 +121,13 @@ textarea {
   text-align: center;
 }
 
-.fox_head {
+.fox-head {
   float: left;
   height: 80%;
   width: 20%;
 }
 
-.posted_main {
+.posted-main {
   border: rgb(7, 116, 61) solid;
   border-width: 20px;
   margin-top: 3%;
@@ -135,11 +135,11 @@ textarea {
   padding-right: 10%;
 }
 
-.posted_main h2 {
+.posted-main h2 {
   color: rgb(7, 116, 61);
 }
 
-.posted_slot {
+.posted-slot {
   border-width: 1px;
   border-style: solid;
   margin-bottom: 3%;
@@ -147,7 +147,7 @@ textarea {
   background-color: rgb(182, 235, 186);
 }
 
-.posted_title {
+.posted-title {
   padding-left: 2%;
   font-weight: bold;
   font-size: 150%;
@@ -156,14 +156,14 @@ textarea {
   word-wrap: break-word;
 }
 
-.posted_content {
+.posted-content {
   text-align: justify;
   padding-left: 20px;
   padding-right: 20px;
   word-wrap: break-word;
 }
 
-.posted_misc {
+.posted-misc {
   margin: 2%;
   margin-bottom: 1%;
   font-weight: bolder;

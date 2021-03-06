@@ -2,11 +2,11 @@
 "use strict";
 exports.__esModule = true;
 var postFunction_1 = require("./tsFiles/postFunction");
-var authorPost = document.querySelector(".author_post");
-var titlePost = document.querySelector(".title_post");
-var contentPost = document.querySelector(".content_post");
+var authorPost = document.querySelector(".author-post");
+var titlePost = document.querySelector(".title-post");
+var contentPost = document.querySelector(".content-post");
 var inputArr = [authorPost, titlePost, contentPost];
-var subButton = document.querySelector(".button_submit");
+var subButton = document.querySelector(".button-submit");
 subButton.addEventListener("click", function () {
     postFunction_1.postBlog(inputArr);
 });
@@ -31,12 +31,12 @@ var Post = /** @class */ (function () {
         this.postContent = document.createElement("div");
     };
     Post.prototype.assignClasses = function () {
-        this.postTitle.classList.add("posted_title");
-        this.postAuthor.classList.add("posted_author");
-        this.postDate.classList.add("posted_date");
-        this.postMisc.classList.add("posted_misc");
-        this.postContent.classList.add("posted_content");
-        this.postSlot.classList.add("posted_slot");
+        this.postTitle.classList.add("posted-title");
+        this.postAuthor.classList.add("posted-author");
+        this.postDate.classList.add("posted-date");
+        this.postMisc.classList.add("posted-misc");
+        this.postContent.classList.add("posted-content");
+        this.postSlot.classList.add("posted-slot");
     };
     Post.prototype.fillPost = function () {
         this.postAuthor.innerHTML = "Posted by: " + this.author;
@@ -75,6 +75,9 @@ function toggleErr(input) {
 function postBlog(inputs) {
     var emptyField = [];
     inputs.forEach(function (input) {
+        if (input.parentElement.classList.contains("err")) {
+            toggleErr(input);
+        }
         if (input.value === "") {
             emptyField.push(input);
         }
@@ -89,7 +92,7 @@ function postBlog(inputs) {
     else {
         var datePost = new Date().toLocaleString().split(",")[0];
         var newPost = new PostClass_1.Post(inputs[0].value, inputs[1].value, inputs[2].value, datePost);
-        var postedMain = document.querySelector(".posted_main");
+        var postedMain = document.querySelector(".posted-main");
         postedMain.appendChild(newPost.makePost());
         inputs.forEach(function (input) {
             input.value = "";

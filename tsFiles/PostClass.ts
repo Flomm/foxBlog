@@ -29,12 +29,12 @@ export class Post {
   }
 
   assignClasses(): void {
-    this.postTitle.classList.add("posted_title");
-    this.postAuthor.classList.add("posted_author");
-    this.postDate.classList.add("posted_date");
-    this.postMisc.classList.add("posted_misc");
-    this.postContent.classList.add("posted_content");
-    this.postSlot.classList.add("posted_slot");
+    this.postTitle.classList.add("posted-title");
+    this.postAuthor.classList.add("posted-author");
+    this.postDate.classList.add("posted-date");
+    this.postMisc.classList.add("posted-misc");
+    this.postContent.classList.add("posted-content");
+    this.postSlot.classList.add("posted-slot");
   }
 
   fillPost(): void {
