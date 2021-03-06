@@ -11,6 +11,9 @@ function toggleErr(input: HTMLInputElement) {
 export function postBlog(inputs: HTMLInputElement[]): void {
   let emptyField: HTMLInputElement[] = [];
   inputs.forEach((input) => {
+    if (input.parentElement.classList.contains("err")) {
+      toggleErr(input);
+    }
     if (input.value === "") {
       emptyField.push(input);
     }
@@ -30,7 +33,7 @@ export function postBlog(inputs: HTMLInputElement[]): void {
       inputs[2].value,
       datePost
     );
-    const postedMain = document.querySelector(".posted_main");
+    const postedMain = document.querySelector(".posted-main");
     postedMain.appendChild(newPost.makePost());
 
     inputs.forEach((input) => {
