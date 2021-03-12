@@ -2,41 +2,67 @@
 "use strict";
 exports.__esModule = true;
 var postFunction_1 = require("./tsFiles/postFunction");
-var authorPost = document.querySelector(".author-post");
-var titlePost = document.querySelector(".title-post");
-var contentPost = document.querySelector(".content-post");
+var PostClass_1 = require("./tsFiles/PostClass");
+var authorPost = document.querySelector('.author-post');
+var titlePost = document.querySelector('.title-post');
+var contentPost = document.querySelector('.content-post');
 var inputArr = [authorPost, titlePost, contentPost];
-var subButton = document.querySelector(".button-submit");
-subButton.addEventListener("click", function () {
+function initialPost(obj) {
+    var valueList = Object.values(obj);
+    var newPost = new PostClass_1.Post(valueList[0], valueList[1], valueList[2], valueList[3]);
+    var postedMain = document.querySelector('.posted-main');
+    var mainChilds = document.querySelectorAll('.posted-slot');
+    postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+}
+window.onload = function () {
+    var newReq = new XMLHttpRequest();
+    newReq.onreadystatechange = function () {
+        if (newReq.readyState === 4 && newReq.status === 200) {
+            var posts = newReq.response;
+            var parsed = JSON.parse(posts);
+            console.log(parsed);
+            for (var _i = 0, parsed_1 = parsed; _i < parsed_1.length; _i++) {
+                var p = parsed_1[_i];
+                initialPost(p);
+            }
+        }
+    };
+    newReq.open('GET', '/posts', true);
+    newReq.send();
+};
+var subButton = document.querySelector('.button-submit');
+subButton.addEventListener('click', function () {
     postFunction_1.postBlog(inputArr);
 });
 
-},{"./tsFiles/postFunction":3}],2:[function(require,module,exports){
+},{"./tsFiles/PostClass":2,"./tsFiles/postFunction":3}],2:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 exports.Post = void 0;
 var Post = /** @class */ (function () {
     function Post(author, title, content, date) {
+        //output
+        this.postSlot = undefined;
         this.author = author;
         this.title = title;
         this.content = content;
         this.date = date;
     }
     Post.prototype.createPostDivs = function () {
-        this.postSlot = document.createElement("div");
-        this.postAuthor = document.createElement("div");
-        this.postDate = document.createElement("div");
-        this.postMisc = document.createElement("div");
-        this.postTitle = document.createElement("div");
-        this.postContent = document.createElement("div");
+        this.postSlot = document.createElement('div');
+        this.postAuthor = document.createElement('div');
+        this.postDate = document.createElement('div');
+        this.postMisc = document.createElement('div');
+        this.postTitle = document.createElement('div');
+        this.postContent = document.createElement('div');
     };
     Post.prototype.assignClasses = function () {
-        this.postTitle.classList.add("posted-title");
-        this.postAuthor.classList.add("posted-author");
-        this.postDate.classList.add("posted-date");
-        this.postMisc.classList.add("posted-misc");
-        this.postContent.classList.add("posted-content");
-        this.postSlot.classList.add("posted-slot");
+        this.postTitle.classList.add('posted-title');
+        this.postAuthor.classList.add('posted-author');
+        this.postDate.classList.add('posted-date');
+        this.postMisc.classList.add('posted-misc');
+        this.postContent.classList.add('posted-content');
+        this.postSlot.classList.add('posted-slot');
     };
     Post.prototype.fillPost = function () {
         this.postAuthor.innerHTML = "Posted by: " + this.author;
@@ -68,35 +94,36 @@ exports.__esModule = true;
 exports.postBlog = void 0;
 var PostClass_1 = require("./PostClass");
 function toggleErr(input) {
-    input.parentElement.classList.toggle("err");
+    input.parentElement.classList.toggle('err');
     var labelEl = document.querySelector("label[for=" + input.name + "]");
-    labelEl.parentElement.classList.toggle("err");
+    labelEl.parentElement.classList.toggle('err');
 }
 function postBlog(inputs) {
     var emptyField = [];
     inputs.forEach(function (input) {
-        if (input.parentElement.classList.contains("err")) {
+        if (input.parentElement.classList.contains('err')) {
             toggleErr(input);
         }
-        if (input.value === "") {
+        if (input.value === '') {
             emptyField.push(input);
         }
     });
     if (emptyField.length !== 0) {
         emptyField.forEach(function (input) {
-            if (!input.parentElement.classList.contains("err")) {
+            if (!input.parentElement.classList.contains('err')) {
                 toggleErr(input);
             }
         });
     }
     else {
-        var datePost = new Date().toLocaleString().split(",")[0];
+        var datePost = new Date().toLocaleString().split(',')[0];
         var newPost = new PostClass_1.Post(inputs[0].value, inputs[1].value, inputs[2].value, datePost);
-        var postedMain = document.querySelector(".posted-main");
-        postedMain.appendChild(newPost.makePost());
+        var postedMain = document.querySelector('.posted-main');
+        var mainChilds = document.querySelectorAll('.posted-slot');
+        postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
         inputs.forEach(function (input) {
-            input.value = "";
-            if (input.parentElement.classList.contains("err")) {
+            input.value = '';
+            if (input.parentElement.classList.contains('err')) {
                 toggleErr(input);
             }
         });

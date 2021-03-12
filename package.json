@@ -1,0 +1,30 @@
+{
+  "name": "flomm.github.io",
+  "version": "1.0.0",
+  "description": "Blog",
+  "main": "server.js",
+  "dependencies": {
+    "@types/node": "^14.14.33",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "server",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flomm/flomm.github.io.git"
+  },
+  "keywords": [
+    "blog",
+    "js",
+    "ts"
+  ],
+  "author": "Flomm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Flomm/flomm.github.io/issues"
+  },
+  "homepage": "https://github.com/Flomm/flomm.github.io#readme"
+}

@@ -5,7 +5,7 @@ export class Post {
   private content: string;
   private date: string;
   //output
-  private postSlot: HTMLDivElement;
+  private postSlot: HTMLDivElement = undefined;
   private postAuthor: HTMLDivElement;
   private postDate: HTMLDivElement;
   private postMisc: HTMLDivElement;
@@ -20,21 +20,21 @@ export class Post {
   }
 
   createPostDivs(): void {
-    this.postSlot = document.createElement("div");
-    this.postAuthor = document.createElement("div");
-    this.postDate = document.createElement("div");
-    this.postMisc = document.createElement("div");
-    this.postTitle = document.createElement("div");
-    this.postContent = document.createElement("div");
+    this.postSlot = document.createElement('div');
+    this.postAuthor = document.createElement('div');
+    this.postDate = document.createElement('div');
+    this.postMisc = document.createElement('div');
+    this.postTitle = document.createElement('div');
+    this.postContent = document.createElement('div');
   }
 
   assignClasses(): void {
-    this.postTitle.classList.add("posted-title");
-    this.postAuthor.classList.add("posted-author");
-    this.postDate.classList.add("posted-date");
-    this.postMisc.classList.add("posted-misc");
-    this.postContent.classList.add("posted-content");
-    this.postSlot.classList.add("posted-slot");
+    this.postTitle.classList.add('posted-title');
+    this.postAuthor.classList.add('posted-author');
+    this.postDate.classList.add('posted-date');
+    this.postMisc.classList.add('posted-misc');
+    this.postContent.classList.add('posted-content');
+    this.postSlot.classList.add('posted-slot');
   }
 
   fillPost(): void {
