@@ -11,7 +11,6 @@ function initialPost(obj: Object): void {
   const valueList: string[] = Object.values(obj);
   const newPost: Post = new Post(valueList[0], valueList[1], valueList[2], valueList[3]);
   const postedMain = document.querySelector('.posted-main');
-
   const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
   postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
 }
