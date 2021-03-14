@@ -89,6 +89,7 @@ textarea {
 }
 
 .button-submit {
+  cursor: pointer;
   width: 20%;
   height: 5%;
   outline: none;

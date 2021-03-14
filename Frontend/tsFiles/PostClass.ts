@@ -1,22 +1,18 @@
-export class Post {
+import Postable from './Postable';
+
+export default class Post {
   //input
-  private author: string;
-  private title: string;
-  private content: string;
-  private date: string;
+  private postInput: Postable;
   //output
-  private postSlot: HTMLDivElement = undefined;
+  private postSlot: HTMLDivElement;
   private postAuthor: HTMLDivElement;
   private postDate: HTMLDivElement;
   private postMisc: HTMLDivElement;
   private postTitle: HTMLDivElement;
   private postContent: HTMLDivElement;
 
-  constructor(author: string, title: string, content: string, date: string) {
-    this.author = author;
-    this.title = title;
-    this.content = content;
-    this.date = date;
+  constructor(postObject: Postable) {
+    this.postInput = postObject;
   }
 
   createPostDivs(): void {
@@ -38,10 +34,10 @@ export class Post {
   }
 
   fillPost(): void {
-    this.postAuthor.innerHTML = `Posted by: ${this.author}`;
-    this.postDate.innerHTML = `On: ${this.date}`;
-    this.postTitle.innerHTML = this.title;
-    this.postContent.innerHTML = this.content;
+    this.postAuthor.innerHTML = `Posted by: ${this.postInput.author}`;
+    this.postDate.innerHTML = `On: ${this.postInput.date}`;
+    this.postTitle.innerHTML = this.postInput.title;
+    this.postContent.innerHTML = this.postInput.content;
   }
 
   creatStructure(): void {

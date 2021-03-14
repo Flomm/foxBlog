@@ -1,17 +1,14 @@
 "use strict";
 exports.__esModule = true;
-exports.postBlog = void 0;
 var PostClass_1 = require("./PostClass");
-function toggleErr(input) {
-    input.parentElement.classList.toggle('err');
-    var labelEl = document.querySelector("label[for=" + input.name + "]");
-    labelEl.parentElement.classList.toggle('err');
-}
+var sendPost_1 = require("./sendPost");
+var toggleErrorClass_1 = require("./toggleErrorClass");
+var scrollToPost_1 = require("./scrollToPost");
 function postBlog(inputs) {
     var emptyField = [];
     inputs.forEach(function (input) {
         if (input.parentElement.classList.contains('err')) {
-            toggleErr(input);
+            toggleErrorClass_1["default"](input);
         }
         if (input.value === '') {
             emptyField.push(input);
@@ -20,22 +17,30 @@ function postBlog(inputs) {
     if (emptyField.length !== 0) {
         emptyField.forEach(function (input) {
             if (!input.parentElement.classList.contains('err')) {
-                toggleErr(input);
+                toggleErrorClass_1["default"](input);
             }
         });
     }
     else {
-        var datePost = new Date().toLocaleString().split(',')[0];
-        var newPost = new PostClass_1.Post(inputs[0].value, inputs[1].value, inputs[2].value, datePost);
+        var newPostInput = {
+            author: inputs[0].value,
+            title: inputs[1].value,
+            content: inputs[2].value,
+            date: new Date().toLocaleString().split(',')[0]
+        };
+        sendPost_1["default"](newPostInput);
+        var newPost = new PostClass_1["default"](newPostInput);
         var postedMain = document.querySelector('.posted-main');
         var mainChilds = document.querySelectorAll('.posted-slot');
-        postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+        var newPostSlot = newPost.makePost();
+        postedMain.insertBefore(newPostSlot, mainChilds[0]);
+        scrollToPost_1["default"](newPostSlot);
         inputs.forEach(function (input) {
             input.value = '';
             if (input.parentElement.classList.contains('err')) {
-                toggleErr(input);
+                toggleErrorClass_1["default"](input);
             }
         });
     }
 }
-exports.postBlog = postBlog;
+exports["default"] = postBlog;

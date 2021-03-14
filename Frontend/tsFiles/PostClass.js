@@ -1,14 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.Post = void 0;
 var Post = /** @class */ (function () {
-    function Post(author, title, content, date) {
-        //output
-        this.postSlot = undefined;
-        this.author = author;
-        this.title = title;
-        this.content = content;
-        this.date = date;
+    function Post(postObject) {
+        this.postInput = postObject;
     }
     Post.prototype.createPostDivs = function () {
         this.postSlot = document.createElement('div');
@@ -27,10 +21,10 @@ var Post = /** @class */ (function () {
         this.postSlot.classList.add('posted-slot');
     };
     Post.prototype.fillPost = function () {
-        this.postAuthor.innerHTML = "Posted by: " + this.author;
-        this.postDate.innerHTML = "On: " + this.date;
-        this.postTitle.innerHTML = this.title;
-        this.postContent.innerHTML = this.content;
+        this.postAuthor.innerHTML = "Posted by: " + this.postInput.author;
+        this.postDate.innerHTML = "On: " + this.postInput.date;
+        this.postTitle.innerHTML = this.postInput.title;
+        this.postContent.innerHTML = this.postInput.content;
     };
     Post.prototype.creatStructure = function () {
         this.postSlot.appendChild(this.postTitle);
@@ -48,4 +42,4 @@ var Post = /** @class */ (function () {
     };
     return Post;
 }());
-exports.Post = Post;
+exports["default"] = Post;
