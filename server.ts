@@ -21,9 +21,13 @@ app.get('/api/posts', (req, res) => {
 });
 
 app.post('/api/addpost', (req, res) => {
-  const newPost: Postable = req.body;
-  const blogFileArr: Postable[] = JSON.parse(fs.readFileSync('./assets/posts.json', 'utf8'));
-  blogFileArr.push(newPost);
-  fs.writeFileSync('./assets/posts.json', JSON.stringify(blogFileArr));
-  res.status(202).send();
+  try {
+    const newPost: Postable = req.body;
+    const blogFileArr: Postable[] = JSON.parse(fs.readFileSync('./assets/posts.json', 'utf8'));
+    blogFileArr.push(newPost);
+    fs.writeFileSync('./assets/posts.json', JSON.stringify(blogFileArr));
+    res.status(202).send();
+  } catch {
+    res.status(404).send;
+  }
 });
