@@ -1,18 +1,14 @@
 import postBlog from './tsFiles/postFunction';
 import initialLoad from './tsFiles/intitialLoad';
 
-const authorPost: HTMLInputElement = document.querySelector('.author-post') as HTMLInputElement;
-const titlePost: HTMLInputElement = document.querySelector('.title-post') as HTMLInputElement;
-const contentPost: HTMLInputElement = document.querySelector('.content-post') as HTMLInputElement;
-
-const inputFields: HTMLInputElement[] = [authorPost, titlePost, contentPost];
-
-const subButton: HTMLButtonElement = document.querySelector('.button-submit') as HTMLButtonElement;
+const inputForm: HTMLFormElement = document.querySelector('#post-form');
+const inputFields: HTMLInputElement[] = Array.from(inputForm.querySelectorAll('input, textarea')) as HTMLInputElement[];
 
 window.addEventListener('load', () => {
   initialLoad();
 });
 
-subButton.addEventListener('click', () => {
+inputForm.addEventListener('submit', (event: Event) => {
+  event.preventDefault();
   postBlog(inputFields);
 });

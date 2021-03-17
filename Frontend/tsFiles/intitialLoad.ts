@@ -9,7 +9,7 @@ function initialPost(postObject: Postable): void {
 }
 
 export default function initialLoad(): void {
-  const newReq = new XMLHttpRequest();
+  const newReq: XMLHttpRequest = new XMLHttpRequest();
   newReq.onreadystatechange = () => {
     if (newReq.readyState === 4 && newReq.status === 200) {
       const posts = newReq.response;

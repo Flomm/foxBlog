@@ -1,7 +1,7 @@
 import Postable from './Postable';
 
 export default function sendPostToServer(postObject: Postable): void {
-  const postReq = new XMLHttpRequest();
+  const postReq: XMLHttpRequest = new XMLHttpRequest();
   postReq.open('POST', '/api/addpost', true);
   postReq.setRequestHeader('Content-Type', 'application/json');
   postReq.send(JSON.stringify(postObject));
