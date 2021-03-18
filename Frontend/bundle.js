@@ -13,7 +13,22 @@ inputForm.addEventListener('submit', function (event) {
     postFunction_1["default"](inputFields);
 });
 
-},{"./tsFiles/intitialLoad":3,"./tsFiles/postFunction":4}],2:[function(require,module,exports){
+},{"./tsFiles/intitialLoad":4,"./tsFiles/postFunction":5}],2:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+var scrollToPost_1 = require("./scrollToPost");
+var PostClass_1 = require("./PostClass");
+function frontEndInsert(newPostInput) {
+    var newPost = new PostClass_1["default"](newPostInput);
+    var postedMain = document.querySelector('.posted-main');
+    var mainChilds = document.querySelectorAll('.posted-slot');
+    var newPostSlot = newPost.makePost();
+    postedMain.insertBefore(newPostSlot, mainChilds[0]);
+    scrollToPost_1["default"](newPostSlot);
+}
+exports["default"] = frontEndInsert;
+
+},{"./PostClass":3,"./scrollToPost":6}],3:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var Post = /** @class */ (function () {
@@ -60,7 +75,7 @@ var Post = /** @class */ (function () {
 }());
 exports["default"] = Post;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var PostClass_1 = require("./PostClass");
@@ -87,13 +102,11 @@ function initialLoad() {
 }
 exports["default"] = initialLoad;
 
-},{"./PostClass":2}],4:[function(require,module,exports){
+},{"./PostClass":3}],5:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
-var PostClass_1 = require("./PostClass");
 var sendPost_1 = require("./sendPost");
 var toggleErrorClass_1 = require("./toggleErrorClass");
-var scrollToPost_1 = require("./scrollToPost");
 function postBlog(inputs) {
     var emptyField = [];
     inputs.forEach(function (input) {
@@ -119,12 +132,12 @@ function postBlog(inputs) {
             date: new Date().toLocaleString().split(',')[0]
         };
         sendPost_1["default"](newPostInput);
-        var newPost = new PostClass_1["default"](newPostInput);
-        var postedMain = document.querySelector('.posted-main');
-        var mainChilds = document.querySelectorAll('.posted-slot');
-        var newPostSlot = newPost.makePost();
-        postedMain.insertBefore(newPostSlot, mainChilds[0]);
-        scrollToPost_1["default"](newPostSlot);
+        // const newPost: Post = new Post(newPostInput);
+        // const postedMain = document.querySelector('.posted-main');
+        // const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
+        // const newPostSlot: HTMLDivElement = newPost.makePost();
+        // postedMain.insertBefore(newPostSlot, mainChilds[0]);
+        // scrollToPost(newPostSlot);
         inputs.forEach(function (input) {
             input.value = '';
             if (input.parentElement.classList.contains('err')) {
@@ -135,7 +148,7 @@ function postBlog(inputs) {
 }
 exports["default"] = postBlog;
 
-},{"./PostClass":2,"./scrollToPost":5,"./sendPost":6,"./toggleErrorClass":7}],5:[function(require,module,exports){
+},{"./sendPost":7,"./toggleErrorClass":8}],6:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function scrollToPost(post) {
@@ -149,9 +162,10 @@ function scrollToPost(post) {
 }
 exports["default"] = scrollToPost;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
+var FrontEndInsert_1 = require("./FrontEndInsert");
 function sendPostToServer(postObject) {
     var postReq = new XMLHttpRequest();
     postReq.open('POST', '/api/addpost', true);
@@ -161,11 +175,12 @@ function sendPostToServer(postObject) {
         if (postReq.status !== 202) {
             alert('There was an problem, please try again.');
         }
+        FrontEndInsert_1["default"](postObject);
     };
 }
 exports["default"] = sendPostToServer;
 
-},{}],7:[function(require,module,exports){
+},{"./FrontEndInsert":2}],8:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function toggleErr(input) {

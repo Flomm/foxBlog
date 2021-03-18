@@ -1,4 +1,5 @@
 import Postable from './Postable';
+import frontEndInsert from './FrontEndInsert';
 
 export default function sendPostToServer(postObject: Postable): void {
   const postReq: XMLHttpRequest = new XMLHttpRequest();
@@ -9,5 +10,6 @@ export default function sendPostToServer(postObject: Postable): void {
     if (postReq.status !== 202) {
       alert('There was an problem, please try again.');
     }
+    frontEndInsert(postObject);
   };
 }

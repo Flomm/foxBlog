@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+var FrontEndInsert_1 = require("./FrontEndInsert");
 function sendPostToServer(postObject) {
     var postReq = new XMLHttpRequest();
     postReq.open('POST', '/api/addpost', true);
@@ -9,6 +10,7 @@ function sendPostToServer(postObject) {
         if (postReq.status !== 202) {
             alert('There was an problem, please try again.');
         }
+        FrontEndInsert_1["default"](postObject);
     };
 }
 exports["default"] = sendPostToServer;

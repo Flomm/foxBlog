@@ -3,8 +3,9 @@ import * as express from 'express';
 import { connection } from './Backend/sqlConnect';
 
 const app = express();
-app.listen(8000, () => {
-  console.log('App is listening on port 8000');
+const port: number = 8000;
+app.listen(port, () => {
+  console.log(`App is listening on port ${port}`);
 });
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -18,7 +19,7 @@ connection.connect((err: Error) => {
   console.log('Connected to DB');
 });
 
-app.get('/', (req: express.Request, res: express.Response) => {
+app.get('/main', (req: express.Request, res: express.Response) => {
   res.sendFile(__dirname + '/index.html');
 });
 

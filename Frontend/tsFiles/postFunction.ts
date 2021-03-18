@@ -1,8 +1,6 @@
 import Postable from './Postable';
-import Post from './PostClass';
 import sendPostToServer from './sendPost';
 import toggleErr from './toggleErrorClass';
-import scrollToPost from './scrollToPost';
 
 export default function postBlog(inputs: HTMLInputElement[]): void {
   let emptyField: HTMLInputElement[] = [];
@@ -28,12 +26,6 @@ export default function postBlog(inputs: HTMLInputElement[]): void {
       date: new Date().toLocaleString().split(',')[0],
     };
     sendPostToServer(newPostInput);
-    const newPost: Post = new Post(newPostInput);
-    const postedMain = document.querySelector('.posted-main');
-    const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
-    const newPostSlot: HTMLDivElement = newPost.makePost();
-    postedMain.insertBefore(newPostSlot, mainChilds[0]);
-    scrollToPost(newPostSlot);
     inputs.forEach((input) => {
       input.value = '';
       if (input.parentElement.classList.contains('err')) {

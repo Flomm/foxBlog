@@ -1,9 +1,7 @@
 "use strict";
 exports.__esModule = true;
-var PostClass_1 = require("./PostClass");
 var sendPost_1 = require("./sendPost");
 var toggleErrorClass_1 = require("./toggleErrorClass");
-var scrollToPost_1 = require("./scrollToPost");
 function postBlog(inputs) {
     var emptyField = [];
     inputs.forEach(function (input) {
@@ -29,12 +27,12 @@ function postBlog(inputs) {
             date: new Date().toLocaleString().split(',')[0]
         };
         sendPost_1["default"](newPostInput);
-        var newPost = new PostClass_1["default"](newPostInput);
-        var postedMain = document.querySelector('.posted-main');
-        var mainChilds = document.querySelectorAll('.posted-slot');
-        var newPostSlot = newPost.makePost();
-        postedMain.insertBefore(newPostSlot, mainChilds[0]);
-        scrollToPost_1["default"](newPostSlot);
+        // const newPost: Post = new Post(newPostInput);
+        // const postedMain = document.querySelector('.posted-main');
+        // const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
+        // const newPostSlot: HTMLDivElement = newPost.makePost();
+        // postedMain.insertBefore(newPostSlot, mainChilds[0]);
+        // scrollToPost(newPostSlot);
         inputs.forEach(function (input) {
             input.value = '';
             if (input.parentElement.classList.contains('err')) {
