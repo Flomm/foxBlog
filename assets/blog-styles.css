@@ -24,11 +24,16 @@ header {
   overflow: hidden;
 }
 
+button {
+  outline: none;
+}
+
 .border-sides {
   border-left-color: rgb(7, 116, 61);
   border-right-color: rgb(7, 116, 61);
   border-left-style: solid;
   border-right-style: solid;
+  border-radius: 5px;
   border-width: 40px;
 }
 
@@ -36,6 +41,7 @@ header {
   padding-top: 60px;
   padding-left: 10%;
   padding-right: 10%;
+  border-radius: 5px;
 }
 
 .add-post-title {
@@ -92,7 +98,6 @@ textarea {
   cursor: pointer;
   width: 20%;
   height: 5%;
-  outline: none;
   border-radius: 25px;
   background-color: rgb(7, 116, 61);
   color: beige;
@@ -134,6 +139,7 @@ textarea {
   margin-top: 3%;
   padding-left: 10%;
   padding-right: 10%;
+  border-radius: 5px;
 }
 
 .posted-main h2 {
@@ -141,6 +147,7 @@ textarea {
 }
 
 .posted-slot {
+  border-radius: 5px;
   border-width: 1px;
   border-style: solid;
   margin-bottom: 3%;
@@ -172,6 +179,33 @@ textarea {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.likebar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.likebar p {
+  font-weight: bolder;
+  color: rgb(7, 116, 61);
+}
+
+.likebar button {
+  cursor: pointer;
+  border-radius: 2px;
+  background-color: rgb(182, 235, 186);
+  border: none;
+  margin: 2%;
+  color: rgb(7, 116, 61);
+}
+.likebar button:nth-child(1) {
+  color: red;
+}
+
+.likebar button:active {
+  opacity: 0.6;
 }
 
 footer {
