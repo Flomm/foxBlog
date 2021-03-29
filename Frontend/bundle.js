@@ -17,9 +17,9 @@ inputForm.addEventListener('submit', function (event) {
 "use strict";
 exports.__esModule = true;
 var scrollToPost_1 = require("./scrollToPost");
-var PostClass_1 = require("./PostClass");
+var GeneralPostClass_1 = require("./GeneralPostClass");
 function frontEndInsert(newPostInput) {
-    var newPost = new PostClass_1["default"](newPostInput);
+    var newPost = new GeneralPostClass_1["default"](newPostInput);
     var postedMain = document.querySelector('.posted-main');
     var mainChilds = document.querySelectorAll('.posted-slot');
     var newPostSlot = newPost.makePost();
@@ -28,59 +28,65 @@ function frontEndInsert(newPostInput) {
 }
 exports["default"] = frontEndInsert;
 
-},{"./PostClass":3,"./scrollToPost":6}],3:[function(require,module,exports){
+},{"./GeneralPostClass":3,"./scrollToPost":6}],3:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
-var Post = /** @class */ (function () {
-    function Post(postObject) {
+var GeneralPost = /** @class */ (function () {
+    function GeneralPost(postObject) {
         this.postInput = postObject;
     }
-    Post.prototype.createPostDivs = function () {
+    GeneralPost.prototype.createPostDivs = function () {
         this.postSlot = document.createElement('div');
         this.postAuthor = document.createElement('div');
         this.postDate = document.createElement('div');
         this.postMisc = document.createElement('div');
         this.postTitle = document.createElement('div');
         this.postContent = document.createElement('div');
+        this.likeBar = document.createElement('div');
+        this.likeBarP = document.createElement('p');
     };
-    Post.prototype.assignClasses = function () {
+    GeneralPost.prototype.assignClasses = function () {
         this.postTitle.classList.add('posted-title');
         this.postAuthor.classList.add('posted-author');
         this.postDate.classList.add('posted-date');
         this.postMisc.classList.add('posted-misc');
         this.postContent.classList.add('posted-content');
         this.postSlot.classList.add('posted-slot');
+        this.likeBar.classList.add('likebar');
     };
-    Post.prototype.fillPost = function () {
-        this.postAuthor.innerHTML = "Posted by: " + this.postInput.author;
-        this.postDate.innerHTML = "On: " + this.postInput.date;
-        this.postTitle.innerHTML = this.postInput.title;
-        this.postContent.innerHTML = this.postInput.content;
+    GeneralPost.prototype.fillPost = function () {
+        this.postAuthor.textContent = "Posted by: " + this.postInput.author;
+        this.postDate.textContent = "On: " + this.postInput.date;
+        this.postTitle.textContent = this.postInput.title;
+        this.postContent.textContent = this.postInput.content;
+        this.likeBarP.textContent = "Score: " + this.postInput.score;
     };
-    Post.prototype.creatStructure = function () {
+    GeneralPost.prototype.createStructure = function () {
         this.postSlot.appendChild(this.postTitle);
         this.postSlot.appendChild(this.postContent);
         this.postMisc.appendChild(this.postAuthor);
         this.postMisc.appendChild(this.postDate);
         this.postSlot.appendChild(this.postMisc);
+        this.likeBar.appendChild(this.likeBarP);
+        this.postSlot.appendChild(this.likeBar);
     };
-    Post.prototype.makePost = function () {
+    GeneralPost.prototype.makePost = function () {
         this.createPostDivs();
         this.assignClasses();
         this.fillPost();
-        this.creatStructure();
+        this.createStructure();
         return this.postSlot;
     };
-    return Post;
+    return GeneralPost;
 }());
-exports["default"] = Post;
+exports["default"] = GeneralPost;
 
 },{}],4:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
-var PostClass_1 = require("./PostClass");
+var GeneralPostClass_1 = require("./GeneralPostClass");
 function initialPost(postObject) {
-    var newPost = new PostClass_1["default"](postObject);
+    var newPost = new GeneralPostClass_1["default"](postObject);
     var postedMain = document.querySelector('.posted-main');
     var mainChilds = document.querySelectorAll('.posted-slot');
     postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
@@ -102,7 +108,7 @@ function initialLoad() {
 }
 exports["default"] = initialLoad;
 
-},{"./PostClass":3}],5:[function(require,module,exports){
+},{"./GeneralPostClass":3}],5:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var sendPost_1 = require("./sendPost");
@@ -132,12 +138,6 @@ function postBlog(inputs) {
             date: new Date().toLocaleString().split(',')[0]
         };
         sendPost_1["default"](newPostInput);
-        // const newPost: Post = new Post(newPostInput);
-        // const postedMain = document.querySelector('.posted-main');
-        // const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
-        // const newPostSlot: HTMLDivElement = newPost.makePost();
-        // postedMain.insertBefore(newPostSlot, mainChilds[0]);
-        // scrollToPost(newPostSlot);
         inputs.forEach(function (input) {
             input.value = '';
             if (input.parentElement.classList.contains('err')) {
@@ -175,7 +175,8 @@ function sendPostToServer(postObject) {
         if (postReq.status !== 202) {
             alert('There was an problem, please try again.');
         }
-        FrontEndInsert_1["default"](postObject);
+        var newPost = postReq.response.body;
+        FrontEndInsert_1["default"](newPost);
     };
 }
 exports["default"] = sendPostToServer;

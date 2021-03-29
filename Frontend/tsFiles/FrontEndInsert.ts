@@ -1,9 +1,9 @@
 import scrollToPost from './scrollToPost';
-import Post from './PostClass';
+import GeneralPost from './GeneralPostClass';
 import Postable from './Postable';
 
 export default function frontEndInsert(newPostInput: Postable) {
-  const newPost: Post = new Post(newPostInput);
+  const newPost: GeneralPost = new GeneralPost(newPostInput);
   const postedMain = document.querySelector('.posted-main');
   const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
   const newPostSlot: HTMLDivElement = newPost.makePost();

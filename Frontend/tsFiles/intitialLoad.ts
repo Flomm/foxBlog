@@ -1,5 +1,5 @@
 import Postable from './Postable';
-import Post from './PostClass';
+import Post from './GeneralPostClass';
 
 function initialPost(postObject: Postable): void {
   const newPost: Post = new Post(postObject);

@@ -1,9 +1,9 @@
 "use strict";
 exports.__esModule = true;
 var scrollToPost_1 = require("./scrollToPost");
-var PostClass_1 = require("./PostClass");
+var GeneralPostClass_1 = require("./GeneralPostClass");
 function frontEndInsert(newPostInput) {
-    var newPost = new PostClass_1["default"](newPostInput);
+    var newPost = new GeneralPostClass_1["default"](newPostInput);
     var postedMain = document.querySelector('.posted-main');
     var mainChilds = document.querySelectorAll('.posted-slot');
     var newPostSlot = newPost.makePost();

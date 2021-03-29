@@ -1,6 +1,6 @@
 import Postable from './Postable';
 
-export default class Post {
+export default class GeneralPost {
   //input
   private postInput: Postable;
   //output
@@ -10,6 +10,8 @@ export default class Post {
   private postMisc: HTMLDivElement;
   private postTitle: HTMLDivElement;
   private postContent: HTMLDivElement;
+  private likeBar: HTMLDivElement;
+  private likeBarP: HTMLParagraphElement;
 
   constructor(postObject: Postable) {
     this.postInput = postObject;
@@ -22,6 +24,8 @@ export default class Post {
     this.postMisc = document.createElement('div');
     this.postTitle = document.createElement('div');
     this.postContent = document.createElement('div');
+    this.likeBar = document.createElement('div');
+    this.likeBarP = document.createElement('p');
   }
 
   assignClasses(): void {
@@ -31,28 +35,32 @@ export default class Post {
     this.postMisc.classList.add('posted-misc');
     this.postContent.classList.add('posted-content');
     this.postSlot.classList.add('posted-slot');
+    this.likeBar.classList.add('likebar');
   }
 
   fillPost(): void {
-    this.postAuthor.innerHTML = `Posted by: ${this.postInput.author}`;
-    this.postDate.innerHTML = `On: ${this.postInput.date}`;
-    this.postTitle.innerHTML = this.postInput.title;
-    this.postContent.innerHTML = this.postInput.content;
+    this.postAuthor.textContent = `Posted by: ${this.postInput.author}`;
+    this.postDate.textContent = `On: ${this.postInput.date}`;
+    this.postTitle.textContent = this.postInput.title;
+    this.postContent.textContent = this.postInput.content;
+    this.likeBarP.textContent = `Score: ${this.postInput.score}`;
   }
 
-  creatStructure(): void {
+  createStructure(): void {
     this.postSlot.appendChild(this.postTitle);
     this.postSlot.appendChild(this.postContent);
     this.postMisc.appendChild(this.postAuthor);
     this.postMisc.appendChild(this.postDate);
     this.postSlot.appendChild(this.postMisc);
+    this.likeBar.appendChild(this.likeBarP);
+    this.postSlot.appendChild(this.likeBar);
   }
 
   makePost(): HTMLDivElement {
     this.createPostDivs();
     this.assignClasses();
     this.fillPost();
-    this.creatStructure();
+    this.createStructure();
     return this.postSlot;
   }
 }

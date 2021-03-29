@@ -27,12 +27,6 @@ function postBlog(inputs) {
             date: new Date().toLocaleString().split(',')[0]
         };
         sendPost_1["default"](newPostInput);
-        // const newPost: Post = new Post(newPostInput);
-        // const postedMain = document.querySelector('.posted-main');
-        // const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
-        // const newPostSlot: HTMLDivElement = newPost.makePost();
-        // postedMain.insertBefore(newPostSlot, mainChilds[0]);
-        // scrollToPost(newPostSlot);
         inputs.forEach(function (input) {
             input.value = '';
             if (input.parentElement.classList.contains('err')) {

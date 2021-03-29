@@ -10,7 +10,8 @@ function sendPostToServer(postObject) {
         if (postReq.status !== 202) {
             alert('There was an problem, please try again.');
         }
-        FrontEndInsert_1["default"](postObject);
+        var newPost = postReq.response.body;
+        FrontEndInsert_1["default"](newPost);
     };
 }
 exports["default"] = sendPostToServer;

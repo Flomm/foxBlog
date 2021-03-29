@@ -33,7 +33,6 @@ button {
   border-right-color: rgb(7, 116, 61);
   border-left-style: solid;
   border-right-style: solid;
-  border-radius: 5px;
   border-width: 40px;
 }
 
@@ -41,7 +40,6 @@ button {
   padding-top: 60px;
   padding-left: 10%;
   padding-right: 10%;
-  border-radius: 5px;
 }
 
 .add-post-title {
@@ -139,7 +137,6 @@ textarea {
   margin-top: 3%;
   padding-left: 10%;
   padding-right: 10%;
-  border-radius: 5px;
 }
 
 .posted-main h2 {
@@ -200,6 +197,7 @@ textarea {
   margin: 2%;
   color: rgb(7, 116, 61);
 }
+
 .likebar button:nth-child(1) {
   color: red;
 }

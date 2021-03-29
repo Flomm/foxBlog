@@ -1,4 +1,4 @@
-import Postable from './Postable';
+import Sendable from './Sendable';
 import sendPostToServer from './sendPost';
 import toggleErr from './toggleErrorClass';
 
@@ -19,7 +19,7 @@ export default function postBlog(inputs: HTMLInputElement[]): void {
       }
     });
   } else {
-    const newPostInput: Postable = {
+    const newPostInput: Sendable = {
       author: inputs[0].value,
       title: inputs[1].value,
       content: inputs[2].value,

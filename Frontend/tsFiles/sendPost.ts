@@ -1,7 +1,8 @@
+import Sendable from './Sendable';
 import Postable from './Postable';
 import frontEndInsert from './FrontEndInsert';
 
-export default function sendPostToServer(postObject: Postable): void {
+export default function sendPostToServer(postObject: Sendable): void {
   const postReq: XMLHttpRequest = new XMLHttpRequest();
   postReq.open('POST', '/api/addpost', true);
   postReq.setRequestHeader('Content-Type', 'application/json');
@@ -10,6 +11,7 @@ export default function sendPostToServer(postObject: Postable): void {
     if (postReq.status !== 202) {
       alert('There was an problem, please try again.');
     }
-    frontEndInsert(postObject);
+    const newPost: Postable = postReq.response.body;
+    frontEndInsert(newPost);
   };
 }

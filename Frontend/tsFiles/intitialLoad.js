@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-var PostClass_1 = require("./PostClass");
+var GeneralPostClass_1 = require("./GeneralPostClass");
 function initialPost(postObject) {
-    var newPost = new PostClass_1["default"](postObject);
+    var newPost = new GeneralPostClass_1["default"](postObject);
     var postedMain = document.querySelector('.posted-main');
     var mainChilds = document.querySelectorAll('.posted-slot');
     postedMain.insertBefore(newPost.makePost(), mainChilds[0]);

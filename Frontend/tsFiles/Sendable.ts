@@ -1,10 +1,8 @@
-export default interface Postable {
-  id: number;
+export default interface Sendable {
   author: string;
   title: string;
   content: string;
   date: string;
-  score: number;
   user?: string;
   vote?: string;
 }
