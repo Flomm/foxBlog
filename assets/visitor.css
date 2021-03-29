@@ -1,0 +1,141 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100%;
+  font-family: 'Courier Prime', monospace;
+  background-color: beige;
+  position: relative;
+}
+
+header {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 10%;
+  background-color: rgb(7, 116, 61);
+  height: 10%;
+  border-width: 1px;
+  border-bottom-style: solid;
+  border-color: black;
+  font-size: 3vw;
+  color: beige;
+  text-shadow: 5px 9px 20px rgba(0, 0, 0, 0.15);
+}
+
+wrapper {
+  padding-top: 10%;
+  height: 90.8%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.instructions {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+  background-color: rgb(182, 235, 186);
+  border-radius: 5px;
+}
+
+h2 {
+  color: rgb(7, 116, 61);
+  margin-bottom: 2%;
+}
+
+a {
+  margin-top: 1%;
+  text-decoration: none;
+  font-weight: bold;
+  color: rgb(7, 116, 61);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.posted-main {
+  border: rgb(7, 116, 61) solid;
+  border-width: 20px;
+  border-radius: 5px;
+  margin-top: 3%;
+  padding: 3%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 5%;
+}
+
+.posted-main h2 {
+  color: rgb(7, 116, 61);
+}
+
+.posted-slot {
+  border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
+  margin-bottom: 3%;
+  padding-bottom: 1%;
+  background-color: rgb(182, 235, 186);
+}
+
+.posted-title {
+  padding-left: 2%;
+  font-weight: bold;
+  font-size: 150%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  word-wrap: break-word;
+}
+
+.posted-content {
+  text-align: justify;
+  padding-left: 20px;
+  padding-right: 20px;
+  word-wrap: break-word;
+}
+
+.posted-misc {
+  margin: 2%;
+  margin-bottom: 1%;
+  font-weight: bolder;
+  color: rgb(7, 116, 61);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.likebar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.likebar p {
+  font-weight: bolder;
+  color: rgb(7, 116, 61);
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  margin-top: 5%;
+  height: 2%;
+  width: 100%;
+  background-color: rgb(7, 116, 61);
+  color: bisque;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

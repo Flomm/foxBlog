@@ -197,7 +197,6 @@ textarea {
   margin: 2%;
   color: rgb(7, 116, 61);
 }
-
 .likebar button:nth-child(1) {
   color: red;
 }
@@ -207,6 +206,8 @@ textarea {
 }
 
 footer {
+  position: absolute;
+  bottom: 0;
   height: 5%;
   width: 100%;
   background-color: rgb(7, 116, 61);

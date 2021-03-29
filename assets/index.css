@@ -1,0 +1,113 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  font-family: 'Courier Prime', monospace;
+  background-color: beige;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  padding-left: 10%;
+  background-color: rgb(7, 116, 61);
+  height: 9%;
+  border-width: 1px;
+  border-bottom-style: solid;
+  border-color: black;
+  font-size: 3vw;
+  color: beige;
+  text-shadow: 5px 9px 20px rgba(0, 0, 0, 0.15);
+}
+
+wrapper {
+  position: relative;
+  height: 90.8%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+wrapper > div {
+  text-align: justify;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5%;
+  background-color: rgb(182, 235, 186);
+  padding: 2%;
+  border-radius: 5px;
+}
+
+h1 {
+  text-align: center;
+  color: rgb(7, 116, 61);
+  margin-bottom: 1%;
+}
+
+.welcome {
+  width: 90%;
+}
+
+.login {
+  width: 30%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input,
+button {
+  margin-bottom: 15%;
+  padding: 2%;
+  outline-color: rgb(7, 116, 61);
+}
+
+input {
+  border: none;
+
+  border-radius: 2px;
+}
+
+button {
+  cursor: pointer;
+  border-color: rgb(7, 116, 61);
+  border-radius: 5px;
+  color: beige;
+  background-color: rgb(7, 116, 61);
+}
+
+button:hover {
+  color: rgb(7, 116, 61);
+  background-color: beige;
+}
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+  color: rgb(7, 116, 61);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  height: 5%;
+  width: 100%;
+  background-color: rgb(7, 116, 61);
+  color: bisque;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

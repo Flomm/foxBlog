@@ -24,8 +24,13 @@ connection.connect((err: Error) => {
   console.log('Connected to DB');
 });
 
-app.get('/main', (req: express.Request, res: express.Response) => {
+//Anchors
+app.get('/index', (req: express.Request, res: express.Response) => {
   res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/visitor', (req: express.Request, res: express.Response) => {
+  res.sendFile(__dirname + '/visitor.html');
 });
 
 //Getposts
