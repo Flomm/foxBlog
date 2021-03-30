@@ -25,12 +25,32 @@ connection.connect((err: Error) => {
 });
 
 //Anchors
-app.get('/index', (req: express.Request, res: express.Response) => {
+app.get('/', (req: express.Request, res: express.Response) => {
   res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/visitor', (req: express.Request, res: express.Response) => {
   res.sendFile(__dirname + '/visitor.html');
+});
+
+app.get('/profile', (req: express.Request, res: express.Response) => {
+  res.sendFile(__dirname + '/profile.html');
+});
+
+app.get('/api/login', (req: express.Request, res: express.Response) => {
+  const userName: string = req.headers.user as string;
+  connection.query('SELECT user_name FROM users WHERE user_name=?', userName, (err: Error, result) => {
+    if (err) {
+      res.sendStatus(404);
+      return console.error(err);
+    }
+    if (result.length === 0) {
+      console.log('pp');
+      res.sendStatus(401);
+    } else {
+      res.sendStatus(200);
+    }
+  });
 });
 
 //Getposts

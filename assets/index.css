@@ -7,9 +7,15 @@ body {
   height: 100vh;
   font-family: 'Courier Prime', monospace;
   background-color: beige;
+  position: relative;
 }
 
 header {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   padding-left: 10%;
@@ -24,7 +30,8 @@ header {
 }
 
 wrapper {
-  position: relative;
+  padding-top: 4%;
+  margin-bottom: 2%;
   height: 90.8%;
   width: 100%;
   display: flex;
@@ -57,6 +64,7 @@ h1 {
 
 .login {
   width: 30%;
+  padding: 2%;
 }
 
 form {
@@ -71,9 +79,15 @@ button {
   outline-color: rgb(7, 116, 61);
 }
 
-input {
-  border: none;
+.err {
+  color: red;
+}
 
+.err + input {
+  border-color: red;
+}
+
+input {
   border-radius: 2px;
 }
 
@@ -103,6 +117,7 @@ a:hover {
 footer {
   position: absolute;
   bottom: 0;
+  margin-top: 2%;
   height: 5%;
   width: 100%;
   background-color: rgb(7, 116, 61);
