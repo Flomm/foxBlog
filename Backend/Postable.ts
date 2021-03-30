@@ -3,7 +3,7 @@ export default interface Postable {
   author: string;
   title: string;
   content: string;
-  date: string;
+  timestamp: number;
   score: number;
   user?: string;
   vote?: string;

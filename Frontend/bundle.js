@@ -56,7 +56,7 @@ var GeneralPost = /** @class */ (function () {
     };
     GeneralPost.prototype.fillPost = function () {
         this.postAuthor.textContent = "Posted by: " + this.postInput.author;
-        this.postDate.textContent = "On: " + this.postInput.date;
+        this.postDate.textContent = "On: " + this.postInput.timestamp;
         this.postTitle.textContent = this.postInput.title;
         this.postContent.textContent = this.postInput.content;
         this.likeBarP.textContent = "Score: " + this.postInput.score;
@@ -135,7 +135,7 @@ function postBlog(inputs) {
             author: inputs[0].value,
             title: inputs[1].value,
             content: inputs[2].value,
-            date: new Date().toLocaleString().split(',')[0]
+            timestamp: Math.floor(new Date().getTime() / 1000)
         };
         sendPost_1["default"](newPostInput);
         inputs.forEach(function (input) {

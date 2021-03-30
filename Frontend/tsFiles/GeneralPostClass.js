@@ -25,7 +25,7 @@ var GeneralPost = /** @class */ (function () {
     };
     GeneralPost.prototype.fillPost = function () {
         this.postAuthor.textContent = "Posted by: " + this.postInput.author;
-        this.postDate.textContent = "On: " + this.postInput.date;
+        this.postDate.textContent = "On: " + new Date(this.postInput.timestamp * 1000).toLocaleString().split(',')[0];
         this.postTitle.textContent = this.postInput.title;
         this.postContent.textContent = this.postInput.content;
         this.likeBarP.textContent = "Score: " + this.postInput.score;

@@ -2,7 +2,7 @@ export default interface Sendable {
   author: string;
   title: string;
   content: string;
-  date: string;
+  timestamp: number;
   user?: string;
   vote?: string;
 }

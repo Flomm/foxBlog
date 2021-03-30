@@ -23,7 +23,7 @@ export default function postBlog(inputs: HTMLInputElement[]): void {
       author: inputs[0].value,
       title: inputs[1].value,
       content: inputs[2].value,
-      date: new Date().toLocaleString().split(',')[0],
+      timestamp: Math.floor(new Date().getTime() / 1000),
     };
     sendPostToServer(newPostInput);
     inputs.forEach((input) => {

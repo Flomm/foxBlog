@@ -24,7 +24,7 @@ function postBlog(inputs) {
             author: inputs[0].value,
             title: inputs[1].value,
             content: inputs[2].value,
-            date: new Date().toLocaleString().split(',')[0]
+            timestamp: Math.floor(new Date().getTime() / 1000)
         };
         sendPost_1["default"](newPostInput);
         inputs.forEach(function (input) {
