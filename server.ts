@@ -1,6 +1,8 @@
 import Postable from './Backend/Postable';
+import AccData from './Backend/IAccData';
 import * as express from 'express';
 import { connection } from './Backend/sqlConnect';
+import countScore from './Backend/countScore';
 
 const app = express();
 const port: number = 8000;
@@ -73,6 +75,24 @@ app.get('/api/posts/myPosts', (req: express.Request, res: express.Response) => {
     }
     const posts: Postable[] = result;
     res.send(posts);
+  });
+});
+
+//Get acc. info
+
+app.get('/api/info', (req: express.Request, res: express.Response) => {
+  const userName: string = req.headers.user as string;
+  connection.query('SELECT id, score FROM posts WHERE author = ?', userName, (err: Error, result) => {
+    if (err) {
+      res.sendStatus(404);
+      return console.error(err);
+    }
+    const resObject: AccData = {
+      numOfPosts: result.length.toString(),
+      sumScore: countScore(result).toString(),
+    };
+    console.log(resObject);
+    res.status(200).send(resObject);
   });
 });
 
