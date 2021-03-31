@@ -1,16 +1,27 @@
+const form: HTMLFormElement = document.querySelector('form');
+const checkBox: HTMLInputElement = document.querySelector('.check');
+const loginInput: HTMLInputElement = document.querySelector('form').elements[0] as HTMLInputElement;
+const pwInput: HTMLInputElement = document.querySelector('form').elements[1] as HTMLInputElement;
+
 window.onload = () => {
-  const form: HTMLFormElement = document.querySelector('form');
   form.addEventListener('submit', (event: Event) => {
     event.preventDefault();
-    const inputs: HTMLInputElement[] = Array.from(form.querySelectorAll('input'));
+    const inputs: HTMLInputElement[] = Array.from(form.querySelectorAll('input:not(.check)'));
     checkLogin(inputs);
   });
-};
 
-function toggleErr(input: HTMLInputElement): void {
-  const labelEl: HTMLLabelElement = document.querySelector(`label[for=${input.name}]`);
-  labelEl.classList.toggle('err');
-}
+  window.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.code === 'Enter') form.submit();
+  });
+
+  checkBox.addEventListener('change', () => {
+    if (pwInput.type === 'password') {
+      pwInput.type = 'text';
+    } else {
+      pwInput.type = 'password';
+    }
+  });
+};
 
 function checkLogin(inputs: HTMLInputElement[]): void {
   let emptyField: HTMLInputElement[] = [];
@@ -32,19 +43,22 @@ function checkLogin(inputs: HTMLInputElement[]): void {
       }
     });
   } else {
-    const loginInput: HTMLInputElement = document.querySelector('form').elements[0] as HTMLInputElement;
     const userName: string = loginInput.value;
+    const pw: string = pwInput.value;
     const xhr: XMLHttpRequest = new XMLHttpRequest();
     xhr.open('GET', '/api/login', true);
     xhr.setRequestHeader('user', userName);
+    xhr.setRequestHeader('password', pw);
     xhr.send();
     xhr.onload = () => {
       if (xhr.status === 404) {
-        alert('Error');
+        alert('There is a problem with the server. Please try again later.');
         return;
       }
       if (xhr.status === 401) {
-        alert('No such user');
+        alert('Invalid login or password.');
+        loginInput.value = '';
+        pwInput.value = '';
         return;
       }
       if (xhr.status === 200) {

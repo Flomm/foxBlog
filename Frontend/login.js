@@ -1,15 +1,26 @@
+var form = document.querySelector('form');
+var checkBox = document.querySelector('.check');
+var loginInput = document.querySelector('form').elements[0];
+var pwInput = document.querySelector('form').elements[1];
 window.onload = function () {
-    var form = document.querySelector('form');
     form.addEventListener('submit', function (event) {
         event.preventDefault();
-        var inputs = Array.from(form.querySelectorAll('input'));
+        var inputs = Array.from(form.querySelectorAll('input:not(.check)'));
         checkLogin(inputs);
     });
+    window.addEventListener('keydown', function (e) {
+        if (e.code === 'Enter')
+            form.submit();
+    });
+    checkBox.addEventListener('change', function () {
+        if (pwInput.type === 'password') {
+            pwInput.type = 'text';
+        }
+        else {
+            pwInput.type = 'password';
+        }
+    });
 };
-function toggleErr(input) {
-    var labelEl = document.querySelector("label[for=" + input.name + "]");
-    labelEl.classList.toggle('err');
-}
 function checkLogin(inputs) {
     var emptyField = [];
     inputs.forEach(function (input) {
@@ -31,19 +42,22 @@ function checkLogin(inputs) {
         });
     }
     else {
-        var loginInput = document.querySelector('form').elements[0];
         var userName_1 = loginInput.value;
+        var pw = pwInput.value;
         var xhr_1 = new XMLHttpRequest();
         xhr_1.open('GET', '/api/login', true);
         xhr_1.setRequestHeader('user', userName_1);
+        xhr_1.setRequestHeader('password', pw);
         xhr_1.send();
         xhr_1.onload = function () {
             if (xhr_1.status === 404) {
-                alert('Error');
+                alert('There is a problem with the server. Please try again later.');
                 return;
             }
             if (xhr_1.status === 401) {
-                alert('No such user');
+                alert('Invalid login or password.');
+                loginInput.value = '';
+                pwInput.value = '';
                 return;
             }
             if (xhr_1.status === 200) {

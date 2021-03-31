@@ -39,15 +39,16 @@ app.get('/profile', (req: express.Request, res: express.Response) => {
 
 app.get('/api/login', (req: express.Request, res: express.Response) => {
   const userName: string = req.headers.user as string;
-  connection.query('SELECT user_name FROM users WHERE user_name=?', userName, (err: Error, result) => {
+  const pw: string = req.headers.password as string;
+  connection.query('SELECT user_name, pw FROM users WHERE user_name=?', userName, (err: Error, result) => {
     if (err) {
       res.sendStatus(404);
       return console.error(err);
     }
-    if (result.length === 0) {
-      console.log('pp');
+    if (result.length === 0 || result[0].pw !== pw) {
       res.sendStatus(401);
     } else {
+      console.log(pw);
       res.sendStatus(200);
     }
   });

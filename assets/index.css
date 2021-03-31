@@ -114,6 +114,11 @@ a:hover {
   text-decoration: underline;
 }
 
+p {
+  color: rgb(7, 116, 61);
+  font-size: small;
+}
+
 footer {
   position: absolute;
   bottom: 0;
