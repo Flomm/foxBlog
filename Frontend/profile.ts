@@ -12,15 +12,8 @@ accBtn.addEventListener('click', () => {
 });
 
 myPostsBtn.addEventListener('click', () => {
-  console.log('x');
   main.innerHTML = '';
-  const postedMain: HTMLDivElement = document.createElement('div');
-  postedMain.classList.add('posted-main');
-  const h2: HTMLHeadingElement = document.createElement('h2');
-  h2.textContent = 'Posts';
-  postedMain.appendChild(h2);
-  main.appendChild(postedMain);
-  initialLoad();
+  loadPosts();
 });
 
 logoutBtn.addEventListener('click', () => {
@@ -100,27 +93,45 @@ class AccInfoDiv {
   }
 }
 
-function initialPost(postObject: Postable): void {
+function initiatePost(postObject: Postable): void {
   const newPost: PersonalPost = new PersonalPost(postObject);
   const postedMain = document.querySelector('.posted-main');
   const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
   postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
 }
 
-function initialLoad(): void {
+function loadPosts(): void {
   const newReq: XMLHttpRequest = new XMLHttpRequest();
-  newReq.onreadystatechange = () => {
-    if (newReq.readyState === 4 && newReq.status === 200) {
+  newReq.onload = () => {
+    if (newReq.status === 204) {
+      createSuccessDiv('Currently you have no posts.');
+    }
+    if (newReq.status === 200) {
+      const postedMain: HTMLDivElement = document.createElement('div');
+      postedMain.classList.add('posted-main');
+      const h2: HTMLHeadingElement = document.createElement('h2');
+      h2.textContent = 'Posts';
+      postedMain.appendChild(h2);
+      main.appendChild(postedMain);
       const posts = newReq.response;
       const parsed: Postable[] = JSON.parse(posts);
       for (let p of parsed) {
-        initialPost(p);
+        initiatePost(p);
       }
+    } else {
+      createSuccessDiv('There was a problem with the server. Please try again later.');
     }
   };
   newReq.open('GET', '/api/posts/myPosts');
   newReq.setRequestHeader('user', window.localStorage.getItem('user'));
   newReq.send();
+}
+
+function createSuccessDiv(txt: string): void {
+  const notSuccesDiv: HTMLDivElement = document.createElement('div');
+  notSuccesDiv.textContent = txt;
+  notSuccesDiv.classList.add('data');
+  document.querySelector('.main').appendChild(notSuccesDiv);
 }
 
 interface AccData {
@@ -130,7 +141,7 @@ interface AccData {
 
 class GeneralPost {
   //input
-  private postInput: Postable;
+  protected postInput: Postable;
   //output
   protected postSlot: HTMLDivElement;
   protected postAuthor: HTMLDivElement;
@@ -197,10 +208,28 @@ class PersonalPost extends GeneralPost {
   constructor(postObject: Postable) {
     super(postObject);
   }
+  boundDelete = this.deletePost.bind(this);
+
+  deletePost(): void {
+    console.log(this.postInput);
+    const xhr: XMLHttpRequest = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status !== 200) {
+        alert('Something went wrong, please try again.');
+      } else {
+        document.querySelector('.main').innerHTML = '';
+        loadPosts();
+      }
+    };
+    xhr.open('DELETE', `/api/posts/${this.postInput.id}`);
+    xhr.setRequestHeader('user', window.localStorage.getItem('user'));
+    xhr.send();
+  }
 
   addDelBtn(): void {
     const delBtn: HTMLButtonElement = document.createElement('button');
     delBtn.classList.add('delete-btn');
+    delBtn.addEventListener('click', this.boundDelete);
     const icon: HTMLElement = document.createElement('i');
     icon.classList.add('fas');
     icon.classList.add('fa-trash-alt');

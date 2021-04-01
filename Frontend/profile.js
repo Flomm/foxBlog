@@ -22,15 +22,8 @@ accBtn.addEventListener('click', function () {
     showAccData();
 });
 myPostsBtn.addEventListener('click', function () {
-    console.log('x');
     main.innerHTML = '';
-    var postedMain = document.createElement('div');
-    postedMain.classList.add('posted-main');
-    var h2 = document.createElement('h2');
-    h2.textContent = 'Posts';
-    postedMain.appendChild(h2);
-    main.appendChild(postedMain);
-    initialLoad();
+    loadPosts();
 });
 logoutBtn.addEventListener('click', function () {
     window.localStorage.setItem('user', '');
@@ -93,27 +86,45 @@ var AccInfoDiv = /** @class */ (function () {
     };
     return AccInfoDiv;
 }());
-function initialPost(postObject) {
+function initiatePost(postObject) {
     var newPost = new PersonalPost(postObject);
     var postedMain = document.querySelector('.posted-main');
     var mainChilds = document.querySelectorAll('.posted-slot');
     postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
 }
-function initialLoad() {
+function loadPosts() {
     var newReq = new XMLHttpRequest();
-    newReq.onreadystatechange = function () {
-        if (newReq.readyState === 4 && newReq.status === 200) {
+    newReq.onload = function () {
+        if (newReq.status === 204) {
+            createSuccessDiv('Currently you have no posts.');
+        }
+        if (newReq.status === 200) {
+            var postedMain = document.createElement('div');
+            postedMain.classList.add('posted-main');
+            var h2 = document.createElement('h2');
+            h2.textContent = 'Posts';
+            postedMain.appendChild(h2);
+            main.appendChild(postedMain);
             var posts = newReq.response;
             var parsed = JSON.parse(posts);
             for (var _i = 0, parsed_1 = parsed; _i < parsed_1.length; _i++) {
                 var p = parsed_1[_i];
-                initialPost(p);
+                initiatePost(p);
             }
+        }
+        else {
+            createSuccessDiv('There was a problem with the server. Please try again later.');
         }
     };
     newReq.open('GET', '/api/posts/myPosts');
     newReq.setRequestHeader('user', window.localStorage.getItem('user'));
     newReq.send();
+}
+function createSuccessDiv(txt) {
+    var notSuccesDiv = document.createElement('div');
+    notSuccesDiv.textContent = txt;
+    notSuccesDiv.classList.add('data');
+    document.querySelector('.main').appendChild(notSuccesDiv);
 }
 var GeneralPost = /** @class */ (function () {
     function GeneralPost(postObject) {
@@ -166,11 +177,30 @@ var GeneralPost = /** @class */ (function () {
 var PersonalPost = /** @class */ (function (_super) {
     __extends(PersonalPost, _super);
     function PersonalPost(postObject) {
-        return _super.call(this, postObject) || this;
+        var _this = _super.call(this, postObject) || this;
+        _this.boundDelete = _this.deletePost.bind(_this);
+        return _this;
     }
+    PersonalPost.prototype.deletePost = function () {
+        console.log(this.postInput);
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (xhr.status !== 200) {
+                alert('Something went wrong, please try again.');
+            }
+            else {
+                document.querySelector('.main').innerHTML = '';
+                loadPosts();
+            }
+        };
+        xhr.open('DELETE', "/api/posts/" + this.postInput.id);
+        xhr.setRequestHeader('user', window.localStorage.getItem('user'));
+        xhr.send();
+    };
     PersonalPost.prototype.addDelBtn = function () {
         var delBtn = document.createElement('button');
         delBtn.classList.add('delete-btn');
+        delBtn.addEventListener('click', this.boundDelete);
         var icon = document.createElement('i');
         icon.classList.add('fas');
         icon.classList.add('fa-trash-alt');

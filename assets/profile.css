@@ -185,6 +185,7 @@ nav button:active {
   position: relative;
   outline: none;
   border: none;
+  cursor: pointer;
   border-radius: 2px;
   width: 30px;
   height: 30px;
@@ -206,6 +207,10 @@ nav button:active {
   content: attr(data-action);
   height: 30px;
   width: 90px;
+}
+
+.delete-btn:active {
+  opacity: 0.8;
 }
 
 .delete-btn:hover:after {

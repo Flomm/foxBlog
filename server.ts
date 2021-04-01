@@ -50,7 +50,6 @@ app.get('/api/login', (req: express.Request, res: express.Response) => {
     if (result.length === 0 || result[0].pw !== pw) {
       res.sendStatus(401);
     } else {
-      console.log(pw);
       res.sendStatus(200);
     }
   });
@@ -58,8 +57,9 @@ app.get('/api/login', (req: express.Request, res: express.Response) => {
 
 //Getposts
 app.get('/api/posts', (req: express.Request, res: express.Response) => {
-  connection.query('SELECT * FROM posts', (err: Error, result) => {
+  connection.query('SELECT * FROM posts WHERE is_deleted=0', (err: Error, result) => {
     if (err) {
+      res.sendStatus(404);
       return console.error(err);
     }
     const posts: Postable[] = result;
@@ -69,17 +69,21 @@ app.get('/api/posts', (req: express.Request, res: express.Response) => {
 
 app.get('/api/posts/myPosts', (req: express.Request, res: express.Response) => {
   const userName: string = req.headers.user as string;
-  connection.query('SELECT * FROM posts WHERE author = ?', userName, (err: Error, result) => {
+  connection.query('SELECT * FROM posts WHERE author = ? AND is_deleted=0', userName, (err: Error, result) => {
     if (err) {
+      res.sendStatus(400);
       return console.error(err);
     }
+    if (result.length === 0) {
+      res.sendStatus(204);
+      return;
+    }
     const posts: Postable[] = result;
-    res.send(posts);
+    res.status(200).send(posts);
   });
 });
 
 //Get acc. info
-
 app.get('/api/info', (req: express.Request, res: express.Response) => {
   const userName: string = req.headers.user as string;
   connection.query('SELECT id, score FROM posts WHERE author = ?', userName, (err: Error, result) => {
@@ -91,8 +95,23 @@ app.get('/api/info', (req: express.Request, res: express.Response) => {
       numOfPosts: result.length.toString(),
       sumScore: countScore(result).toString(),
     };
-    console.log(resObject);
     res.status(200).send(resObject);
+  });
+});
+
+//Delete
+app.delete('/api/posts/:id', (req: express.Request, res: express.Response) => {
+  const idToDel: string = req.params.id;
+  connection.query('UPDATE posts SET is_deleted = 1 WHERE id = ?', idToDel, (err: Error, result) => {
+    if (err) {
+      res.sendStatus(400);
+      return console.error(err);
+    }
+    if (result.affectedRows === 0) {
+      res.sendStatus(204);
+      return;
+    }
+    res.sendStatus(200);
   });
 });
 
@@ -108,42 +127,6 @@ app.post('/api/addpost', (req: express.Request, res: express.Response) => {
   });
 });
 
-// app.get('/api/posts/myPosts', (req: express.Request, res: express.Response) => {
-//   const userName = req.headers.user;
-//   if (userName) {
-//     connection.query('SELECT * FROM posts WHERE isDeleted = 0 and owner= ?', userName, (err: Error, result) => {
-//       if (err) {
-//         res.sendStatus(400);
-//         return console.error(err);
-//       }
-//       const body: ISendData[] = result;
-//       res.status(200).send(body);
-//     });
-//   } else {
-//     res.sendStatus(400);
-//   }
-// });
-// //Post
-// app.post('/api/posts', (req: express.Request, res: express.Response) => {
-//   const userName: string = req.headers.user as string;
-//   const newData: IPostData = req.body;
-//   const newPost: NewPost = createNewPost(newData, userName);
-//   connection.query('INSERT INTO posts SET ?;', newPost, (err: Error, result) => {
-//     if (err) {
-//       res.sendStatus(400);
-//       return console.error(err);
-//     }
-//     const newId: number = result.insertId;
-//     connection.query('SELECT * FROM posts WHERE id = ?', newId, (err: Error, result) => {
-//       if (err) {
-//         res.sendStatus(400);
-//         return console.error(err);
-//       }
-//       const post: ISendData = result[0];
-//       res.status(200).send(post);
-//     });
-//   });
-// });
 // //Upvote
 // app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) => {
 //   const postID = req.params.id;
@@ -323,25 +306,6 @@ app.post('/api/addpost', (req: express.Request, res: express.Response) => {
 //     }
 //     if (result.affectedRows === 0) return res.sendStatus(400);
 //     connection.query('SELECT * FROM posts WHERE id = ?', postID, (err: Error, result) => {
-//       if (err) {
-//         res.sendStatus(400);
-//         return console.error(err);
-//       }
-//       const post: ISendData = result[0];
-//       res.status(200).send(post);
-//     });
-//   });
-// });
-// //Delete
-// app.delete('/api/posts/:id', (req: express.Request, res: express.Response) => {
-//   const idToDel: string = req.params.id;
-//   connection.query('UPDATE posts SET isDeleted = 1 WHERE id = ?', idToDel, (err: Error, result) => {
-//     if (err) {
-//       res.sendStatus(400);
-//       return console.error(err);
-//     }
-//     if (result.affectedRows === 0) return res.sendStatus(400);
-//     connection.query('SELECT * FROM posts WHERE id = ?', idToDel, (err: Error, result) => {
 //       if (err) {
 //         res.sendStatus(400);
 //         return console.error(err);
