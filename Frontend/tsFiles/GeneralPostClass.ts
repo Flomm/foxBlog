@@ -2,16 +2,16 @@ import Postable from './Postable';
 
 export default class GeneralPost {
   //input
-  private postInput: Postable;
+  protected postInput: Postable;
   //output
-  private postSlot: HTMLDivElement;
-  private postAuthor: HTMLDivElement;
-  private postDate: HTMLDivElement;
-  private postMisc: HTMLDivElement;
-  private postTitle: HTMLDivElement;
-  private postContent: HTMLDivElement;
-  private likeBar: HTMLDivElement;
-  private likeBarP: HTMLParagraphElement;
+  protected postSlot: HTMLDivElement;
+  protected postAuthor: HTMLDivElement;
+  protected postDate: HTMLDivElement;
+  protected postMisc: HTMLDivElement;
+  protected postTitle: HTMLDivElement;
+  protected postContent: HTMLDivElement;
+  protected likeBar: HTMLDivElement;
+  protected likeBarP: HTMLParagraphElement;
 
   constructor(postObject: Postable) {
     this.postInput = postObject;
