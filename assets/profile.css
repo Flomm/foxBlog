@@ -117,6 +117,116 @@ nav button:active {
   margin-bottom: 2%;
 }
 
+.posted-main {
+  border: rgb(7, 116, 61) solid;
+  border-width: 20px;
+  border-radius: 5px;
+  margin-top: 3%;
+  padding: 3%;
+  margin-left: 25%;
+  margin-right: 5%;
+  margin-bottom: 5%;
+}
+
+.posted-main h2 {
+  color: rgb(7, 116, 61);
+}
+
+.posted-slot {
+  border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
+  margin-bottom: 3%;
+  padding-bottom: 1%;
+  background-color: rgb(182, 235, 186);
+}
+
+.posted-title {
+  padding-left: 2%;
+  padding-right: 2%;
+  font-weight: bold;
+  font-size: 150%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  word-wrap: break-word;
+  display: flex;
+  justify-content: space-between;
+}
+
+.posted-content {
+  text-align: justify;
+  padding-left: 20px;
+  padding-right: 20px;
+  word-wrap: break-word;
+}
+
+.posted-misc {
+  margin: 2%;
+  margin-bottom: 1%;
+  font-weight: bolder;
+  color: rgb(7, 116, 61);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.likebar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.likebar p {
+  font-weight: bolder;
+  color: rgb(7, 116, 61);
+}
+
+.delete-btn {
+  position: relative;
+  outline: none;
+  border: none;
+  border-radius: 2px;
+  width: 30px;
+  height: 30px;
+  background-color: rgb(7, 116, 61);
+  color: #df2e1a;
+}
+
+.delete-btn:after {
+  z-index: 10;
+  display: none;
+  color: beige;
+  background-color: #df2e1a;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  top: 0;
+  right: 100%;
+  content: attr(data-action);
+  height: 30px;
+  width: 90px;
+}
+
+.delete-btn:hover:after {
+  display: flex;
+}
+
+.delete-btn:before {
+  z-index: 11;
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 100%;
+  content: '';
+  border: 5px solid transparent;
+  border-right-color: rgb(20, 19, 19);
+}
+
+.delete-btn:hover:before {
+  display: block;
+}
+
 footer {
   position: absolute;
   bottom: 0;

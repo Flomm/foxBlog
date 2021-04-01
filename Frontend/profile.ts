@@ -1,6 +1,7 @@
 const userName: string = window.localStorage.getItem('user');
 const welcomeMessage: HTMLElement = document.querySelector('.welcome');
 const accBtn: HTMLButtonElement = document.querySelector('.account-btn');
+const myPostsBtn: HTMLButtonElement = document.querySelector('.my-posts-btn');
 const logoutBtn: HTMLButtonElement = document.querySelector('.logout-btn');
 const main: HTMLDivElement = document.querySelector('.main');
 
@@ -8,6 +9,18 @@ welcomeMessage.textContent = `Hello ${userName}`;
 
 accBtn.addEventListener('click', () => {
   showAccData();
+});
+
+myPostsBtn.addEventListener('click', () => {
+  console.log('x');
+  main.innerHTML = '';
+  const postedMain: HTMLDivElement = document.createElement('div');
+  postedMain.classList.add('posted-main');
+  const h2: HTMLHeadingElement = document.createElement('h2');
+  h2.textContent = 'Posts';
+  postedMain.appendChild(h2);
+  main.appendChild(postedMain);
+  initialLoad();
 });
 
 logoutBtn.addEventListener('click', () => {
@@ -87,7 +100,134 @@ class AccInfoDiv {
   }
 }
 
+function initialPost(postObject: Postable): void {
+  const newPost: PersonalPost = new PersonalPost(postObject);
+  const postedMain = document.querySelector('.posted-main');
+  const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
+  postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+}
+
+function initialLoad(): void {
+  const newReq: XMLHttpRequest = new XMLHttpRequest();
+  newReq.onreadystatechange = () => {
+    if (newReq.readyState === 4 && newReq.status === 200) {
+      const posts = newReq.response;
+      const parsed: Postable[] = JSON.parse(posts);
+      for (let p of parsed) {
+        initialPost(p);
+      }
+    }
+  };
+  newReq.open('GET', '/api/posts/myPosts');
+  newReq.setRequestHeader('user', window.localStorage.getItem('user'));
+  newReq.send();
+}
+
 interface AccData {
   numOfPosts: string;
   sumScore: string;
+}
+
+class GeneralPost {
+  //input
+  private postInput: Postable;
+  //output
+  protected postSlot: HTMLDivElement;
+  protected postAuthor: HTMLDivElement;
+  protected postDate: HTMLDivElement;
+  protected postMisc: HTMLDivElement;
+  protected postTitle: HTMLDivElement;
+  protected postContent: HTMLDivElement;
+  protected likeBar: HTMLDivElement;
+  protected likeBarP: HTMLParagraphElement;
+
+  constructor(postObject: Postable) {
+    this.postInput = postObject;
+  }
+
+  createPostDivs(): void {
+    this.postSlot = document.createElement('div');
+    this.postAuthor = document.createElement('div');
+    this.postDate = document.createElement('div');
+    this.postMisc = document.createElement('div');
+    this.postTitle = document.createElement('div');
+    this.postContent = document.createElement('div');
+    this.likeBar = document.createElement('div');
+    this.likeBarP = document.createElement('p');
+  }
+
+  assignClasses(): void {
+    this.postTitle.classList.add('posted-title');
+    this.postAuthor.classList.add('posted-author');
+    this.postDate.classList.add('posted-date');
+    this.postMisc.classList.add('posted-misc');
+    this.postContent.classList.add('posted-content');
+    this.postSlot.classList.add('posted-slot');
+    this.likeBar.classList.add('likebar');
+  }
+
+  fillPost(): void {
+    this.postAuthor.textContent = `Posted by: ${this.postInput.author}`;
+    this.postDate.textContent = `On: ${new Date(this.postInput.timestamp * 1000).toLocaleString().split(',')[0]}`;
+    this.postTitle.textContent = this.postInput.title;
+    this.postContent.textContent = this.postInput.content;
+    this.likeBarP.textContent = `Score: ${this.postInput.score}`;
+  }
+
+  createStructure(): void {
+    this.postSlot.appendChild(this.postTitle);
+    this.postSlot.appendChild(this.postContent);
+    this.postMisc.appendChild(this.postAuthor);
+    this.postMisc.appendChild(this.postDate);
+    this.postSlot.appendChild(this.postMisc);
+    this.likeBar.appendChild(this.likeBarP);
+    this.postSlot.appendChild(this.likeBar);
+  }
+
+  makePost(): HTMLDivElement {
+    this.createPostDivs();
+    this.assignClasses();
+    this.fillPost();
+    this.createStructure();
+    return this.postSlot;
+  }
+}
+
+class PersonalPost extends GeneralPost {
+  constructor(postObject: Postable) {
+    super(postObject);
+  }
+
+  addDelBtn(): void {
+    const delBtn: HTMLButtonElement = document.createElement('button');
+    delBtn.classList.add('delete-btn');
+    const icon: HTMLElement = document.createElement('i');
+    icon.classList.add('fas');
+    icon.classList.add('fa-trash-alt');
+    delBtn.appendChild(icon);
+    delBtn.setAttribute('data-action', 'delete');
+    const newSpan: HTMLSpanElement = document.createElement('span');
+    newSpan.appendChild(delBtn);
+    this.postTitle.appendChild(newSpan);
+  }
+
+  makePost(): HTMLDivElement {
+    this.createPostDivs();
+    this.assignClasses();
+    this.fillPost();
+    this.createStructure();
+    this.addDelBtn();
+    return this.postSlot;
+  }
+}
+
+interface Postable {
+  id: number;
+  author: string;
+  title: string;
+  content: string;
+  timestamp: number;
+  score: number;
+  user?: string;
+  vote?: string;
 }

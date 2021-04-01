@@ -1,11 +1,36 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var userName = window.localStorage.getItem('user');
 var welcomeMessage = document.querySelector('.welcome');
 var accBtn = document.querySelector('.account-btn');
+var myPostsBtn = document.querySelector('.my-posts-btn');
 var logoutBtn = document.querySelector('.logout-btn');
 var main = document.querySelector('.main');
 welcomeMessage.textContent = "Hello " + userName;
 accBtn.addEventListener('click', function () {
     showAccData();
+});
+myPostsBtn.addEventListener('click', function () {
+    console.log('x');
+    main.innerHTML = '';
+    var postedMain = document.createElement('div');
+    postedMain.classList.add('posted-main');
+    var h2 = document.createElement('h2');
+    h2.textContent = 'Posts';
+    postedMain.appendChild(h2);
+    main.appendChild(postedMain);
+    initialLoad();
 });
 logoutBtn.addEventListener('click', function () {
     window.localStorage.setItem('user', '');
@@ -68,3 +93,100 @@ var AccInfoDiv = /** @class */ (function () {
     };
     return AccInfoDiv;
 }());
+function initialPost(postObject) {
+    var newPost = new PersonalPost(postObject);
+    var postedMain = document.querySelector('.posted-main');
+    var mainChilds = document.querySelectorAll('.posted-slot');
+    postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+}
+function initialLoad() {
+    var newReq = new XMLHttpRequest();
+    newReq.onreadystatechange = function () {
+        if (newReq.readyState === 4 && newReq.status === 200) {
+            var posts = newReq.response;
+            var parsed = JSON.parse(posts);
+            for (var _i = 0, parsed_1 = parsed; _i < parsed_1.length; _i++) {
+                var p = parsed_1[_i];
+                initialPost(p);
+            }
+        }
+    };
+    newReq.open('GET', '/api/posts/myPosts');
+    newReq.setRequestHeader('user', window.localStorage.getItem('user'));
+    newReq.send();
+}
+var GeneralPost = /** @class */ (function () {
+    function GeneralPost(postObject) {
+        this.postInput = postObject;
+    }
+    GeneralPost.prototype.createPostDivs = function () {
+        this.postSlot = document.createElement('div');
+        this.postAuthor = document.createElement('div');
+        this.postDate = document.createElement('div');
+        this.postMisc = document.createElement('div');
+        this.postTitle = document.createElement('div');
+        this.postContent = document.createElement('div');
+        this.likeBar = document.createElement('div');
+        this.likeBarP = document.createElement('p');
+    };
+    GeneralPost.prototype.assignClasses = function () {
+        this.postTitle.classList.add('posted-title');
+        this.postAuthor.classList.add('posted-author');
+        this.postDate.classList.add('posted-date');
+        this.postMisc.classList.add('posted-misc');
+        this.postContent.classList.add('posted-content');
+        this.postSlot.classList.add('posted-slot');
+        this.likeBar.classList.add('likebar');
+    };
+    GeneralPost.prototype.fillPost = function () {
+        this.postAuthor.textContent = "Posted by: " + this.postInput.author;
+        this.postDate.textContent = "On: " + new Date(this.postInput.timestamp * 1000).toLocaleString().split(',')[0];
+        this.postTitle.textContent = this.postInput.title;
+        this.postContent.textContent = this.postInput.content;
+        this.likeBarP.textContent = "Score: " + this.postInput.score;
+    };
+    GeneralPost.prototype.createStructure = function () {
+        this.postSlot.appendChild(this.postTitle);
+        this.postSlot.appendChild(this.postContent);
+        this.postMisc.appendChild(this.postAuthor);
+        this.postMisc.appendChild(this.postDate);
+        this.postSlot.appendChild(this.postMisc);
+        this.likeBar.appendChild(this.likeBarP);
+        this.postSlot.appendChild(this.likeBar);
+    };
+    GeneralPost.prototype.makePost = function () {
+        this.createPostDivs();
+        this.assignClasses();
+        this.fillPost();
+        this.createStructure();
+        return this.postSlot;
+    };
+    return GeneralPost;
+}());
+var PersonalPost = /** @class */ (function (_super) {
+    __extends(PersonalPost, _super);
+    function PersonalPost(postObject) {
+        return _super.call(this, postObject) || this;
+    }
+    PersonalPost.prototype.addDelBtn = function () {
+        var delBtn = document.createElement('button');
+        delBtn.classList.add('delete-btn');
+        var icon = document.createElement('i');
+        icon.classList.add('fas');
+        icon.classList.add('fa-trash-alt');
+        delBtn.appendChild(icon);
+        delBtn.setAttribute('data-action', 'delete');
+        var newSpan = document.createElement('span');
+        newSpan.appendChild(delBtn);
+        this.postTitle.appendChild(newSpan);
+    };
+    PersonalPost.prototype.makePost = function () {
+        this.createPostDivs();
+        this.assignClasses();
+        this.fillPost();
+        this.createStructure();
+        this.addDelBtn();
+        return this.postSlot;
+    };
+    return PersonalPost;
+}(GeneralPost));
