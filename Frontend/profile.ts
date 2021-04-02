@@ -444,6 +444,22 @@ class VotablePost extends GeneralPost {
   constructor(postObject: Postable) {
     super(postObject);
   }
+  boundVote = this.makeVote.bind(this);
+
+  makeVote(voteType: string) {
+    const xhr: XMLHttpRequest = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status !== 200) {
+        alert('Something went wrong, please try again.');
+      } else {
+        const newPost: Postable = JSON.parse(xhr.response)[0];
+        this.likeBarP.textContent = `Score: ${newPost.score}`;
+      }
+    };
+    xhr.open('PUT', `/api/posts/${this.postInput.id}/${voteType}`);
+    xhr.setRequestHeader('user', window.localStorage.getItem('user'));
+    xhr.send();
+  }
 
   addVoteButtons() {
     const downVoteBtn: HTMLButtonElement = document.createElement('button');
@@ -457,10 +473,10 @@ class VotablePost extends GeneralPost {
     downVoteBtn.appendChild(downIcon);
     upVoteBtn.appendChild(upIcon);
     downVoteBtn.addEventListener('click', () => {
-      console.log('x');
+      this.makeVote('downvote');
     });
     upVoteBtn.addEventListener('click', () => {
-      console.log('y');
+      this.makeVote('upvote');
     });
     this.likeBar.insertBefore(downVoteBtn, this.likeBar.firstElementChild);
     this.likeBar.appendChild(upVoteBtn);

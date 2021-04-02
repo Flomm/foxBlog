@@ -406,9 +406,28 @@ var PersonalPost = /** @class */ (function (_super) {
 var VotablePost = /** @class */ (function (_super) {
     __extends(VotablePost, _super);
     function VotablePost(postObject) {
-        return _super.call(this, postObject) || this;
+        var _this = _super.call(this, postObject) || this;
+        _this.boundVote = _this.makeVote.bind(_this);
+        return _this;
     }
+    VotablePost.prototype.makeVote = function (voteType) {
+        var _this = this;
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (xhr.status !== 200) {
+                alert('Something went wrong, please try again.');
+            }
+            else {
+                var newPost = JSON.parse(xhr.response)[0];
+                _this.likeBarP.textContent = "Score: " + newPost.score;
+            }
+        };
+        xhr.open('PUT', "/api/posts/" + this.postInput.id + "/" + voteType);
+        xhr.setRequestHeader('user', window.localStorage.getItem('user'));
+        xhr.send();
+    };
     VotablePost.prototype.addVoteButtons = function () {
+        var _this = this;
         var downVoteBtn = document.createElement('button');
         var upVoteBtn = document.createElement('button');
         var downIcon = document.createElement('icon');
@@ -420,10 +439,10 @@ var VotablePost = /** @class */ (function (_super) {
         downVoteBtn.appendChild(downIcon);
         upVoteBtn.appendChild(upIcon);
         downVoteBtn.addEventListener('click', function () {
-            console.log('x');
+            _this.makeVote('downvote');
         });
         upVoteBtn.addEventListener('click', function () {
-            console.log('y');
+            _this.makeVote('upvote');
         });
         this.likeBar.insertBefore(downVoteBtn, this.likeBar.firstElementChild);
         this.likeBar.appendChild(upVoteBtn);

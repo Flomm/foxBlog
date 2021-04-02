@@ -37,7 +37,7 @@ button {
 }
 
 .submit-main {
-  padding-top: 60px;
+  padding-top: 10%;
   padding-left: 10%;
   padding-right: 10%;
 }
@@ -137,6 +137,7 @@ textarea {
   margin-top: 3%;
   padding-left: 10%;
   padding-right: 10%;
+  padding-top: 5%;
 }
 
 .posted-main h2 {
@@ -154,11 +155,59 @@ textarea {
 
 .posted-title {
   padding-left: 2%;
+  padding-right: 2%;
   font-weight: bold;
   font-size: 150%;
   margin-top: 1%;
   margin-bottom: 1%;
   word-wrap: break-word;
+  display: flex;
+  justify-content: space-between;
+}
+.delete-btn {
+  position: relative;
+  outline: none;
+  border: none;
+  border-radius: 2px;
+  width: 30px;
+  height: 30px;
+  background-color: rgb(7, 116, 61);
+  color: #df2e1a;
+}
+
+.delete-btn:after {
+  z-index: 10;
+  display: none;
+  color: beige;
+  background-color: #df2e1a;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  top: 0;
+  right: 100%;
+  content: attr(data-action);
+  height: 30px;
+  width: 90px;
+}
+
+.delete-btn:hover:after {
+  display: flex;
+}
+
+.delete-btn:before {
+  z-index: 11;
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 100%;
+  content: '';
+  border: 5px solid transparent;
+  border-right-color: rgb(20, 19, 19);
+}
+
+.delete-btn:hover:before {
+  display: block;
 }
 
 .posted-content {

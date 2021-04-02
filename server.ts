@@ -1,5 +1,7 @@
 import Postable from './Backend/Postable';
 import AccData from './Backend/IAccData';
+import Vote from './Backend/IVote';
+import SetVoteScore from './Backend/ISetVoteScore';
 import * as express from 'express';
 import { connection } from './Backend/sqlConnect';
 import countScore from './Backend/countScore';
@@ -136,171 +138,179 @@ app.post('/api/addpost', (req: express.Request, res: express.Response) => {
   });
 });
 
-// //Upvote
-// app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) => {
-//   const postID = req.params.id;
-//   const userName: string = req.headers.user as string;
-//   connection.query(
-//     'SELECT * FROM VOTES WHERE CONCAT(post_id, user)= ?',
-//     `${postID}${userName}`,
-//     (err: Error, result) => {
-//       if (err) {
-//         res.sendStatus(400);
-//         return console.error(err);
-//       }
-//       if (!result[0]) {
-//         const newVote: NewVote = {
-//           post_id: parseInt(postID),
-//           user: userName,
-//           vote: 1,
-//         };
-//         connection.query(
-//           `INSERT INTO VOTES SET ?; UPDATE posts SET score = score + 1 WHERE id = ${postID}`,
-//           newVote,
-//           (err: Error, result) => {
-//             if (err) {
-//               res.status(400).send(err);
-//             }
-//             connection.query(
-//               `SELECT posts.id, title, url, timestamp, score, owner, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and isDeleted = 0`,
-//               postID,
-//               (err: Error, result) => {
-//                 if (err) {
-//                   res.status(400).send(err);
-//                   return;
-//                 }
-//                 const response: ISendData = result;
-//                 res.status(200).json(response);
-//               }
-//             );
-//           }
-//         );
-//       } else {
-//         const vote: number = result[0].vote;
-//         let setVote: SetVoteScore;
-//         if (vote === 1) {
-//           setVote = {
-//             setVote: 0,
-//             setScore: -1,
-//           };
-//         } else if (vote === 0) {
-//           setVote = {
-//             setVote: 1,
-//             setScore: 1,
-//           };
-//         } else if (vote === -1) {
-//           setVote = {
-//             setVote: 1,
-//             setScore: 2,
-//           };
-//         }
-//         connection.query(
-//           `UPDATE votes SET vote = ${setVote.setVote} WHERE CONCAT(post_id, user)= ?; UPDATE posts SET score = score + ${setVote.setScore} WHERE id = ${postID}`,
-//           `${postID}${userName}`,
-//           (err: Error, result) => {
-//             if (err) {
-//               res.status(400).send(err);
-//               return;
-//             }
-//             connection.query(
-//               `SELECT posts.id, title, url, timestamp, score, owner, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and isDeleted = 0`,
-//               postID,
-//               (err: Error, result) => {
-//                 if (err) {
-//                   res.status(400).send(err);
-//                   return;
-//                 }
-//                 const response: ISendData = result;
-//                 res.status(200).json(response);
-//               }
-//             );
-//           }
-//         );
-//       }
-//     }
-//   );
-// });
+//Upvote
+app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) => {
+  const postID = req.params.id;
+  const userName: string = req.headers.user as string;
+  connection.query(
+    'SELECT * FROM VOTES WHERE CONCAT(post_id, user)= ?',
+    `${postID}${userName}`,
+    (err: Error, result) => {
+      if (err) {
+        res.sendStatus(400);
+        return console.error(err);
+      }
+      if (!result[0]) {
+        const newVote: Vote = {
+          post_id: parseInt(postID),
+          user: userName,
+          vote: 1,
+        };
+        connection.query(
+          `INSERT INTO VOTES SET ?; UPDATE posts SET score = score + 1 WHERE id = ${postID}`,
+          newVote,
+          (err: Error, result) => {
+            if (err) {
+              res.status(400).send(err);
+              console.log(err);
+              return;
+            }
+            connection.query(
+              `SELECT  posts.id, title, content, timestamp, score, author, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and is_deleted = 0`,
+              postID,
+              (err: Error, result) => {
+                if (err) {
+                  res.status(400).send(err);
+                  console.log('error3');
+                  return;
+                }
+                const response: Postable = result;
+                res.status(200).json(response);
+                console.log('error4');
+                return;
+              }
+            );
+          }
+        );
+      } else {
+        const vote: number = result[0].vote;
+        let setVote: SetVoteScore;
+        if (vote === 1) {
+          setVote = {
+            setVote: 0,
+            setScore: -1,
+          };
+        } else if (vote === 0) {
+          setVote = {
+            setVote: 1,
+            setScore: 1,
+          };
+        } else if (vote === -1) {
+          setVote = {
+            setVote: 1,
+            setScore: 2,
+          };
+        }
+        connection.query(
+          `UPDATE votes SET vote = ${setVote.setVote} WHERE CONCAT(post_id, user)= ?; UPDATE posts SET score = score + ${setVote.setScore} WHERE id = ${postID}`,
+          `${postID}${userName}`,
+          (err: Error, result) => {
+            if (err) {
+              res.status(400).send(err);
+              console.log('error5');
+              return;
+            }
+            connection.query(
+              `SELECT  posts.id, title, content, timestamp, score, author, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and is_deleted = 0`,
+              postID,
+              (err: Error, result) => {
+                if (err) {
+                  res.status(400).send(err);
+                  console.log('error6');
+                  return;
+                }
+                const response: Postable = result;
+                res.status(200).json(response);
+                console.log('error7');
+              }
+            );
+          }
+        );
+      }
+    }
+  );
+});
 
-// app.put('/api/posts/:id/downvote', (req: express.Request, res: express.Response) => {
-//   const postID = req.params.id;
-//   const userName: string = req.headers.user as string;
-//   connection.query(
-//     'SELECT * FROM VOTES WHERE CONCAT(post_id, user)= ?',
-//     `${postID}${userName}`,
-//     (err: Error, result) => {
-//       if (err) {
-//         res.sendStatus(400);
-//         return console.error(err);
-//       }
-//       if (!result[0]) {
-//         const newVote: NewVote = {
-//           post_id: parseInt(postID),
-//           user: userName,
-//           vote: -1,
-//         };
-//         connection.query(
-//           `INSERT INTO VOTES SET ?; UPDATE posts SET score = score - 1 WHERE id = ${postID}`,
-//           newVote,
-//           (err: Error, result) => {
-//             if (err) {
-//               res.status(400).send(err);
-//             }
-//             connection.query(
-//               `SELECT posts.id, title, url, timestamp, score, owner, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and isDeleted = 0`,
-//               postID,
-//               (err: Error, result) => {
-//                 if (err) {
-//                   res.status(400).send(err);
-//                   return;
-//                 }
-//                 const response: ISendData = result;
-//                 res.status(200).json(response);
-//               }
-//             );
-//           }
-//         );
-//       } else {
-//         const vote: number = result[0].vote;
-//         let setVote: SetVoteScore;
-//         if (vote === 1) {
-//           setVote = {
-//             setVote: 0,
-//             setScore: -1,
-//           };
-//         } else if (vote === 0) {
-//           setVote = {
-//             setVote: -1,
-//             setScore: -1,
-//           };
-//         } else if (vote === -1) {
-//           setVote = {
-//             setVote: 0,
-//             setScore: 1,
-//           };
-//         }
-//         connection.query(
-//           `UPDATE votes SET vote = ${setVote.setVote} WHERE CONCAT(post_id, user)= ?; UPDATE posts SET score = score + ${setVote.setScore} WHERE id = ${postID}`,
-//           `${postID}${userName}`,
-//           (err: Error, result) => {
-//             if (err) {
-//               res.status(400).send(err);
-//               return;
-//             }
-//             connection.query(
-//               `SELECT posts.id, title, url, timestamp, score, owner, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and isDeleted = 0`,
-//               postID,
-//               (err: Error, result) => {
-//                 if (err) {
-//                   res.status(400).send(err);
-//                   return;
-//                 }
-//                 const response: ISendData = result;
-//                 res.status(200).json(response);
-//               }
-//             );
-//           }
-//         );
-//       }
-//     }
-//   );
-// });
+app.put('/api/posts/:id/downvote', (req: express.Request, res: express.Response) => {
+  const postID = req.params.id;
+  const userName: string = req.headers.user as string;
+  connection.query(
+    'SELECT * FROM VOTES WHERE CONCAT(post_id, user)= ?',
+    `${postID}${userName}`,
+    (err: Error, result) => {
+      if (err) {
+        res.sendStatus(400);
+        return console.error(err);
+      }
+      if (!result[0]) {
+        const newVote: Vote = {
+          post_id: parseInt(postID),
+          user: userName,
+          vote: -1,
+        };
+        connection.query(
+          `INSERT INTO VOTES SET ?; UPDATE posts SET score = score - 1 WHERE id = ${postID}`,
+          newVote,
+          (err: Error, result) => {
+            if (err) {
+              res.status(400).send(err);
+            }
+            connection.query(
+              `SELECT  posts.id, title, content, timestamp, score, author, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and is_deleted = 0`,
+              postID,
+              (err: Error, result) => {
+                if (err) {
+                  res.status(400).send(err);
+                  return;
+                }
+                const response: Postable = result;
+                res.status(200).json(response);
+              }
+            );
+          }
+        );
+      } else {
+        const vote: number = result[0].vote;
+        let setVote: SetVoteScore;
+        if (vote === 1) {
+          setVote = {
+            setVote: 0,
+            setScore: -1,
+          };
+        } else if (vote === 0) {
+          setVote = {
+            setVote: -1,
+            setScore: -1,
+          };
+        } else if (vote === -1) {
+          setVote = {
+            setVote: 0,
+            setScore: 1,
+          };
+        }
+        connection.query(
+          `UPDATE votes SET vote = ${setVote.setVote} WHERE CONCAT(post_id, user)= ?; UPDATE posts SET score = score + ${setVote.setScore} WHERE id = ${postID}`,
+          `${postID}${userName}`,
+          (err: Error, result) => {
+            if (err) {
+              res.status(400).send(err);
+              return;
+            }
+            connection.query(
+              `SELECT  posts.id, title, content, timestamp, score, author, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and is_deleted = 0`,
+              postID,
+              (err: Error, result) => {
+                if (err) {
+                  res.status(400).send(err);
+                  return;
+                }
+                const response: Postable = result;
+                res.status(200).json(response);
+              }
+            );
+          }
+        );
+      }
+    }
+  );
+});
