@@ -123,7 +123,16 @@ app.post('/api/addpost', (req: express.Request, res: express.Response) => {
       res.status(404).send();
       return console.error(err);
     }
-    res.status(202).send();
+    const newId: number = result.insertId;
+    connection.query('SELECT * FROM posts WHERE id=?;', newId, (err: Error, result) => {
+      if (err) {
+        res.status(404).send();
+        return console.error(err);
+      }
+      const newPost: Postable = result[0];
+      console.log(newPost);
+      res.status(202).send(newPost);
+    });
   });
 });
 
@@ -294,24 +303,4 @@ app.post('/api/addpost', (req: express.Request, res: express.Response) => {
 //       }
 //     }
 //   );
-// });
-// //Update title
-// app.put('/api/posts/:id', (req: express.Request, res: express.Response) => {
-//   const postID: string = req.params.id;
-//   const rbody: IPostData = req.body;
-//   connection.query(`UPDATE posts SET title = '${rbody.title}' WHERE id = ?`, postID, (err: Error, result) => {
-//     if (err) {
-//       res.sendStatus(400);
-//       return console.error(err);
-//     }
-//     if (result.affectedRows === 0) return res.sendStatus(400);
-//     connection.query('SELECT * FROM posts WHERE id = ?', postID, (err: Error, result) => {
-//       if (err) {
-//         res.sendStatus(400);
-//         return console.error(err);
-//       }
-//       const post: ISendData = result[0];
-//       res.status(200).send(post);
-//     });
-//   });
 // });

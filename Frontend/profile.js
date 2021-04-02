@@ -15,15 +15,22 @@ var userName = window.localStorage.getItem('user');
 var welcomeMessage = document.querySelector('.welcome');
 var accBtn = document.querySelector('.account-btn');
 var myPostsBtn = document.querySelector('.my-posts-btn');
+var addBtn = document.querySelector('.add-btn');
 var logoutBtn = document.querySelector('.logout-btn');
 var main = document.querySelector('.main');
 welcomeMessage.textContent = "Hello " + userName;
 accBtn.addEventListener('click', function () {
+    main.innerHTML = '';
     showAccData();
 });
 myPostsBtn.addEventListener('click', function () {
     main.innerHTML = '';
-    loadPosts();
+    loadPosts('myPosts', true);
+});
+addBtn.addEventListener('click', function () {
+    main.innerHTML = '';
+    addPostForm();
+    loadPosts('', false);
 });
 logoutBtn.addEventListener('click', function () {
     window.localStorage.setItem('user', '');
@@ -32,7 +39,6 @@ logoutBtn.addEventListener('click', function () {
 //Account data
 function showAccData() {
     var userName = window.localStorage.getItem('user');
-    main.innerHTML = '';
     var dataDiv = document.createElement('div');
     dataDiv.classList.add('data');
     var xhr = new XMLHttpRequest();
@@ -86,13 +92,19 @@ var AccInfoDiv = /** @class */ (function () {
     };
     return AccInfoDiv;
 }());
-function initiatePost(postObject) {
-    var newPost = new PersonalPost(postObject);
+function initiatePost(postObject, isMy) {
     var postedMain = document.querySelector('.posted-main');
     var mainChilds = document.querySelectorAll('.posted-slot');
-    postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+    if (isMy) {
+        var newPost = new PersonalPost(postObject);
+        postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+    }
+    else {
+        var newPost = new VotablePost(postObject);
+        postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+    }
 }
-function loadPosts() {
+function loadPosts(endP, isMy) {
     var newReq = new XMLHttpRequest();
     newReq.onload = function () {
         if (newReq.status === 204) {
@@ -103,20 +115,25 @@ function loadPosts() {
             var postedMain = document.createElement('div');
             postedMain.classList.add('posted-main');
             var h2 = document.createElement('h2');
-            h2.textContent = 'Posts';
+            if (isMy) {
+                h2.textContent = 'My posts';
+            }
+            else {
+                h2.textContent = 'Posts';
+            }
             postedMain.appendChild(h2);
             main.appendChild(postedMain);
             var posts = newReq.response;
             var parsed = JSON.parse(posts);
             for (var _i = 0, parsed_1 = parsed; _i < parsed_1.length; _i++) {
                 var p = parsed_1[_i];
-                initiatePost(p);
+                initiatePost(p, isMy);
             }
             return;
         }
         createSuccessDiv('There was a problem with the server. Please try again later.');
     };
-    newReq.open('GET', '/api/posts/myPosts');
+    newReq.open('GET', "/api/posts/" + endP);
     newReq.setRequestHeader('user', window.localStorage.getItem('user'));
     newReq.send();
 }
@@ -125,6 +142,143 @@ function createSuccessDiv(txt) {
     notSuccesDiv.textContent = txt;
     notSuccesDiv.classList.add('data');
     document.querySelector('.main').appendChild(notSuccesDiv);
+}
+function addPostForm() {
+    var main = document.querySelector('.main');
+    var submitMain = document.createElement('div');
+    submitMain.classList.add('submit-main');
+    var titleSpan = document.createElement('span');
+    titleSpan.textContent = 'Add new fox!';
+    submitMain.appendChild(titleSpan);
+    var addForm = document.createElement('form');
+    addForm.setAttribute('id', 'post-form');
+    //Label 1
+    var labelSlot1 = document.createElement('div');
+    labelSlot1.classList.add('label-slot');
+    labelSlot1.setAttribute('err-text', ' Please add a title');
+    var titleLabel = document.createElement('label');
+    titleLabel.setAttribute('for', 'title-post');
+    titleLabel.textContent = 'Title';
+    labelSlot1.appendChild(titleLabel);
+    var titleInpHolder = document.createElement('div');
+    titleInpHolder.classList.add('text-area');
+    var titleInput = document.createElement('input');
+    titleInput.setAttribute('type', 'text');
+    titleInput.setAttribute('name', 'title-post');
+    titleInput.setAttribute('maxlength', '25');
+    titleInput.setAttribute('size', '25');
+    titleInput.setAttribute('placeholder', 'The name of your favourite fox');
+    titleInpHolder.appendChild(titleInput);
+    // labelSlot1.appendChild(titleInpHolder);
+    //Input2
+    var labelSlot2 = document.createElement('div');
+    labelSlot2.classList.add('label-slot');
+    labelSlot2.setAttribute('err-text', ' Please add content');
+    var contentLabel = document.createElement('label');
+    contentLabel.setAttribute('for', 'content-post');
+    contentLabel.textContent = 'Content';
+    labelSlot2.appendChild(contentLabel);
+    var contentInpHolder = document.createElement('div');
+    contentInpHolder.classList.add('text-area');
+    var contentInput = document.createElement('textarea');
+    contentInput.setAttribute('type', 'text');
+    contentInput.setAttribute('name', 'content-post');
+    contentInput.setAttribute('maxlength', '1500');
+    contentInput.setAttribute('rows', '10');
+    contentInput.setAttribute('cols', '30');
+    contentInput.setAttribute('placeholder', 'Write something about your favourite fox');
+    contentInpHolder.appendChild(contentInput);
+    // labelSlot2.appendChild(contentInpHolder);
+    addForm.appendChild(labelSlot1);
+    addForm.appendChild(titleInpHolder);
+    addForm.appendChild(labelSlot2);
+    addForm.appendChild(contentInpHolder);
+    addForm.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var inputFields = Array.from(addForm.querySelectorAll('input, textarea'));
+        postBlog(inputFields);
+    });
+    submitMain.appendChild(addForm);
+    //BTN
+    var btnHolder = document.createElement('div');
+    btnHolder.classList.add('button-holder');
+    var submitBtn = document.createElement('button');
+    submitBtn.classList.add('button-submit');
+    submitBtn.setAttribute('type', 'submit');
+    submitBtn.setAttribute('form', 'post-form');
+    submitBtn.textContent = 'Submit fox';
+    btnHolder.appendChild(submitBtn);
+    submitMain.appendChild(btnHolder);
+    main.appendChild(submitMain);
+}
+function toggleErr(input) {
+    input.parentElement.classList.toggle('err');
+    var labelEl = document.querySelector("label[for=" + input.name + "]");
+    labelEl.parentElement.classList.toggle('err');
+}
+function scrollToPost(post) {
+    var headerHeight = 50;
+    var screenHalf = window.screen.height / 2;
+    var y = post.getBoundingClientRect().top + window.scrollY - headerHeight - screenHalf;
+    window.scroll({
+        top: y,
+        behavior: 'smooth'
+    });
+}
+function frontEndInsert(newPostInput) {
+    var newPost = new VotablePost(newPostInput);
+    var postedMain = document.querySelector('.posted-main');
+    var mainChilds = document.querySelectorAll('.posted-slot');
+    var newPostSlot = newPost.makePost();
+    postedMain.insertBefore(newPostSlot, mainChilds[0]);
+    scrollToPost(newPostSlot);
+}
+function sendPostToServer(postObject) {
+    var postReq = new XMLHttpRequest();
+    postReq.open('POST', '/api/addpost', true);
+    postReq.setRequestHeader('Content-Type', 'application/json');
+    postReq.send(JSON.stringify(postObject));
+    postReq.onload = function () {
+        if (postReq.status !== 202) {
+            alert('There was an problem, please try again.');
+        }
+        var newPost = JSON.parse(postReq.response);
+        console.log(newPost);
+        frontEndInsert(newPost);
+    };
+}
+function postBlog(inputs) {
+    var emptyField = [];
+    inputs.forEach(function (input) {
+        if (input.parentElement.classList.contains('err')) {
+            toggleErr(input);
+        }
+        if (input.value === '') {
+            emptyField.push(input);
+        }
+    });
+    if (emptyField.length !== 0) {
+        emptyField.forEach(function (input) {
+            if (!input.parentElement.classList.contains('err')) {
+                toggleErr(input);
+            }
+        });
+    }
+    else {
+        var newPostInput = {
+            author: window.localStorage.getItem('user'),
+            title: inputs[0].value,
+            content: inputs[1].value,
+            timestamp: Math.floor(new Date().getTime() / 1000)
+        };
+        sendPostToServer(newPostInput);
+        inputs.forEach(function (input) {
+            input.value = '';
+            if (input.parentElement.classList.contains('err')) {
+                toggleErr(input);
+            }
+        });
+    }
 }
 var GeneralPost = /** @class */ (function () {
     function GeneralPost(postObject) {
@@ -219,7 +373,7 @@ var PersonalPost = /** @class */ (function (_super) {
             }
             else {
                 document.querySelector('.main').innerHTML = '';
-                loadPosts();
+                loadPosts('myPosts', true);
             }
         };
         xhr.open('DELETE', "/api/posts/" + this.postInput.id);
@@ -248,4 +402,39 @@ var PersonalPost = /** @class */ (function (_super) {
         return this.postSlot;
     };
     return PersonalPost;
+}(GeneralPost));
+var VotablePost = /** @class */ (function (_super) {
+    __extends(VotablePost, _super);
+    function VotablePost(postObject) {
+        return _super.call(this, postObject) || this;
+    }
+    VotablePost.prototype.addVoteButtons = function () {
+        var downVoteBtn = document.createElement('button');
+        var upVoteBtn = document.createElement('button');
+        var downIcon = document.createElement('icon');
+        downIcon.classList.add('fas');
+        downIcon.classList.add('fa-arrow-down');
+        var upIcon = document.createElement('icon');
+        upIcon.classList.add('fas');
+        upIcon.classList.add('fa-arrow-up');
+        downVoteBtn.appendChild(downIcon);
+        upVoteBtn.appendChild(upIcon);
+        downVoteBtn.addEventListener('click', function () {
+            console.log('x');
+        });
+        upVoteBtn.addEventListener('click', function () {
+            console.log('y');
+        });
+        this.likeBar.insertBefore(downVoteBtn, this.likeBar.firstElementChild);
+        this.likeBar.appendChild(upVoteBtn);
+    };
+    VotablePost.prototype.makePost = function () {
+        this.createPostDivs();
+        this.assignClasses();
+        this.fillPost();
+        this.createStructure();
+        this.addVoteButtons();
+        return this.postSlot;
+    };
+    return VotablePost;
 }(GeneralPost));

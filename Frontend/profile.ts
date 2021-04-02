@@ -2,18 +2,26 @@ const userName: string = window.localStorage.getItem('user');
 const welcomeMessage: HTMLElement = document.querySelector('.welcome');
 const accBtn: HTMLButtonElement = document.querySelector('.account-btn');
 const myPostsBtn: HTMLButtonElement = document.querySelector('.my-posts-btn');
+const addBtn: HTMLButtonElement = document.querySelector('.add-btn');
 const logoutBtn: HTMLButtonElement = document.querySelector('.logout-btn');
 const main: HTMLDivElement = document.querySelector('.main');
 
 welcomeMessage.textContent = `Hello ${userName}`;
 
 accBtn.addEventListener('click', () => {
+  main.innerHTML = '';
   showAccData();
 });
 
 myPostsBtn.addEventListener('click', () => {
   main.innerHTML = '';
-  loadPosts();
+  loadPosts('myPosts', true);
+});
+
+addBtn.addEventListener('click', () => {
+  main.innerHTML = '';
+  addPostForm();
+  loadPosts('', false);
 });
 
 logoutBtn.addEventListener('click', () => {
@@ -24,7 +32,6 @@ logoutBtn.addEventListener('click', () => {
 //Account data
 function showAccData(): void {
   const userName: string = window.localStorage.getItem('user');
-  main.innerHTML = '';
   const dataDiv: HTMLDivElement = document.createElement('div');
   dataDiv.classList.add('data');
   const xhr: XMLHttpRequest = new XMLHttpRequest();
@@ -93,14 +100,19 @@ class AccInfoDiv {
   }
 }
 
-function initiatePost(postObject: Postable): void {
-  const newPost: PersonalPost = new PersonalPost(postObject);
+function initiatePost(postObject: Postable, isMy: boolean): void {
   const postedMain = document.querySelector('.posted-main');
   const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
-  postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+  if (isMy) {
+    const newPost: PersonalPost = new PersonalPost(postObject);
+    postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+  } else {
+    const newPost: VotablePost = new VotablePost(postObject);
+    postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+  }
 }
 
-function loadPosts(): void {
+function loadPosts(endP: string, isMy: boolean): void {
   const newReq: XMLHttpRequest = new XMLHttpRequest();
   newReq.onload = () => {
     if (newReq.status === 204) {
@@ -111,19 +123,23 @@ function loadPosts(): void {
       const postedMain: HTMLDivElement = document.createElement('div');
       postedMain.classList.add('posted-main');
       const h2: HTMLHeadingElement = document.createElement('h2');
-      h2.textContent = 'Posts';
+      if (isMy) {
+        h2.textContent = 'My posts';
+      } else {
+        h2.textContent = 'Posts';
+      }
       postedMain.appendChild(h2);
       main.appendChild(postedMain);
       const posts = newReq.response;
       const parsed: Postable[] = JSON.parse(posts);
       for (let p of parsed) {
-        initiatePost(p);
+        initiatePost(p, isMy);
       }
       return;
     }
     createSuccessDiv('There was a problem with the server. Please try again later.');
   };
-  newReq.open('GET', '/api/posts/myPosts');
+  newReq.open('GET', `/api/posts/${endP}`);
   newReq.setRequestHeader('user', window.localStorage.getItem('user'));
   newReq.send();
 }
@@ -138,6 +154,150 @@ function createSuccessDiv(txt: string): void {
 interface AccData {
   numOfPosts: string;
   sumScore: string;
+}
+
+function addPostForm() {
+  const main: HTMLDivElement = document.querySelector('.main');
+  const submitMain: HTMLDivElement = document.createElement('div');
+  submitMain.classList.add('submit-main');
+  const titleSpan: HTMLSpanElement = document.createElement('span');
+  titleSpan.textContent = 'Add new fox!';
+  submitMain.appendChild(titleSpan);
+  const addForm: HTMLFormElement = document.createElement('form');
+  addForm.setAttribute('id', 'post-form');
+  //Label 1
+  const labelSlot1: HTMLDivElement = document.createElement('div');
+  labelSlot1.classList.add('label-slot');
+  labelSlot1.setAttribute('err-text', ' Please add a title');
+  const titleLabel: HTMLLabelElement = document.createElement('label');
+  titleLabel.setAttribute('for', 'title-post');
+  titleLabel.textContent = 'Title';
+  labelSlot1.appendChild(titleLabel);
+  const titleInpHolder: HTMLDivElement = document.createElement('div');
+  titleInpHolder.classList.add('text-area');
+  const titleInput: HTMLInputElement = document.createElement('input');
+  titleInput.setAttribute('type', 'text');
+  titleInput.setAttribute('name', 'title-post');
+  titleInput.setAttribute('maxlength', '25');
+  titleInput.setAttribute('size', '25');
+  titleInput.setAttribute('placeholder', 'The name of your favourite fox');
+  titleInpHolder.appendChild(titleInput);
+  // labelSlot1.appendChild(titleInpHolder);
+  //Input2
+  const labelSlot2: HTMLDivElement = document.createElement('div');
+  labelSlot2.classList.add('label-slot');
+  labelSlot2.setAttribute('err-text', ' Please add content');
+  const contentLabel: HTMLLabelElement = document.createElement('label');
+  contentLabel.setAttribute('for', 'content-post');
+  contentLabel.textContent = 'Content';
+  labelSlot2.appendChild(contentLabel);
+  const contentInpHolder: HTMLDivElement = document.createElement('div');
+  contentInpHolder.classList.add('text-area');
+  const contentInput: HTMLTextAreaElement = document.createElement('textarea');
+  contentInput.setAttribute('type', 'text');
+  contentInput.setAttribute('name', 'content-post');
+  contentInput.setAttribute('maxlength', '1500');
+  contentInput.setAttribute('rows', '10');
+  contentInput.setAttribute('cols', '30');
+  contentInput.setAttribute('placeholder', 'Write something about your favourite fox');
+  contentInpHolder.appendChild(contentInput);
+  // labelSlot2.appendChild(contentInpHolder);
+  addForm.appendChild(labelSlot1);
+  addForm.appendChild(titleInpHolder);
+  addForm.appendChild(labelSlot2);
+  addForm.appendChild(contentInpHolder);
+  addForm.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const inputFields: HTMLInputElement[] = Array.from(
+      addForm.querySelectorAll('input, textarea')
+    ) as HTMLInputElement[];
+    postBlog(inputFields);
+  });
+  submitMain.appendChild(addForm);
+  //BTN
+  const btnHolder: HTMLDivElement = document.createElement('div');
+  btnHolder.classList.add('button-holder');
+  const submitBtn: HTMLButtonElement = document.createElement('button');
+  submitBtn.classList.add('button-submit');
+  submitBtn.setAttribute('type', 'submit');
+  submitBtn.setAttribute('form', 'post-form');
+  submitBtn.textContent = 'Submit fox';
+  btnHolder.appendChild(submitBtn);
+  submitMain.appendChild(btnHolder);
+  main.appendChild(submitMain);
+}
+
+function toggleErr(input: HTMLInputElement): void {
+  input.parentElement.classList.toggle('err');
+  const labelEl: HTMLLabelElement = document.querySelector(`label[for=${input.name}]`);
+  labelEl.parentElement.classList.toggle('err');
+}
+
+function scrollToPost(post: HTMLDivElement): void {
+  const headerHeight: number = 50;
+  const screenHalf: number = window.screen.height / 2;
+  const y: number = post.getBoundingClientRect().top + window.scrollY - headerHeight - screenHalf;
+  window.scroll({
+    top: y,
+    behavior: 'smooth',
+  });
+}
+
+function frontEndInsert(newPostInput: Postable) {
+  const newPost: VotablePost = new VotablePost(newPostInput);
+  const postedMain = document.querySelector('.posted-main');
+  const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
+  const newPostSlot: HTMLDivElement = newPost.makePost();
+  postedMain.insertBefore(newPostSlot, mainChilds[0]);
+  scrollToPost(newPostSlot);
+}
+
+function sendPostToServer(postObject: Sendable): void {
+  const postReq: XMLHttpRequest = new XMLHttpRequest();
+  postReq.open('POST', '/api/addpost', true);
+  postReq.setRequestHeader('Content-Type', 'application/json');
+  postReq.send(JSON.stringify(postObject));
+  postReq.onload = () => {
+    if (postReq.status !== 202) {
+      alert('There was an problem, please try again.');
+    }
+    const newPost: Postable = JSON.parse(postReq.response);
+    console.log(newPost);
+    frontEndInsert(newPost);
+  };
+}
+
+function postBlog(inputs: HTMLInputElement[]): void {
+  let emptyField: HTMLInputElement[] = [];
+  inputs.forEach((input) => {
+    if (input.parentElement.classList.contains('err')) {
+      toggleErr(input);
+    }
+    if (input.value === '') {
+      emptyField.push(input);
+    }
+  });
+  if (emptyField.length !== 0) {
+    emptyField.forEach((input) => {
+      if (!input.parentElement.classList.contains('err')) {
+        toggleErr(input);
+      }
+    });
+  } else {
+    const newPostInput: Sendable = {
+      author: window.localStorage.getItem('user'),
+      title: inputs[0].value,
+      content: inputs[1].value,
+      timestamp: Math.floor(new Date().getTime() / 1000),
+    };
+    sendPostToServer(newPostInput);
+    inputs.forEach((input) => {
+      input.value = '';
+      if (input.parentElement.classList.contains('err')) {
+        toggleErr(input);
+      }
+    });
+  }
 }
 
 class GeneralPost {
@@ -248,7 +408,7 @@ class PersonalPost extends GeneralPost {
         alert('Something went wrong, please try again.');
       } else {
         document.querySelector('.main').innerHTML = '';
-        loadPosts();
+        loadPosts('myPosts', true);
       }
     };
     xhr.open('DELETE', `/api/posts/${this.postInput.id}`);
@@ -280,6 +440,42 @@ class PersonalPost extends GeneralPost {
   }
 }
 
+class VotablePost extends GeneralPost {
+  constructor(postObject: Postable) {
+    super(postObject);
+  }
+
+  addVoteButtons() {
+    const downVoteBtn: HTMLButtonElement = document.createElement('button');
+    const upVoteBtn: HTMLButtonElement = document.createElement('button');
+    const downIcon: HTMLElement = document.createElement('icon');
+    downIcon.classList.add('fas');
+    downIcon.classList.add('fa-arrow-down');
+    const upIcon: HTMLElement = document.createElement('icon');
+    upIcon.classList.add('fas');
+    upIcon.classList.add('fa-arrow-up');
+    downVoteBtn.appendChild(downIcon);
+    upVoteBtn.appendChild(upIcon);
+    downVoteBtn.addEventListener('click', () => {
+      console.log('x');
+    });
+    upVoteBtn.addEventListener('click', () => {
+      console.log('y');
+    });
+    this.likeBar.insertBefore(downVoteBtn, this.likeBar.firstElementChild);
+    this.likeBar.appendChild(upVoteBtn);
+  }
+
+  makePost(): HTMLDivElement {
+    this.createPostDivs();
+    this.assignClasses();
+    this.fillPost();
+    this.createStructure();
+    this.addVoteButtons();
+    return this.postSlot;
+  }
+}
+
 interface Postable {
   id: number;
   author: string;
@@ -287,6 +483,15 @@ interface Postable {
   content: string;
   timestamp: number;
   score: number;
+  user?: string;
+  vote?: string;
+}
+
+interface Sendable {
+  author: string;
+  title: string;
+  content: string;
+  timestamp: number;
   user?: string;
   vote?: string;
 }
