@@ -97,6 +97,7 @@ function loadPosts() {
     newReq.onload = function () {
         if (newReq.status === 204) {
             createSuccessDiv('Currently you have no posts.');
+            return;
         }
         if (newReq.status === 200) {
             var postedMain = document.createElement('div');
@@ -111,10 +112,9 @@ function loadPosts() {
                 var p = parsed_1[_i];
                 initiatePost(p);
             }
+            return;
         }
-        else {
-            createSuccessDiv('There was a problem with the server. Please try again later.');
-        }
+        createSuccessDiv('There was a problem with the server. Please try again later.');
     };
     newReq.open('GET', '/api/posts/myPosts');
     newReq.setRequestHeader('user', window.localStorage.getItem('user'));
@@ -178,11 +178,40 @@ var PersonalPost = /** @class */ (function (_super) {
     __extends(PersonalPost, _super);
     function PersonalPost(postObject) {
         var _this = _super.call(this, postObject) || this;
-        _this.boundDelete = _this.deletePost.bind(_this);
+        _this.boundShowBox = _this.showConfirmBox.bind(_this);
         return _this;
     }
+    PersonalPost.prototype.showConfirmBox = function () {
+        var _this = this;
+        var wrapper = document.querySelector('wrapper');
+        var confirmBox = document.createElement('div');
+        confirmBox.classList.add('confirm-box');
+        var newP1 = document.createElement('p');
+        newP1.textContent = 'Are you sure you want to delete the post?';
+        var newP2 = document.createElement('p');
+        var yesBtn = document.createElement('button');
+        yesBtn.classList.add('yes-btn');
+        yesBtn.textContent = 'YES';
+        var noBtn = document.createElement('button');
+        yesBtn.classList.add('no-btn');
+        noBtn.textContent = 'NO';
+        newP2.appendChild(yesBtn);
+        newP2.appendChild(noBtn);
+        confirmBox.appendChild(newP1);
+        confirmBox.appendChild(newP2);
+        document.querySelector('body').insertBefore(confirmBox, wrapper);
+        wrapper.classList.add('shady');
+        yesBtn.addEventListener('click', function () {
+            document.querySelector('body').removeChild(confirmBox);
+            wrapper.classList.remove('shady');
+            _this.deletePost();
+        });
+        noBtn.addEventListener('click', function () {
+            document.querySelector('body').removeChild(confirmBox);
+            wrapper.classList.remove('shady');
+        });
+    };
     PersonalPost.prototype.deletePost = function () {
-        console.log(this.postInput);
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
             if (xhr.status !== 200) {
@@ -200,7 +229,7 @@ var PersonalPost = /** @class */ (function (_super) {
     PersonalPost.prototype.addDelBtn = function () {
         var delBtn = document.createElement('button');
         delBtn.classList.add('delete-btn');
-        delBtn.addEventListener('click', this.boundDelete);
+        delBtn.addEventListener('click', this.boundShowBox);
         var icon = document.createElement('i');
         icon.classList.add('fas');
         icon.classList.add('fa-trash-alt');

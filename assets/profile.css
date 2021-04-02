@@ -9,6 +9,50 @@ body {
   background-color: beige;
 }
 
+button {
+  font-family: 'Courier Prime', monospace;
+}
+
+.shady {
+  filter: brightness(75%);
+  pointer-events: none;
+}
+
+.confirm-box {
+  z-index: 15;
+  position: fixed;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  top: 40%;
+  left: 40%;
+  padding: 5%;
+  background-color: rgb(182, 235, 186);
+  color: rgb(7, 116, 61);
+}
+
+.confirm-box p:nth-child(2) {
+  display: flex;
+  justify-content: space-around;
+}
+
+.confirm-box button {
+  padding: 1%;
+  margin-top: 1%;
+  border-radius: 5px;
+  background-color: beige;
+  color: rgb(7, 116, 61);
+}
+
+.confirm-box button:hover {
+  background-color: rgb(7, 116, 61);
+  color: beige;
+}
+
+.confirm-box button:active {
+  opacity: 0.7;
+}
+
 header {
   z-index: 1;
   position: fixed;

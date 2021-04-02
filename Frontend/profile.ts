@@ -105,6 +105,7 @@ function loadPosts(): void {
   newReq.onload = () => {
     if (newReq.status === 204) {
       createSuccessDiv('Currently you have no posts.');
+      return;
     }
     if (newReq.status === 200) {
       const postedMain: HTMLDivElement = document.createElement('div');
@@ -118,9 +119,9 @@ function loadPosts(): void {
       for (let p of parsed) {
         initiatePost(p);
       }
-    } else {
-      createSuccessDiv('There was a problem with the server. Please try again later.');
+      return;
     }
+    createSuccessDiv('There was a problem with the server. Please try again later.');
   };
   newReq.open('GET', '/api/posts/myPosts');
   newReq.setRequestHeader('user', window.localStorage.getItem('user'));
@@ -208,10 +209,39 @@ class PersonalPost extends GeneralPost {
   constructor(postObject: Postable) {
     super(postObject);
   }
-  boundDelete = this.deletePost.bind(this);
+  boundShowBox = this.showConfirmBox.bind(this);
+
+  showConfirmBox() {
+    const wrapper: HTMLElement = document.querySelector('wrapper');
+    const confirmBox: HTMLDivElement = document.createElement('div');
+    confirmBox.classList.add('confirm-box');
+    const newP1: HTMLParagraphElement = document.createElement('p');
+    newP1.textContent = 'Are you sure you want to delete the post?';
+    const newP2: HTMLParagraphElement = document.createElement('p');
+    const yesBtn: HTMLButtonElement = document.createElement('button');
+    yesBtn.classList.add('yes-btn');
+    yesBtn.textContent = 'YES';
+    const noBtn: HTMLButtonElement = document.createElement('button');
+    yesBtn.classList.add('no-btn');
+    noBtn.textContent = 'NO';
+    newP2.appendChild(yesBtn);
+    newP2.appendChild(noBtn);
+    confirmBox.appendChild(newP1);
+    confirmBox.appendChild(newP2);
+    document.querySelector('body').insertBefore(confirmBox, wrapper);
+    wrapper.classList.add('shady');
+    yesBtn.addEventListener('click', () => {
+      document.querySelector('body').removeChild(confirmBox);
+      wrapper.classList.remove('shady');
+      this.deletePost();
+    });
+    noBtn.addEventListener('click', () => {
+      document.querySelector('body').removeChild(confirmBox);
+      wrapper.classList.remove('shady');
+    });
+  }
 
   deletePost(): void {
-    console.log(this.postInput);
     const xhr: XMLHttpRequest = new XMLHttpRequest();
     xhr.onload = () => {
       if (xhr.status !== 200) {
@@ -229,7 +259,7 @@ class PersonalPost extends GeneralPost {
   addDelBtn(): void {
     const delBtn: HTMLButtonElement = document.createElement('button');
     delBtn.classList.add('delete-btn');
-    delBtn.addEventListener('click', this.boundDelete);
+    delBtn.addEventListener('click', this.boundShowBox);
     const icon: HTMLElement = document.createElement('i');
     icon.classList.add('fas');
     icon.classList.add('fa-trash-alt');
