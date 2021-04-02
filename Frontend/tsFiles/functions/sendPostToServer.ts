@@ -1,6 +1,6 @@
-import Sendable from './Sendable';
-import Postable from './Postable';
-import frontEndInsert from './FrontEndInsert';
+import Sendable from '../Interfaces/ISendable';
+import Postable from '../Interfaces/IPostable';
+import frontEndInsert from './frontendInsert';
 
 export default function sendPostToServer(postObject: Sendable): void {
   const postReq: XMLHttpRequest = new XMLHttpRequest();
@@ -11,7 +11,8 @@ export default function sendPostToServer(postObject: Sendable): void {
     if (postReq.status !== 202) {
       alert('There was an problem, please try again.');
     }
-    const newPost: Postable = postReq.response.body;
+    const newPost: Postable = JSON.parse(postReq.response);
+    console.log(newPost);
     frontEndInsert(newPost);
   };
 }

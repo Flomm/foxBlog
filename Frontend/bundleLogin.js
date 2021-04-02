@@ -1,12 +1,15 @@
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+var checkLogin_1 = require("./tsFiles/functions/checkLogin");
 var form = document.querySelector('form');
 var checkBox = document.querySelector('.check');
-var loginInput = document.querySelector('form').elements[0];
 var pwInput = document.querySelector('form').elements[1];
 window.onload = function () {
     form.addEventListener('submit', function (event) {
         event.preventDefault();
         var inputs = Array.from(form.querySelectorAll('input:not(.check)'));
-        checkLogin(inputs);
+        checkLogin_1["default"](inputs);
     });
     window.addEventListener('keydown', function (e) {
         if (e.code === 'Enter')
@@ -21,7 +24,13 @@ window.onload = function () {
         }
     });
 };
+
+},{"./tsFiles/functions/checkLogin":2}],2:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
 function checkLogin(inputs) {
+    var loginInput = document.querySelector('form').elements[0];
+    var pwInput = document.querySelector('form').elements[1];
     var emptyField = [];
     inputs.forEach(function (input) {
         var labelEl = document.querySelector("label[for=" + input.name + "]");
@@ -67,3 +76,6 @@ function checkLogin(inputs) {
         };
     }
 }
+exports["default"] = checkLogin;
+
+},{}]},{},[1]);

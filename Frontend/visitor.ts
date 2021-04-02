@@ -1,4 +1,4 @@
-import initialLoad from './tsFiles/intitialLoad';
+import visitorPostLoad from './tsFiles/functions/visitorPostLoad';
 window.addEventListener('load', () => {
-  initialLoad();
+  visitorPostLoad();
 });

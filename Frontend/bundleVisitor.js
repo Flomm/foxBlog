@@ -54,14 +54,14 @@ exports["default"] = GeneralPost;
 },{}],2:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
-var GeneralPostClass_1 = require("./GeneralPostClass");
+var GeneralPost_1 = require("../Classes/GeneralPost");
 function initialPost(postObject) {
-    var newPost = new GeneralPostClass_1["default"](postObject);
+    var newPost = new GeneralPost_1["default"](postObject);
     var postedMain = document.querySelector('.posted-main');
     var mainChilds = document.querySelectorAll('.posted-slot');
     postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
 }
-function initialLoad() {
+function visitorPostLoad() {
     var newReq = new XMLHttpRequest();
     newReq.onreadystatechange = function () {
         if (newReq.readyState === 4 && newReq.status === 200) {
@@ -76,14 +76,14 @@ function initialLoad() {
     newReq.open('GET', '/api/posts');
     newReq.send();
 }
-exports["default"] = initialLoad;
+exports["default"] = visitorPostLoad;
 
-},{"./GeneralPostClass":1}],3:[function(require,module,exports){
+},{"../Classes/GeneralPost":1}],3:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
-var intitialLoad_1 = require("./tsFiles/intitialLoad");
+var visitorPostLoad_1 = require("./tsFiles/functions/visitorPostLoad");
 window.addEventListener('load', function () {
-    intitialLoad_1["default"]();
+    visitorPostLoad_1["default"]();
 });
 
-},{"./tsFiles/intitialLoad":2}]},{},[3]);
+},{"./tsFiles/functions/visitorPostLoad":2}]},{},[3]);

@@ -1,4 +1,4 @@
-import Postable from './Postable';
+import Postable from '../Interfaces/IPostable';
 
 export default class GeneralPost {
   //input

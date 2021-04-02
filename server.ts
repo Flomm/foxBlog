@@ -88,7 +88,7 @@ app.get('/api/posts/myPosts', (req: express.Request, res: express.Response) => {
 //Get acc. info
 app.get('/api/info', (req: express.Request, res: express.Response) => {
   const userName: string = req.headers.user as string;
-  connection.query('SELECT id, score FROM posts WHERE author = ?', userName, (err: Error, result) => {
+  connection.query('SELECT id, score FROM posts WHERE author = ? AND is_deleted=0', userName, (err: Error, result) => {
     if (err) {
       res.sendStatus(404);
       return console.error(err);
@@ -132,7 +132,6 @@ app.post('/api/addpost', (req: express.Request, res: express.Response) => {
         return console.error(err);
       }
       const newPost: Postable = result[0];
-      console.log(newPost);
       res.status(202).send(newPost);
     });
   });
@@ -162,7 +161,6 @@ app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) =
           (err: Error, result) => {
             if (err) {
               res.status(400).send(err);
-              console.log(err);
               return;
             }
             connection.query(
@@ -171,12 +169,10 @@ app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) =
               (err: Error, result) => {
                 if (err) {
                   res.status(400).send(err);
-                  console.log('error3');
                   return;
                 }
                 const response: Postable = result;
                 res.status(200).json(response);
-                console.log('error4');
                 return;
               }
             );
@@ -207,7 +203,6 @@ app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) =
           (err: Error, result) => {
             if (err) {
               res.status(400).send(err);
-              console.log('error5');
               return;
             }
             connection.query(
@@ -216,12 +211,10 @@ app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) =
               (err: Error, result) => {
                 if (err) {
                   res.status(400).send(err);
-                  console.log('error6');
                   return;
                 }
                 const response: Postable = result;
                 res.status(200).json(response);
-                console.log('error7');
               }
             );
           }
