@@ -139,7 +139,7 @@ var PersonalPost = /** @class */ (function (_super) {
     }
     PersonalPost.prototype.showConfirmBox = function () {
         var _this = this;
-        var wrapper = document.querySelector('wrapper');
+        var wrapper = document.querySelector('.main');
         var confirmBox = document.createElement('div');
         confirmBox.classList.add('confirm-box');
         var newP1 = document.createElement('p');
@@ -331,14 +331,11 @@ function addPostForm() {
         postBlog_1["default"](inputFields);
     });
     //Button
-    var btnHolder = document.createElement('div');
-    btnHolder.classList.add('button-holder');
     var submitBtn = document.createElement('input');
     submitBtn.classList.add('button-submit');
     submitBtn.setAttribute('type', 'submit');
     submitBtn.value = 'Submit fox';
-    btnHolder.appendChild(submitBtn);
-    addForm.appendChild(btnHolder);
+    addForm.appendChild(submitBtn);
     submitMain.appendChild(addForm);
     main.appendChild(submitMain);
 }

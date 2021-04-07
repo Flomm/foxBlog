@@ -49,14 +49,11 @@ export default function addPostForm() {
     postBlog(inputFields);
   });
   //Button
-  const btnHolder: HTMLDivElement = document.createElement('div');
-  btnHolder.classList.add('button-holder');
   const submitBtn: HTMLInputElement = document.createElement('input');
   submitBtn.classList.add('button-submit');
   submitBtn.setAttribute('type', 'submit');
   submitBtn.value = 'Submit fox';
-  btnHolder.appendChild(submitBtn);
-  addForm.appendChild(btnHolder);
+  addForm.appendChild(submitBtn);
   submitMain.appendChild(addForm);
   main.appendChild(submitMain);
 }

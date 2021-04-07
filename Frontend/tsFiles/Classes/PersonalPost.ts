@@ -9,7 +9,7 @@ export default class PersonalPost extends GeneralPost {
   boundShowBox = this.showConfirmBox.bind(this);
 
   showConfirmBox() {
-    const wrapper: HTMLElement = document.querySelector('wrapper');
+    const wrapper: HTMLElement = document.querySelector('.main');
     const confirmBox: HTMLDivElement = document.createElement('div');
     confirmBox.classList.add('confirm-box');
     const newP1: HTMLParagraphElement = document.createElement('p');

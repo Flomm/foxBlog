@@ -5,7 +5,7 @@
 }
 
 body {
-  height: 100vh;
+  height: 100%;
   font-family: 'Courier Prime', monospace;
   background-color: beige;
 }
@@ -31,8 +31,9 @@ input {
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  top: 40%;
-  left: 40%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   padding: 5%;
   background-color: rgb(182, 235, 186);
   color: rgb(7, 116, 61);
@@ -61,6 +62,7 @@ input {
 }
 
 header {
+  user-select: none;
   z-index: 1;
   position: fixed;
   top: 0;
@@ -79,44 +81,30 @@ header {
   text-shadow: 5px 9px 20px rgba(0, 0, 0, 0.15);
 }
 
-wrapper {
-  padding-top: 4%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 nav {
-  position: fixed;
-  left: 0;
-  height: 90%;
-  width: 13%;
+  position: absolute;
+  top: 10%;
+  width: 100%;
   padding-left: 2%;
   padding-right: 2%;
-  align-self: flex-start;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
   background-color: rgb(7, 116, 61);
-  border-bottom: 100px, solid, rgb(182, 235, 186);
 }
 
 nav h4 {
+  user-select: none;
   color: bisque;
 }
 
 nav p {
-  margin-top: 20%;
-}
-
-img {
-  margin-top: 25%;
+  padding: 1% 0%;
 }
 
 nav button,
 a {
+  font-weight: bolder;
   text-decoration: none;
   cursor: pointer;
   background-color: rgb(7, 116, 61);
@@ -135,18 +123,31 @@ nav button:active {
 }
 
 .main {
-  padding: 2%;
-  width: 82%;
+  padding-top: 12%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.img-holder {
+  background-color: rgb(182, 235, 186);
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+  height: 50%;
+  width: 50%;
+  margin: 2%;
+}
+
 .data {
   width: 50%;
   padding: 5%;
-  margin-left: 25%;
   background-color: rgb(182, 235, 186);
   color: rgb(7, 116, 61);
   display: flex;
@@ -171,11 +172,8 @@ nav button:active {
   border: rgb(7, 116, 61) solid;
   border-width: 20px;
   border-radius: 5px;
-  margin-top: 3%;
+  margin: 2% 5%;
   padding: 3%;
-  margin-left: 25%;
-  margin-right: 5%;
-  margin-bottom: 5%;
 }
 
 .posted-main h2 {
@@ -185,8 +183,7 @@ nav button:active {
 
 .posted-slot {
   border-radius: 5px;
-  border-width: 1px;
-  border-style: solid;
+  border: 1px solid black;
   margin-bottom: 3%;
   padding-bottom: 1%;
   background-color: rgb(182, 235, 186);
@@ -297,19 +294,20 @@ nav button:active {
 }
 
 .submit-main {
-  padding-top: 2%;
-  padding-bottom: 2%;
-  width: 100%;
-  margin-left: 20%;
+  padding: 2% 10%;
+  width: 80%;
   background-color: rgb(182, 235, 186);
-  padding-left: 10%;
-  padding-right: 10%;
 }
 
 .submit-main span {
   font-size: 150%;
   font-weight: bold;
   color: rgb(7, 116, 61);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
 }
 
 label {
@@ -340,15 +338,11 @@ textarea {
   outline: none;
 }
 
-.button-holder {
-  margin-top: 3%;
-  display: flex;
-  justify-content: center;
-}
-
 .button-submit {
-  width: 40%;
-  height: 2%;
+  margin-top: 2%;
+  border: none;
+  width: 25%;
+  align-self: center;
   border-radius: 10px;
   background-color: rgb(7, 116, 61);
   color: beige;
@@ -358,21 +352,16 @@ textarea {
   padding: 1%;
 }
 
-@media screen and (max-width: 768px) {
-  .button-submit {
-    width: 30%;
-    height: 7%;
-  }
-}
-
 .button-submit:hover {
   background-color: beige;
   color: rgb(7, 116, 61);
 }
 
 footer {
+  user-select: none;
   position: fixed;
   bottom: 0;
+  margin-top: 2%;
   height: 5%;
   width: 100%;
   background-color: rgb(7, 116, 61);

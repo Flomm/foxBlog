@@ -12,18 +12,16 @@ body {
 
 header {
   z-index: 1;
+  user-select: none;
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   padding-left: 10%;
   background-color: rgb(7, 116, 61);
   height: 9%;
-  border-width: 1px;
-  border-bottom-style: solid;
-  border-color: black;
+  border-bottom: 1px solid black;
   font-size: 3vw;
   color: beige;
   text-shadow: 5px 9px 20px rgba(0, 0, 0, 0.15);
@@ -127,4 +125,5 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }
