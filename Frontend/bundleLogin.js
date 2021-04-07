@@ -2,18 +2,14 @@
 "use strict";
 exports.__esModule = true;
 var checkLogin_1 = require("./tsFiles/functions/checkLogin");
-var form = document.querySelector('form');
+var loginForm = document.querySelector('form');
 var checkBox = document.querySelector('.check');
 var pwInput = document.querySelector('form').elements[1];
 window.onload = function () {
-    form.addEventListener('submit', function (event) {
+    loginForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        var inputs = Array.from(form.querySelectorAll('input:not(.check)'));
+        var inputs = Array.from(loginForm.querySelectorAll('input[size="10"]'));
         checkLogin_1["default"](inputs);
-    });
-    window.addEventListener('keydown', function (e) {
-        if (e.code === 'Enter')
-            form.submit();
     });
     checkBox.addEventListener('change', function () {
         if (pwInput.type === 'password') {

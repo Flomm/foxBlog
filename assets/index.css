@@ -72,11 +72,12 @@ form {
   flex-direction: column;
 }
 
-input,
-button {
+input {
+  border-radius: 2px;
   margin-bottom: 15%;
   padding: 2%;
   outline-color: rgb(7, 116, 61);
+  border: 1px solid rgb(7, 116, 61);
 }
 
 .err {
@@ -87,11 +88,7 @@ button {
   border-color: red;
 }
 
-input {
-  border-radius: 2px;
-}
-
-button {
+input[type='submit'] {
   cursor: pointer;
   border-color: rgb(7, 116, 61);
   border-radius: 5px;
@@ -99,7 +96,7 @@ button {
   background-color: rgb(7, 116, 61);
 }
 
-button:hover {
+input[type='submit']:hover {
   color: rgb(7, 116, 61);
   background-color: beige;
 }
