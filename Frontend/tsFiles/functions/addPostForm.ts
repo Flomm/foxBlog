@@ -1,4 +1,6 @@
 import postBlog from './postBlog';
+import setAttributes from './setAttributes';
+import { titleAttr, contentAttr } from '../other/attributeObjects';
 
 export default function addPostForm() {
   const main: HTMLDivElement = document.querySelector('.main');
@@ -20,11 +22,7 @@ export default function addPostForm() {
   const titleInpHolder: HTMLDivElement = document.createElement('div');
   titleInpHolder.classList.add('text-area');
   const titleInput: HTMLInputElement = document.createElement('input');
-  titleInput.setAttribute('type', 'text');
-  titleInput.setAttribute('name', 'title-post');
-  titleInput.setAttribute('maxlength', '25');
-  titleInput.setAttribute('size', '25');
-  titleInput.setAttribute('placeholder', 'The name of your favourite fox');
+  setAttributes(titleInput, titleAttr);
   titleInpHolder.appendChild(titleInput);
   //Input2
   const labelSlot2: HTMLDivElement = document.createElement('div');
@@ -37,12 +35,7 @@ export default function addPostForm() {
   const contentInpHolder: HTMLDivElement = document.createElement('div');
   contentInpHolder.classList.add('text-area');
   const contentInput: HTMLTextAreaElement = document.createElement('textarea');
-  contentInput.setAttribute('type', 'text');
-  contentInput.setAttribute('name', 'content-post');
-  contentInput.setAttribute('maxlength', '1500');
-  contentInput.setAttribute('rows', '10');
-  contentInput.setAttribute('cols', '30');
-  contentInput.setAttribute('placeholder', 'Write something about your favourite fox');
+  setAttributes(contentInput, contentAttr);
   contentInpHolder.appendChild(contentInput);
   addForm.appendChild(labelSlot1);
   addForm.appendChild(titleInpHolder);
@@ -51,20 +44,19 @@ export default function addPostForm() {
   addForm.addEventListener('submit', (ev) => {
     ev.preventDefault();
     const inputFields: HTMLInputElement[] = Array.from(
-      addForm.querySelectorAll('input, textarea')
+      addForm.querySelectorAll('input[type="text"], textarea')
     ) as HTMLInputElement[];
     postBlog(inputFields);
   });
-  submitMain.appendChild(addForm);
   //Button
   const btnHolder: HTMLDivElement = document.createElement('div');
   btnHolder.classList.add('button-holder');
-  const submitBtn: HTMLButtonElement = document.createElement('button');
+  const submitBtn: HTMLInputElement = document.createElement('input');
   submitBtn.classList.add('button-submit');
   submitBtn.setAttribute('type', 'submit');
-  submitBtn.setAttribute('form', 'post-form');
-  submitBtn.textContent = 'Submit fox';
+  submitBtn.value = 'Submit fox';
   btnHolder.appendChild(submitBtn);
-  submitMain.appendChild(btnHolder);
+  addForm.appendChild(btnHolder);
+  submitMain.appendChild(addForm);
   main.appendChild(submitMain);
 }

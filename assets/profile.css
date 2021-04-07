@@ -10,7 +10,8 @@ body {
   background-color: beige;
 }
 
-button {
+button,
+input[type='submit'] {
   cursor: pointer;
   font-family: 'Courier Prime', monospace;
   outline: none;

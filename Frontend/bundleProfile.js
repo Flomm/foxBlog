@@ -30,7 +30,7 @@ logoutBtn.addEventListener('click', function () {
     window.location.replace('./');
 });
 
-},{"./tsFiles/functions/addPostForm":6,"./tsFiles/functions/loadPosts":10,"./tsFiles/functions/showAccData":14}],2:[function(require,module,exports){
+},{"./tsFiles/functions/addPostForm":6,"./tsFiles/functions/loadPosts":10,"./tsFiles/functions/showAccData":15}],2:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var AccInfoDiv = /** @class */ (function () {
@@ -284,6 +284,8 @@ exports["default"] = VotablePost;
 "use strict";
 exports.__esModule = true;
 var postBlog_1 = require("./postBlog");
+var setAttributes_1 = require("./setAttributes");
+var attributeObjects_1 = require("../other/attributeObjects");
 function addPostForm() {
     var main = document.querySelector('.main');
     var submitMain = document.createElement('div');
@@ -304,11 +306,7 @@ function addPostForm() {
     var titleInpHolder = document.createElement('div');
     titleInpHolder.classList.add('text-area');
     var titleInput = document.createElement('input');
-    titleInput.setAttribute('type', 'text');
-    titleInput.setAttribute('name', 'title-post');
-    titleInput.setAttribute('maxlength', '25');
-    titleInput.setAttribute('size', '25');
-    titleInput.setAttribute('placeholder', 'The name of your favourite fox');
+    setAttributes_1["default"](titleInput, attributeObjects_1.titleAttr);
     titleInpHolder.appendChild(titleInput);
     //Input2
     var labelSlot2 = document.createElement('div');
@@ -321,12 +319,7 @@ function addPostForm() {
     var contentInpHolder = document.createElement('div');
     contentInpHolder.classList.add('text-area');
     var contentInput = document.createElement('textarea');
-    contentInput.setAttribute('type', 'text');
-    contentInput.setAttribute('name', 'content-post');
-    contentInput.setAttribute('maxlength', '1500');
-    contentInput.setAttribute('rows', '10');
-    contentInput.setAttribute('cols', '30');
-    contentInput.setAttribute('placeholder', 'Write something about your favourite fox');
+    setAttributes_1["default"](contentInput, attributeObjects_1.contentAttr);
     contentInpHolder.appendChild(contentInput);
     addForm.appendChild(labelSlot1);
     addForm.appendChild(titleInpHolder);
@@ -334,25 +327,24 @@ function addPostForm() {
     addForm.appendChild(contentInpHolder);
     addForm.addEventListener('submit', function (ev) {
         ev.preventDefault();
-        var inputFields = Array.from(addForm.querySelectorAll('input, textarea'));
+        var inputFields = Array.from(addForm.querySelectorAll('input[type="text"], textarea'));
         postBlog_1["default"](inputFields);
     });
-    submitMain.appendChild(addForm);
     //Button
     var btnHolder = document.createElement('div');
     btnHolder.classList.add('button-holder');
-    var submitBtn = document.createElement('button');
+    var submitBtn = document.createElement('input');
     submitBtn.classList.add('button-submit');
     submitBtn.setAttribute('type', 'submit');
-    submitBtn.setAttribute('form', 'post-form');
-    submitBtn.textContent = 'Submit fox';
+    submitBtn.value = 'Submit fox';
     btnHolder.appendChild(submitBtn);
-    submitMain.appendChild(btnHolder);
+    addForm.appendChild(btnHolder);
+    submitMain.appendChild(addForm);
     main.appendChild(submitMain);
 }
 exports["default"] = addPostForm;
 
-},{"./postBlog":11}],7:[function(require,module,exports){
+},{"../other/attributeObjects":17,"./postBlog":11,"./setAttributes":14}],7:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function createSuccessDiv(txt) {
@@ -478,7 +470,7 @@ function postBlog(inputs) {
 }
 exports["default"] = postBlog;
 
-},{"./sendPostToServer":13,"./togglePostError":15}],12:[function(require,module,exports){
+},{"./sendPostToServer":13,"./togglePostError":16}],12:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function scrollToPost(post) {
@@ -513,6 +505,16 @@ function sendPostToServer(postObject) {
 exports["default"] = sendPostToServer;
 
 },{"./frontendInsert":8}],14:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+function setAttributes(elem, attr) {
+    for (var key in attr) {
+        elem.setAttribute(key, attr[key]);
+    }
+}
+exports["default"] = setAttributes;
+
+},{}],15:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var AccInfoDiv_1 = require("../Classes/AccInfoDiv");
@@ -550,7 +552,7 @@ function showAccData() {
 }
 exports["default"] = showAccData;
 
-},{"../Classes/AccInfoDiv":2}],15:[function(require,module,exports){
+},{"../Classes/AccInfoDiv":2}],16:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function togglePostError(input) {
@@ -559,5 +561,25 @@ function togglePostError(input) {
     labelEl.parentElement.classList.toggle('err');
 }
 exports["default"] = togglePostError;
+
+},{}],17:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+exports.contentAttr = exports.titleAttr = void 0;
+exports.titleAttr = {
+    type: 'text',
+    name: 'title-post',
+    maxlength: '25',
+    size: '25',
+    placeholder: 'The name of your favourite fox'
+};
+exports.contentAttr = {
+    type: 'text',
+    name: 'content-post',
+    maxlength: '1500',
+    rows: '10',
+    cols: '30',
+    placeholder: 'Write something about your favourite fox'
+};
 
 },{}]},{},[1]);
