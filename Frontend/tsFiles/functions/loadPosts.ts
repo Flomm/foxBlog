@@ -7,7 +7,11 @@ const main: HTMLDivElement = document.querySelector('.main');
 export default function loadPosts(endP: string): void {
   const newReq: XMLHttpRequest = new XMLHttpRequest();
   newReq.onload = () => {
-    if (newReq.status === 204) {
+    if (newReq.status === 500) {
+      createSuccessDiv('There was a problem with server. Please try again later.');
+      return;
+    }
+    if (newReq.status === 400) {
       createSuccessDiv('Currently you have no posts.');
       return;
     }

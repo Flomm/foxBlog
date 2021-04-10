@@ -15,7 +15,7 @@ export default function showAccData(): void {
       numOfPosts: '',
       sumScore: '',
     };
-    if (xhr.status === 404) {
+    if (xhr.status === 500) {
       accData = {
         numOfPosts: 'server not found',
         sumScore: 'server not found',

@@ -10,15 +10,17 @@ function initialPost(postObject: Postable): void {
 
 export default function visitorPostLoad(): void {
   const newReq: XMLHttpRequest = new XMLHttpRequest();
-  newReq.onreadystatechange = () => {
-    if (newReq.readyState === 4 && newReq.status === 200) {
+  newReq.onload = () => {
+    if (newReq.status === 200) {
       const posts = newReq.response;
       const parsed: Postable[] = JSON.parse(posts);
       for (let p of parsed) {
         initialPost(p);
       }
+    } else {
+      alert('There was a problem with the server. Please try again later.');
     }
   };
-  newReq.open('GET', '/api/posts');
+  newReq.open('GET', '/api/posts/visitor');
   newReq.send();
 }

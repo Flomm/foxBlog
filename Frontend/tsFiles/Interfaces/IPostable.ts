@@ -6,5 +6,5 @@ export default interface Postable {
   timestamp: number;
   score: number;
   user?: string;
-  vote?: string;
+  vote?: number;
 }
