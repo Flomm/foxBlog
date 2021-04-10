@@ -1,10 +1,11 @@
-import Postable from './Backend/Postable';
+import IPostable from './Backend/IPostable';
 import AccData from './Backend/IAccData';
 import Vote from './Backend/IVote';
 import SetVoteScore from './Backend/ISetVoteScore';
 import * as express from 'express';
 import { connection } from './Backend/sqlConnect';
 import countScore from './Backend/countScore';
+import Postable from './Frontend/tsFiles/Interfaces/IPostable';
 
 const app = express();
 const port: number = 8000;
@@ -40,57 +41,67 @@ app.get('/visitor', (req: express.Request, res: express.Response) => {
 app.get('/profile', (req: express.Request, res: express.Response) => {
   res.sendFile(__dirname + '/profile.html');
 });
-
+//Login
 app.get('/api/login', (req: express.Request, res: express.Response) => {
   const userName: string = req.headers.user as string;
   const pw: string = req.headers.password as string;
   connection.query('SELECT user_name, pw FROM users WHERE user_name=?', userName, (err: Error, result) => {
     if (err) {
-      res.sendStatus(404);
+      res.sendStatus(500);
       return console.error(err);
     }
     if (result.length === 0 || result[0].pw !== pw) {
-      res.sendStatus(401);
+      res.sendStatus(400);
     } else {
       res.sendStatus(200);
     }
   });
 });
-
 //Getposts
 app.get('/api/posts', (req: express.Request, res: express.Response) => {
-  connection.query('SELECT * FROM posts WHERE is_deleted=0', (err: Error, result) => {
+  connection.query('SELECT * FROM posts WHERE is_deleted=0', (err: Error, result: IPostable[]) => {
     if (err) {
-      res.sendStatus(404);
+      res.sendStatus(500);
       return console.error(err);
     }
-    const posts: Postable[] = result;
-    res.send(posts);
+    res.send(result);
   });
 });
-
+//Get my posts
 app.get('/api/posts/myPosts', (req: express.Request, res: express.Response) => {
   const userName: string = req.headers.user as string;
-  connection.query('SELECT * FROM posts WHERE author = ? AND is_deleted=0', userName, (err: Error, result) => {
+  connection.query(
+    'SELECT * FROM posts WHERE author = ? AND is_deleted=0',
+    userName,
+    (err: Error, result: IPostable[]) => {
+      if (err) {
+        res.sendStatus(500);
+        return console.error(err);
+      }
+      if (result.length === 0) {
+        res.sendStatus(400);
+        return;
+      }
+      res.status(200).send(result);
+    }
+  );
+});
+//Get single post
+app.get('/api/singlePost/:id', (req: express.Request, res: express.Response) => {
+  connection.query('SELECT * FROM posts WHERE id = ?', req.params.id, (err: Error, result: IPostable[]) => {
     if (err) {
-      res.sendStatus(400);
+      res.sendStatus(500);
       return console.error(err);
     }
-    if (result.length === 0) {
-      res.sendStatus(204);
-      return;
-    }
-    const posts: Postable[] = result;
-    res.status(200).send(posts);
+    res.status(200).send(result[0]);
   });
 });
-
 //Get acc. info
 app.get('/api/info', (req: express.Request, res: express.Response) => {
   const userName: string = req.headers.user as string;
   connection.query('SELECT id, score FROM posts WHERE author = ? AND is_deleted=0', userName, (err: Error, result) => {
     if (err) {
-      res.sendStatus(404);
+      res.sendStatus(500);
       return console.error(err);
     }
     const resObject: AccData = {
@@ -106,37 +117,34 @@ app.delete('/api/posts/:id', (req: express.Request, res: express.Response) => {
   const idToDel: string = req.params.id;
   connection.query('UPDATE posts SET is_deleted = 1 WHERE id = ?', idToDel, (err: Error, result) => {
     if (err) {
-      res.sendStatus(400);
+      res.sendStatus(500);
       return console.error(err);
     }
     if (result.affectedRows === 0) {
-      res.sendStatus(204);
+      res.sendStatus(400);
       return;
     }
     res.sendStatus(200);
   });
 });
-
 //Addpost
 app.post('/api/addpost', (req: express.Request, res: express.Response) => {
-  const newPost: Postable = req.body;
+  const newPost: IPostable = req.body;
   connection.query('INSERT INTO posts SET ?;', newPost, (err: Error, result) => {
     if (err) {
-      res.status(404).send();
+      res.status(500).send();
       return console.error(err);
     }
     const newId: number = result.insertId;
-    connection.query('SELECT * FROM posts WHERE id=?;', newId, (err: Error, result) => {
+    connection.query('SELECT * FROM posts WHERE id=?;', newId, (err: Error, result: Postable[]) => {
       if (err) {
-        res.status(404).send();
+        res.status(500).send();
         return console.error(err);
       }
-      const newPost: Postable = result[0];
-      res.status(202).send(newPost);
+      res.status(202).send(result[0]);
     });
   });
 });
-
 //Upvote
 app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) => {
   const postID = req.params.id;
@@ -146,7 +154,7 @@ app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) =
     `${postID}${userName}`,
     (err: Error, result) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(500);
         return console.error(err);
       }
       if (!result[0]) {
@@ -160,19 +168,18 @@ app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) =
           newVote,
           (err: Error, result) => {
             if (err) {
-              res.status(400).send(err);
+              res.status(500).send(err);
               return;
             }
             connection.query(
               `SELECT  posts.id, title, content, timestamp, score, author, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and is_deleted = 0`,
               postID,
-              (err: Error, result) => {
+              (err: Error, result: IPostable[]) => {
                 if (err) {
-                  res.status(400).send(err);
+                  res.status(500).send(err);
                   return;
                 }
-                const response: Postable = result;
-                res.status(200).json(response);
+                res.status(200).json(result[0]);
                 return;
               }
             );
@@ -202,19 +209,18 @@ app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) =
           `${postID}${userName}`,
           (err: Error, result) => {
             if (err) {
-              res.status(400).send(err);
+              res.status(500).send(err);
               return;
             }
             connection.query(
               `SELECT  posts.id, title, content, timestamp, score, author, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and is_deleted = 0`,
               postID,
-              (err: Error, result) => {
+              (err: Error, result: IPostable[]) => {
                 if (err) {
-                  res.status(400).send(err);
+                  res.status(500).send(err);
                   return;
                 }
-                const response: Postable = result;
-                res.status(200).json(response);
+                res.status(200).json(result[0]);
               }
             );
           }
@@ -232,7 +238,7 @@ app.put('/api/posts/:id/downvote', (req: express.Request, res: express.Response)
     `${postID}${userName}`,
     (err: Error, result) => {
       if (err) {
-        res.sendStatus(400);
+        res.sendStatus(500);
         return console.error(err);
       }
       if (!result[0]) {
@@ -246,18 +252,17 @@ app.put('/api/posts/:id/downvote', (req: express.Request, res: express.Response)
           newVote,
           (err: Error, result) => {
             if (err) {
-              res.status(400).send(err);
+              res.status(500).send(err);
             }
             connection.query(
               `SELECT  posts.id, title, content, timestamp, score, author, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and is_deleted = 0`,
               postID,
-              (err: Error, result) => {
+              (err: Error, result: IPostable[]) => {
                 if (err) {
-                  res.status(400).send(err);
+                  res.status(500).send(err);
                   return;
                 }
-                const response: Postable = result;
-                res.status(200).json(response);
+                res.status(200).json(result[0]);
               }
             );
           }
@@ -286,19 +291,18 @@ app.put('/api/posts/:id/downvote', (req: express.Request, res: express.Response)
           `${postID}${userName}`,
           (err: Error, result) => {
             if (err) {
-              res.status(400).send(err);
+              res.status(500).send(err);
               return;
             }
             connection.query(
               `SELECT  posts.id, title, content, timestamp, score, author, vote FROM posts INNER JOIN votes ON id = post_id INNER JOIN users ON user_name = user WHERE posts.id=? and user='${userName}' and is_deleted = 0`,
               postID,
-              (err: Error, result) => {
+              (err: Error, result: IPostable[]) => {
                 if (err) {
-                  res.status(400).send(err);
+                  res.status(500).send(err);
                   return;
                 }
-                const response: Postable = result;
-                res.status(200).json(response);
+                res.status(200).json(result[0]);
               }
             );
           }
