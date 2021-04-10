@@ -1,4 +1,4 @@
-export default interface Postable {
+export default interface IPostable {
   id: number;
   author: string;
   title: string;
