@@ -63,8 +63,8 @@ function initialPost(postObject) {
 }
 function visitorPostLoad() {
     var newReq = new XMLHttpRequest();
-    newReq.onreadystatechange = function () {
-        if (newReq.readyState === 4 && newReq.status === 200) {
+    newReq.onload = function () {
+        if (newReq.status === 200) {
             var posts = newReq.response;
             var parsed = JSON.parse(posts);
             for (var _i = 0, parsed_1 = parsed; _i < parsed_1.length; _i++) {
@@ -72,8 +72,11 @@ function visitorPostLoad() {
                 initialPost(p);
             }
         }
+        else {
+            alert('There was a problem with the server. Please try again later.');
+        }
     };
-    newReq.open('GET', '/api/posts');
+    newReq.open('GET', '/api/posts/visitor');
     newReq.send();
 }
 exports["default"] = visitorPostLoad;

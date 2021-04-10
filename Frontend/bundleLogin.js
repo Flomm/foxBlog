@@ -55,11 +55,11 @@ function checkLogin(inputs) {
         xhr_1.setRequestHeader('password', pw);
         xhr_1.send();
         xhr_1.onload = function () {
-            if (xhr_1.status === 404) {
+            if (xhr_1.status === 500) {
                 alert('There is a problem with the server. Please try again later.');
                 return;
             }
-            if (xhr_1.status === 401) {
+            if (xhr_1.status === 400) {
                 alert('Invalid login or password.');
                 loginInput.value = '';
                 pwInput.value = '';
