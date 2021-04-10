@@ -239,13 +239,33 @@ var VotablePost = /** @class */ (function (_super) {
                 alert('Something went wrong, please try again.');
             }
             else {
-                var newPost = JSON.parse(xhr.response)[0];
-                _this.likeBarP.textContent = "Score: " + newPost.score;
+                var newPost = JSON.parse(xhr.response);
+                _this.postInput.score = newPost.score;
+                _this.postInput.vote = newPost.vote;
+                _this.likeBarP.textContent = "Score: " + _this.postInput.score;
+                _this.toggleLikeStyles();
             }
         };
         xhr.open('PUT', "/api/posts/" + this.postInput.id + "/" + voteType);
         xhr.setRequestHeader('user', window.localStorage.getItem('user'));
         xhr.send();
+    };
+    VotablePost.prototype.toggleLikeStyles = function () {
+        var likeBtns = Array.from(this.likeBar.querySelectorAll('button'));
+        var downIcon = likeBtns[0].querySelector('icon');
+        var upIcon = likeBtns[1].querySelector('icon');
+        if (this.postInput.vote === 0) {
+            downIcon.classList.remove('down-vote');
+            upIcon.classList.remove('up-vote');
+        }
+        else if (this.postInput.vote === 1) {
+            downIcon.classList.remove('down-vote');
+            upIcon.classList.add('up-vote');
+        }
+        else if (this.postInput.vote === -1) {
+            downIcon.classList.add('down-vote');
+            upIcon.classList.remove('up-vote');
+        }
     };
     VotablePost.prototype.addVoteButtons = function () {
         var _this = this;
@@ -253,18 +273,24 @@ var VotablePost = /** @class */ (function (_super) {
         var upVoteBtn = document.createElement('button');
         var downIcon = document.createElement('icon');
         downIcon.classList.add('fas');
-        downIcon.classList.add('fa-arrow-down');
+        downIcon.classList.add('fa-thumbs-down');
         var upIcon = document.createElement('icon');
         upIcon.classList.add('fas');
-        upIcon.classList.add('fa-arrow-up');
+        upIcon.classList.add('fa-thumbs-up');
         downVoteBtn.appendChild(downIcon);
         upVoteBtn.appendChild(upIcon);
         downVoteBtn.addEventListener('click', function () {
             _this.makeVote('downvote');
         });
+        if (this.postInput.vote === -1) {
+            downIcon.classList.add('down-vote');
+        }
         upVoteBtn.addEventListener('click', function () {
             _this.makeVote('upvote');
         });
+        if (this.postInput.vote === 1) {
+            upIcon.classList.add('up-vote');
+        }
         this.likeBar.insertBefore(downVoteBtn, this.likeBar.firstElementChild);
         this.likeBar.appendChild(upVoteBtn);
     };
@@ -395,7 +421,11 @@ var main = document.querySelector('.main');
 function loadPosts(endP) {
     var newReq = new XMLHttpRequest();
     newReq.onload = function () {
-        if (newReq.status === 204) {
+        if (newReq.status === 500) {
+            createSuccessDiv_1["default"]('There was a problem with server. Please try again later.');
+            return;
+        }
+        if (newReq.status === 400) {
             createSuccessDiv_1["default"]('Currently you have no posts.');
             return;
         }
@@ -529,7 +559,7 @@ function showAccData() {
             numOfPosts: '',
             sumScore: ''
         };
-        if (xhr.status === 404) {
+        if (xhr.status === 500) {
             accData = {
                 numOfPosts: 'server not found',
                 sumScore: 'server not found'
