@@ -231,12 +231,19 @@ img {
 
 .likebar button {
   border-radius: 2px;
-  background-color: rgb(182, 235, 186);
+  background-color: beige;
+  border-radius: 50px;
   border: none;
+  padding: 2%;
   margin: 2%;
+  color: black;
+}
+
+.up-vote {
   color: rgb(7, 116, 61);
 }
-.likebar button:nth-child(1) {
+
+.down-vote {
   color: red;
 }
 
