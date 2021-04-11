@@ -31,7 +31,8 @@ input {
   pointer-events: none;
 }
 
-.confirm-box {
+.confirm-box,
+.edit-box {
   z-index: 15;
   position: fixed;
   border-radius: 5px;
@@ -65,6 +66,17 @@ input {
 
 .confirm-box button:active {
   opacity: 0.7;
+}
+
+.cancel-btn {
+  align-self: center;
+  border: none;
+  padding: 1%;
+  margin-top: 4%;
+  border-radius: 5px;
+  width: 50%;
+  color: beige;
+  background-color: #df2e1a;
 }
 
 header {
@@ -382,7 +394,7 @@ textarea {
 .button-submit {
   margin-top: 2%;
   border: none;
-  width: 25%;
+  width: 50%;
   align-self: center;
   border-radius: 10px;
   background-color: var(--darkgreen);

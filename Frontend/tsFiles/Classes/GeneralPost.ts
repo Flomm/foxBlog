@@ -9,6 +9,7 @@ export default class GeneralPost {
   protected postDate: HTMLDivElement;
   protected postMisc: HTMLDivElement;
   protected postTitle: HTMLDivElement;
+  protected titleText: HTMLSpanElement;
   protected postContent: HTMLDivElement;
   protected likeBar: HTMLDivElement;
   protected likeBarP: HTMLParagraphElement;
@@ -23,6 +24,7 @@ export default class GeneralPost {
     this.postDate = document.createElement('div');
     this.postMisc = document.createElement('div');
     this.postTitle = document.createElement('div');
+    this.titleText = document.createElement('span');
     this.postContent = document.createElement('div');
     this.likeBar = document.createElement('div');
     this.likeBarP = document.createElement('p');
@@ -41,12 +43,13 @@ export default class GeneralPost {
   fillPost(): void {
     this.postAuthor.textContent = `Posted by: ${this.postInput.author}`;
     this.postDate.textContent = `On: ${new Date(this.postInput.timestamp * 1000).toLocaleString().split(',')[0]}`;
-    this.postTitle.textContent = this.postInput.title;
+    this.titleText.textContent = this.postInput.title;
     this.postContent.textContent = this.postInput.content;
     this.likeBarP.textContent = `Score: ${this.postInput.score}`;
   }
 
   createStructure(): void {
+    this.postTitle.appendChild(this.titleText);
     this.postSlot.appendChild(this.postTitle);
     this.postSlot.appendChild(this.postContent);
     this.postMisc.appendChild(this.postAuthor);

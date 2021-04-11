@@ -30,7 +30,7 @@ logoutBtn.addEventListener('click', function () {
     window.location.replace('./');
 });
 
-},{"./tsFiles/functions/addPostForm":6,"./tsFiles/functions/loadPosts":10,"./tsFiles/functions/showAccData":15}],2:[function(require,module,exports){
+},{"./tsFiles/functions/addPostForm":6,"./tsFiles/functions/loadPosts":11,"./tsFiles/functions/showAccData":16}],2:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var AccInfoDiv = /** @class */ (function () {
@@ -72,6 +72,7 @@ var GeneralPost = /** @class */ (function () {
         this.postDate = document.createElement('div');
         this.postMisc = document.createElement('div');
         this.postTitle = document.createElement('div');
+        this.titleText = document.createElement('span');
         this.postContent = document.createElement('div');
         this.likeBar = document.createElement('div');
         this.likeBarP = document.createElement('p');
@@ -88,11 +89,12 @@ var GeneralPost = /** @class */ (function () {
     GeneralPost.prototype.fillPost = function () {
         this.postAuthor.textContent = "Posted by: " + this.postInput.author;
         this.postDate.textContent = "On: " + new Date(this.postInput.timestamp * 1000).toLocaleString().split(',')[0];
-        this.postTitle.textContent = this.postInput.title;
+        this.titleText.textContent = this.postInput.title;
         this.postContent.textContent = this.postInput.content;
         this.likeBarP.textContent = "Score: " + this.postInput.score;
     };
     GeneralPost.prototype.createStructure = function () {
+        this.postTitle.appendChild(this.titleText);
         this.postSlot.appendChild(this.postTitle);
         this.postSlot.appendChild(this.postContent);
         this.postMisc.appendChild(this.postAuthor);
@@ -129,12 +131,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 var GeneralPost_1 = require("./GeneralPost");
-var loadPosts_1 = require("../functions/loadPosts");
+var formIsValid_1 = require("../functions/formIsValid");
+var setAttributes_1 = require("../functions/setAttributes");
+var attributeObjects_1 = require("../other/attributeObjects");
 var PersonalPost = /** @class */ (function (_super) {
     __extends(PersonalPost, _super);
     function PersonalPost(postObject) {
         var _this = _super.call(this, postObject) || this;
-        _this.boundShowBox = _this.showConfirmBox.bind(_this);
+        _this.showConfirmBox = _this.showConfirmBox.bind(_this);
+        _this.showEditBox = _this.showEditBox.bind(_this);
+        _this.xhrCall = _this.xhrCall.bind(_this);
         return _this;
     }
     PersonalPost.prototype.showConfirmBox = function () {
@@ -155,59 +161,157 @@ var PersonalPost = /** @class */ (function (_super) {
         newP2.appendChild(noBtn);
         confirmBox.appendChild(newP1);
         confirmBox.appendChild(newP2);
-        document.querySelector('body').insertBefore(confirmBox, wrapper);
-        wrapper.classList.add('shady');
         yesBtn.addEventListener('click', function () {
             document.querySelector('body').removeChild(confirmBox);
             wrapper.classList.remove('shady');
-            _this.deletePost();
+            _this.xhrCall('DELETE', "/api/posts/" + _this.postInput.id);
         });
         noBtn.addEventListener('click', function () {
             document.querySelector('body').removeChild(confirmBox);
             wrapper.classList.remove('shady');
         });
+        document.querySelector('body').insertBefore(confirmBox, wrapper);
+        wrapper.classList.add('shady');
     };
-    PersonalPost.prototype.deletePost = function () {
+    PersonalPost.prototype.showEditBox = function () {
+        var _this = this;
+        var wrapper = document.querySelector('.main');
+        var editBox = document.createElement('div');
+        editBox.classList.add('edit-box');
+        var submitMain = document.createElement('div');
+        submitMain.classList.add('submit-main');
+        var titleSpan = document.createElement('span');
+        titleSpan.textContent = 'Edit post!';
+        submitMain.appendChild(titleSpan);
+        var editForm = document.createElement('form');
+        editForm.setAttribute('id', 'post-form');
+        //Input 1
+        var labelSlot1 = document.createElement('div');
+        labelSlot1.classList.add('label-slot');
+        labelSlot1.setAttribute('err-text', ' Please add a title');
+        var titleLabel = document.createElement('label');
+        titleLabel.setAttribute('for', 'title-post');
+        titleLabel.textContent = 'New title';
+        labelSlot1.appendChild(titleLabel);
+        var titleInpHolder = document.createElement('div');
+        titleInpHolder.classList.add('text-area');
+        var titleInput = document.createElement('input');
+        setAttributes_1["default"](titleInput, attributeObjects_1.titleAttr);
+        titleInput.value = this.postInput.title;
+        titleInpHolder.appendChild(titleInput);
+        //Input2
+        var labelSlot2 = document.createElement('div');
+        labelSlot2.classList.add('label-slot');
+        labelSlot2.setAttribute('err-text', ' Please add content');
+        var contentLabel = document.createElement('label');
+        contentLabel.setAttribute('for', 'content-post');
+        contentLabel.textContent = 'New content';
+        labelSlot2.appendChild(contentLabel);
+        var contentInpHolder = document.createElement('div');
+        contentInpHolder.classList.add('text-area');
+        var contentInput = document.createElement('textarea');
+        setAttributes_1["default"](contentInput, attributeObjects_1.contentAttr);
+        contentInput.value = this.postInput.content;
+        contentInpHolder.appendChild(contentInput);
+        editForm.appendChild(labelSlot1);
+        editForm.appendChild(titleInpHolder);
+        editForm.appendChild(labelSlot2);
+        editForm.appendChild(contentInpHolder);
+        var submitBtn = document.createElement('input');
+        submitBtn.classList.add('button-submit');
+        submitBtn.setAttribute('type', 'submit');
+        submitBtn.value = 'Submit fox';
+        editForm.appendChild(submitBtn);
+        editForm.addEventListener('submit', function (ev) {
+            var inputFields = Array.from(editForm.querySelectorAll('input[type="text"], textarea'));
+            ev.preventDefault();
+            if (formIsValid_1["default"](inputFields)) {
+                _this.xhrCall('PUT', "/api/posts/" + _this.postInput.id);
+                document.querySelector('body').removeChild(editBox);
+                wrapper.classList.remove('shady');
+            }
+        });
+        var cancelBtn = document.createElement('button');
+        cancelBtn.classList.add('cancel-btn');
+        cancelBtn.innerText = 'Cancel';
+        cancelBtn.addEventListener('click', function () {
+            document.querySelector('body').removeChild(editBox);
+            wrapper.classList.remove('shady');
+        });
+        editForm.appendChild(cancelBtn);
+        editBox.appendChild(editForm);
+        document.querySelector('body').insertBefore(editBox, wrapper);
+        wrapper.classList.add('shady');
+    };
+    PersonalPost.prototype.xhrCall = function (method, endpoint) {
+        var _this = this;
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
             if (xhr.status !== 200) {
                 alert('Something went wrong, please try again.');
             }
             else {
-                document.querySelector('.main').innerHTML = '';
-                loadPosts_1["default"]('myPosts');
+                if (method === 'DELETE') {
+                    var postedMain = document.querySelector('.posted-main');
+                    postedMain.removeChild(_this.postSlot);
+                }
+                else {
+                    var response = JSON.parse(xhr.response);
+                    _this.postInput.title = response.title;
+                    _this.titleText.textContent = _this.postInput.title;
+                    _this.postInput.content = response.content;
+                    _this.postContent.textContent = _this.postInput.content;
+                }
             }
         };
-        xhr.open('DELETE', "/api/posts/" + this.postInput.id);
+        xhr.open(method, endpoint);
         xhr.setRequestHeader('user', window.localStorage.getItem('user'));
-        xhr.send();
+        if (method === 'PUT') {
+            var editForm = document.querySelector('form');
+            var inputFields = Array.from(editForm.querySelectorAll('input[type="text"], textarea'));
+            var editedData = {
+                title: inputFields[0].value,
+                content: inputFields[1].value
+            };
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(editedData));
+        }
+        else {
+            xhr.send();
+        }
     };
-    PersonalPost.prototype.addDelBtn = function () {
-        var delBtn = document.createElement('button');
-        delBtn.classList.add('delete-btn');
-        delBtn.addEventListener('click', this.boundShowBox);
+    PersonalPost.prototype.addBtn = function (type, callback, span) {
+        var newBtn = document.createElement('button');
+        newBtn.classList.add(type + "-btn");
+        newBtn.addEventListener('click', callback);
         var icon = document.createElement('i');
         icon.classList.add('fas');
-        icon.classList.add('fa-trash-alt');
-        delBtn.appendChild(icon);
-        delBtn.setAttribute('data-action', 'delete');
-        var newSpan = document.createElement('span');
-        newSpan.appendChild(delBtn);
-        this.postTitle.appendChild(newSpan);
+        if (type === 'delete') {
+            icon.classList.add('fa-trash-alt');
+        }
+        else {
+            icon.classList.add('fa-edit');
+        }
+        newBtn.appendChild(icon);
+        newBtn.setAttribute('data-action', type);
+        span.appendChild(newBtn);
     };
     PersonalPost.prototype.makePost = function () {
         this.createPostDivs();
         this.assignClasses();
         this.fillPost();
         this.createStructure();
-        this.addDelBtn();
+        var newSpan = document.createElement('span');
+        this.addBtn('edit', this.showEditBox, newSpan);
+        this.addBtn('delete', this.showConfirmBox, newSpan);
+        this.postTitle.appendChild(newSpan);
         return this.postSlot;
     };
     return PersonalPost;
 }(GeneralPost_1["default"]));
 exports["default"] = PersonalPost;
 
-},{"../functions/loadPosts":10,"./GeneralPost":3}],5:[function(require,module,exports){
+},{"../functions/formIsValid":8,"../functions/setAttributes":15,"../other/attributeObjects":18,"./GeneralPost":3}],5:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -367,7 +471,7 @@ function addPostForm() {
 }
 exports["default"] = addPostForm;
 
-},{"../other/attributeObjects":17,"./postBlog":11,"./setAttributes":14}],7:[function(require,module,exports){
+},{"../other/attributeObjects":18,"./postBlog":12,"./setAttributes":15}],7:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function createSuccessDiv(txt) {
@@ -379,6 +483,32 @@ function createSuccessDiv(txt) {
 exports["default"] = createSuccessDiv;
 
 },{}],8:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+var togglePostError_1 = require("./togglePostError");
+function formIsValid(inputs) {
+    var emptyField = [];
+    inputs.forEach(function (input) {
+        if (input.parentElement.classList.contains('err')) {
+            togglePostError_1["default"](input);
+        }
+        if (input.value === '') {
+            emptyField.push(input);
+        }
+    });
+    if (emptyField.length !== 0) {
+        emptyField.forEach(function (input) {
+            if (!input.parentElement.classList.contains('err')) {
+                togglePostError_1["default"](input);
+            }
+        });
+        return false;
+    }
+    return true;
+}
+exports["default"] = formIsValid;
+
+},{"./togglePostError":17}],9:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var VotablePost_1 = require("../Classes/VotablePost");
@@ -393,7 +523,7 @@ function frontEndInsert(newPostInput) {
 }
 exports["default"] = frontEndInsert;
 
-},{"../Classes/VotablePost":5,"./scrollToPost":12}],9:[function(require,module,exports){
+},{"../Classes/VotablePost":5,"./scrollToPost":13}],10:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var PersonalPost_1 = require("../Classes/PersonalPost");
@@ -412,7 +542,7 @@ function initiatePost(postObject, endP) {
 }
 exports["default"] = initiatePost;
 
-},{"../Classes/PersonalPost":4,"../Classes/VotablePost":5}],10:[function(require,module,exports){
+},{"../Classes/PersonalPost":4,"../Classes/VotablePost":5}],11:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var initiatePost_1 = require("./initiatePost");
@@ -457,29 +587,14 @@ function loadPosts(endP) {
 }
 exports["default"] = loadPosts;
 
-},{"./createSuccessDiv":7,"./initiatePost":9}],11:[function(require,module,exports){
+},{"./createSuccessDiv":7,"./initiatePost":10}],12:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var togglePostError_1 = require("./togglePostError");
+var formIsValid_1 = require("./formIsValid");
 var sendPostToServer_1 = require("./sendPostToServer");
 function postBlog(inputs) {
-    var emptyField = [];
-    inputs.forEach(function (input) {
-        if (input.parentElement.classList.contains('err')) {
-            togglePostError_1["default"](input);
-        }
-        if (input.value === '') {
-            emptyField.push(input);
-        }
-    });
-    if (emptyField.length !== 0) {
-        emptyField.forEach(function (input) {
-            if (!input.parentElement.classList.contains('err')) {
-                togglePostError_1["default"](input);
-            }
-        });
-    }
-    else {
+    if (formIsValid_1["default"](inputs)) {
         var newPostInput = {
             author: window.localStorage.getItem('user'),
             title: inputs[0].value,
@@ -497,7 +612,7 @@ function postBlog(inputs) {
 }
 exports["default"] = postBlog;
 
-},{"./sendPostToServer":13,"./togglePostError":16}],12:[function(require,module,exports){
+},{"./formIsValid":8,"./sendPostToServer":14,"./togglePostError":17}],13:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function scrollToPost(post) {
@@ -511,7 +626,7 @@ function scrollToPost(post) {
 }
 exports["default"] = scrollToPost;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var frontendInsert_1 = require("./frontendInsert");
@@ -525,13 +640,13 @@ function sendPostToServer(postObject) {
             alert('There was an problem, please try again.');
         }
         var newPost = JSON.parse(postReq.response);
-        console.log(newPost);
+        newPost.author = window.localStorage.getItem('user');
         frontendInsert_1["default"](newPost);
     };
 }
 exports["default"] = sendPostToServer;
 
-},{"./frontendInsert":8}],14:[function(require,module,exports){
+},{"./frontendInsert":9}],15:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function setAttributes(elem, attr) {
@@ -541,7 +656,7 @@ function setAttributes(elem, attr) {
 }
 exports["default"] = setAttributes;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var AccInfoDiv_1 = require("../Classes/AccInfoDiv");
@@ -579,7 +694,7 @@ function showAccData() {
 }
 exports["default"] = showAccData;
 
-},{"../Classes/AccInfoDiv":2}],16:[function(require,module,exports){
+},{"../Classes/AccInfoDiv":2}],17:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function togglePostError(input) {
@@ -589,7 +704,7 @@ function togglePostError(input) {
 }
 exports["default"] = togglePostError;
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 exports.contentAttr = exports.titleAttr = void 0;
