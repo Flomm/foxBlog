@@ -1,3 +1,8 @@
+:root {
+  --darkgreen: var(--darkgreen);
+  --lightgreen: var(--lightgreen);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -19,7 +24,7 @@ header {
   display: flex;
   align-items: center;
   padding-left: 10%;
-  background-color: rgb(7, 116, 61);
+  background-color: var(--darkgreen);
   height: 10%;
   border-bottom: 1px solid black;
   font-size: 3vw;
@@ -44,12 +49,12 @@ wrapper {
   justify-content: center;
   align-items: center;
   padding: 5%;
-  background-color: rgb(182, 235, 186);
+  background-color: var(--lightgreen);
   border-radius: 5px;
 }
 
 h2 {
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
   margin-bottom: 2%;
 }
 
@@ -57,7 +62,7 @@ a {
   margin-top: 1%;
   text-decoration: none;
   font-weight: bold;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 a:hover {
@@ -65,7 +70,7 @@ a:hover {
 }
 
 .posted-main {
-  border: rgb(7, 116, 61) solid;
+  border: var(--darkgreen) solid;
   border-width: 20px;
   border-radius: 5px;
   margin: 4% 5%;
@@ -73,7 +78,7 @@ a:hover {
 }
 
 .posted-main h2 {
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 .posted-slot {
@@ -81,7 +86,7 @@ a:hover {
   border: 1px solid black;
   margin-bottom: 3%;
   padding-bottom: 1%;
-  background-color: rgb(182, 235, 186);
+  background-color: var(--lightgreen);
 }
 
 .posted-title {
@@ -104,7 +109,7 @@ a:hover {
   margin: 2%;
   margin-bottom: 1%;
   font-weight: bolder;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -118,7 +123,7 @@ a:hover {
 
 .likebar p {
   font-weight: bolder;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 footer {
@@ -128,7 +133,7 @@ footer {
   margin-top: 5%;
   height: 2%;
   width: 100%;
-  background-color: rgb(7, 116, 61);
+  background-color: var(--darkgreen);
   color: bisque;
   display: flex;
   justify-content: center;

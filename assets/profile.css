@@ -1,3 +1,8 @@
+:root {
+  --darkgreen: var(--darkgreen);
+  --lightgreen: var(--lightgreen);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -35,8 +40,8 @@ input {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 5%;
-  background-color: rgb(182, 235, 186);
-  color: rgb(7, 116, 61);
+  background-color: var(--lightgreen);
+  color: var(--darkgreen);
 }
 
 .confirm-box p:nth-child(2) {
@@ -49,11 +54,11 @@ input {
   margin-top: 1%;
   border-radius: 5px;
   background-color: beige;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 .confirm-box button:hover {
-  background-color: rgb(7, 116, 61);
+  background-color: var(--darkgreen);
   color: beige;
 }
 
@@ -71,7 +76,7 @@ header {
   display: flex;
   align-items: center;
   padding-left: 10%;
-  background-color: rgb(7, 116, 61);
+  background-color: var(--darkgreen);
   height: 10%;
   border-width: 1px;
   border-bottom-style: solid;
@@ -90,7 +95,7 @@ nav {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: rgb(7, 116, 61);
+  background-color: var(--darkgreen);
 }
 
 nav h4 {
@@ -107,7 +112,7 @@ a {
   font-weight: bolder;
   text-decoration: none;
   cursor: pointer;
-  background-color: rgb(7, 116, 61);
+  background-color: var(--darkgreen);
   outline: none;
   border: none;
   font-family: 'Courier Prime', monospace;
@@ -119,7 +124,7 @@ nav button:hover {
 }
 
 nav button:active {
-  color: rgb(182, 235, 186);
+  color: var(--lightgreen);
 }
 
 .main {
@@ -132,7 +137,7 @@ nav button:active {
 }
 
 .img-holder {
-  background-color: rgb(182, 235, 186);
+  background-color: var(--lightgreen);
   width: 50%;
   display: flex;
   justify-content: center;
@@ -148,8 +153,8 @@ img {
 .data {
   width: 50%;
   padding: 5%;
-  background-color: rgb(182, 235, 186);
-  color: rgb(7, 116, 61);
+  background-color: var(--lightgreen);
+  color: var(--darkgreen);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -169,7 +174,7 @@ img {
 }
 
 .posted-main {
-  border: rgb(7, 116, 61) solid;
+  border: var(--darkgreen) solid;
   border-width: 20px;
   border-radius: 5px;
   margin: 2% 5%;
@@ -178,7 +183,7 @@ img {
 
 .posted-main h2 {
   margin-bottom: 2%;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 .posted-slot {
@@ -186,7 +191,7 @@ img {
   border: 1px solid black;
   margin-bottom: 3%;
   padding-bottom: 1%;
-  background-color: rgb(182, 235, 186);
+  background-color: var(--lightgreen);
 }
 
 .posted-title {
@@ -212,7 +217,7 @@ img {
   margin: 2%;
   margin-bottom: 1%;
   font-weight: bolder;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -226,7 +231,7 @@ img {
 
 .likebar p {
   font-weight: bolder;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 .likebar button {
@@ -240,7 +245,7 @@ img {
 }
 
 .up-vote {
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 .down-vote {
@@ -251,30 +256,46 @@ img {
   opacity: 0.6;
 }
 
-.delete-btn {
+.posted-title button {
   position: relative;
   border: none;
   border-radius: 2px;
   width: 30px;
   height: 30px;
-  background-color: rgb(7, 116, 61);
+}
+
+.delete-btn {
+  background-color: var(--darkgreen);
   color: #df2e1a;
 }
 
-.delete-btn:after {
+.edit-btn {
+  background-color: beige;
+  color: var(--darkgreen);
+}
+
+.posted-title button:after {
   z-index: 10;
   display: none;
   color: beige;
-  background-color: #df2e1a;
   position: absolute;
   align-items: center;
   justify-content: center;
   border-radius: 2px;
   top: 0;
-  right: 100%;
   content: attr(data-action);
   height: 30px;
   width: 90px;
+}
+
+.delete-btn:after {
+  background-color: #df2e1a;
+  left: 100%;
+}
+
+.edit-btn:after {
+  background-color: #df2e1a;
+  left: 100%;
 }
 
 .delete-btn:active {
@@ -303,13 +324,13 @@ img {
 .submit-main {
   padding: 2% 10%;
   width: 80%;
-  background-color: rgb(182, 235, 186);
+  background-color: var(--lightgreen);
 }
 
 .submit-main span {
   font-size: 150%;
   font-weight: bold;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 form {
@@ -319,7 +340,7 @@ form {
 
 label {
   font-weight: bold;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 .label-slot {
@@ -351,7 +372,7 @@ textarea {
   width: 25%;
   align-self: center;
   border-radius: 10px;
-  background-color: rgb(7, 116, 61);
+  background-color: var(--darkgreen);
   color: beige;
   display: flex;
   justify-content: center;
@@ -361,7 +382,7 @@ textarea {
 
 .button-submit:hover {
   background-color: beige;
-  color: rgb(7, 116, 61);
+  color: var(--darkgreen);
 }
 
 footer {
@@ -371,7 +392,7 @@ footer {
   margin-top: 2%;
   height: 5%;
   width: 100%;
-  background-color: rgb(7, 116, 61);
+  background-color: var(--darkgreen);
   color: bisque;
   display: flex;
   justify-content: center;
