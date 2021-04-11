@@ -1,6 +1,6 @@
 export default interface IPostable {
   id: number;
-  author: string;
+  author?: string;
   title: string;
   content: string;
   timestamp: number;

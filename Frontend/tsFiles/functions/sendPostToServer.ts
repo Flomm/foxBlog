@@ -12,7 +12,7 @@ export default function sendPostToServer(postObject: Sendable): void {
       alert('There was an problem, please try again.');
     }
     const newPost: Postable = JSON.parse(postReq.response);
-    console.log(newPost);
+    newPost.author = window.localStorage.getItem('user');
     frontEndInsert(newPost);
   };
 }

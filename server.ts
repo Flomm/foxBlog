@@ -185,19 +185,29 @@ app.delete('/api/posts/:id', (req: express.Request, res: express.Response) => {
 //Addpost
 app.post('/api/addpost', (req: express.Request, res: express.Response) => {
   const newPost: IPostable = req.body;
-  connection.query('INSERT INTO posts SET ?;', newPost, (err: Error, result) => {
+  connection.query('SELECT id FROM users WHERE user_name=?', newPost.author, (err: Error, result) => {
     if (err) {
       res.status(500).send();
       return console.error(err);
+    } else {
+      newPost.author_id = result[0].id;
+      // const { author, ...newPost } = newPost;
+      delete newPost.author;
+      connection.query('INSERT INTO posts SET ?', newPost, (err: Error, result) => {
+        if (err) {
+          res.status(500).send();
+          return console.error(err);
+        }
+        const newId: number = result.insertId;
+        connection.query('SELECT * FROM posts WHERE id=?;', newId, (err: Error, result: Postable[]) => {
+          if (err) {
+            res.status(500).send();
+            return console.error(err);
+          }
+          res.status(202).send(result[0]);
+        });
+      });
     }
-    const newId: number = result.insertId;
-    connection.query('SELECT * FROM posts WHERE id=?;', newId, (err: Error, result: Postable[]) => {
-      if (err) {
-        res.status(500).send();
-        return console.error(err);
-      }
-      res.status(202).send(result[0]);
-    });
   });
 });
 //Upvote
