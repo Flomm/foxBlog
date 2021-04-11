@@ -5,8 +5,9 @@ import loadPosts from '../functions/loadPosts';
 export default class PersonalPost extends GeneralPost {
   constructor(postObject: Postable) {
     super(postObject);
+    this.showConfirmBox = this.showConfirmBox.bind(this);
   }
-  boundShowBox = this.showConfirmBox.bind(this);
+  // boundShowBox = this.showConfirmBox.bind(this);
 
   showConfirmBox() {
     const wrapper: HTMLElement = document.querySelector('.main');
@@ -30,7 +31,7 @@ export default class PersonalPost extends GeneralPost {
     yesBtn.addEventListener('click', () => {
       document.querySelector('body').removeChild(confirmBox);
       wrapper.classList.remove('shady');
-      this.deletePost();
+      this.xhrCall('DELETE', `/api/posts/${this.postInput.id}`);
     });
     noBtn.addEventListener('click', () => {
       document.querySelector('body').removeChild(confirmBox);
@@ -38,7 +39,11 @@ export default class PersonalPost extends GeneralPost {
     });
   }
 
-  deletePost(): void {
+  showEditBox() {
+    console.log('edit');
+  }
+
+  xhrCall(method: string, endpoint: string) {
     const xhr: XMLHttpRequest = new XMLHttpRequest();
     xhr.onload = () => {
       if (xhr.status !== 200) {
@@ -48,23 +53,47 @@ export default class PersonalPost extends GeneralPost {
         loadPosts('myPosts');
       }
     };
-    xhr.open('DELETE', `/api/posts/${this.postInput.id}`);
+    xhr.open(method, endpoint);
     xhr.setRequestHeader('user', window.localStorage.getItem('user'));
-    xhr.send();
+    if (method === 'PUT') {
+      const editedData: any = [];
+      xhr.send(JSON.stringify(editedData));
+    } else {
+      xhr.send();
+    }
   }
 
-  addDelBtn(): void {
-    const delBtn: HTMLButtonElement = document.createElement('button');
-    delBtn.classList.add('delete-btn');
-    delBtn.addEventListener('click', this.boundShowBox);
+  // editPost(): void {}
+
+  // deletePost(): void {
+  //   const xhr: XMLHttpRequest = new XMLHttpRequest();
+  //   xhr.onload = () => {
+  //     if (xhr.status !== 200) {
+  //       alert('Something went wrong, please try again.');
+  //     } else {
+  //       document.querySelector('.main').innerHTML = '';
+  //       loadPosts('myPosts');
+  //     }
+  //   };
+  //   xhr.open('DELETE', `/api/posts/${this.postInput.id}`);
+  //   xhr.setRequestHeader('user', window.localStorage.getItem('user'));
+  //   xhr.send();
+  // }
+
+  addBtn(type: string, callback, span: HTMLSpanElement): void {
+    const newBtn: HTMLButtonElement = document.createElement('button');
+    newBtn.classList.add(`${type}-btn`);
+    newBtn.addEventListener('click', callback);
     const icon: HTMLElement = document.createElement('i');
     icon.classList.add('fas');
-    icon.classList.add('fa-trash-alt');
-    delBtn.appendChild(icon);
-    delBtn.setAttribute('data-action', 'delete');
-    const newSpan: HTMLSpanElement = document.createElement('span');
-    newSpan.appendChild(delBtn);
-    this.postTitle.appendChild(newSpan);
+    if (type === 'delete') {
+      icon.classList.add('fa-trash-alt');
+    } else {
+      icon.classList.add('fa-edit');
+    }
+    newBtn.appendChild(icon);
+    newBtn.setAttribute('data-action', type);
+    span.appendChild(newBtn);
   }
 
   makePost(): HTMLDivElement {
@@ -72,7 +101,10 @@ export default class PersonalPost extends GeneralPost {
     this.assignClasses();
     this.fillPost();
     this.createStructure();
-    this.addDelBtn();
+    const newSpan: HTMLSpanElement = document.createElement('span');
+    this.addBtn('edit', this.showEditBox, newSpan);
+    this.addBtn('delete', this.showConfirmBox, newSpan);
+    this.postTitle.appendChild(newSpan);
     return this.postSlot;
   }
 }

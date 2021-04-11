@@ -21,6 +21,7 @@ input[type='submit'] {
   font-family: 'Courier Prime', monospace;
   outline: none;
 }
+
 input {
   outline: none;
 }
@@ -137,6 +138,7 @@ nav button:active {
 }
 
 .img-holder {
+  margin-top: 1%;
   background-color: var(--lightgreen);
   width: 50%;
   display: flex;
@@ -294,19 +296,30 @@ img {
 }
 
 .edit-btn:after {
-  background-color: #df2e1a;
-  left: 100%;
+  background-color: var(--darkgreen);
+  right: 100%;
 }
 
-.delete-btn:active {
+.posted-title button:active {
   opacity: 0.8;
 }
 
-.delete-btn:hover:after {
+.posted-title button:hover:after {
   display: flex;
 }
 
 .delete-btn:before {
+  z-index: 11;
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 100%;
+  content: '';
+  border: 5px solid transparent;
+  border-left-color: rgb(20, 19, 19);
+}
+
+.edit-btn:before {
   z-index: 11;
   display: none;
   position: absolute;
@@ -317,7 +330,7 @@ img {
   border-right-color: rgb(20, 19, 19);
 }
 
-.delete-btn:hover:before {
+.posted-title button:hover:before {
   display: block;
 }
 
