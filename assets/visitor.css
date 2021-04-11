@@ -1,6 +1,6 @@
 :root {
-  --darkgreen: var(--darkgreen);
-  --lightgreen: var(--lightgreen);
+  --darkgreen: rgb(7, 116, 61);
+  --lightgreen: rgb(182, 235, 186);
 }
 
 * {
