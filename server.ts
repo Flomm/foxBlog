@@ -1,10 +1,10 @@
 import IPostable from './Backend/IPostable';
+import IUpdateData from './Backend/IUpdateData';
 import AccData from './Backend/IAccData';
 import Vote from './Backend/IVote';
 import SetVoteScore from './Backend/ISetVoteScore';
-import { connection } from './Backend/sqlConnect';
 import countScore from './Backend/countScore';
-import Postable from './Frontend/tsFiles/Interfaces/IPostable';
+import { connection } from './Backend/sqlConnect';
 import * as express from 'express';
 
 const app = express();
@@ -191,7 +191,6 @@ app.post('/api/addpost', (req: express.Request, res: express.Response) => {
       return console.error(err);
     } else {
       newPost.author_id = result[0].id;
-      // const { author, ...newPost } = newPost;
       delete newPost.author;
       connection.query('INSERT INTO posts SET ?', newPost, (err: Error, result) => {
         if (err) {
@@ -199,7 +198,7 @@ app.post('/api/addpost', (req: express.Request, res: express.Response) => {
           return console.error(err);
         }
         const newId: number = result.insertId;
-        connection.query('SELECT * FROM posts WHERE id=?;', newId, (err: Error, result: Postable[]) => {
+        connection.query('SELECT * FROM posts WHERE id=?;', newId, (err: Error, result: IPostable[]) => {
           if (err) {
             res.status(500).send();
             return console.error(err);
@@ -209,6 +208,29 @@ app.post('/api/addpost', (req: express.Request, res: express.Response) => {
       });
     }
   });
+});
+//Update post
+app.put('/api/posts/:id', (req: express.Request, res: express.Response) => {
+  const postID: string = req.params.id;
+  const rbody: IUpdateData = req.body;
+  connection.query(
+    `UPDATE posts SET title = '${rbody.title}', content='${rbody.content}' WHERE id = ?`,
+    postID,
+    (err: Error, result) => {
+      if (err) {
+        res.sendStatus(500);
+        return console.error(err);
+      }
+      if (result.affectedRows === 0) return res.sendStatus(400);
+      connection.query('SELECT * FROM posts WHERE id = ?', postID, (err: Error, result: IPostable[]) => {
+        if (err) {
+          res.sendStatus(500);
+          return console.error(err);
+        }
+        res.status(200).send(result[0]);
+      });
+    }
+  );
 });
 //Upvote
 app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) => {
