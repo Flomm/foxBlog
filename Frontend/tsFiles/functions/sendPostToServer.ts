@@ -3,16 +3,17 @@ import Postable from '../Interfaces/IPostable';
 import frontEndInsert from './frontendInsert';
 
 export default function sendPostToServer(postObject: Sendable): void {
-  const postReq: XMLHttpRequest = new XMLHttpRequest();
-  postReq.open('POST', '/api/addpost', true);
-  postReq.setRequestHeader('Content-Type', 'application/json');
-  postReq.send(JSON.stringify(postObject));
-  postReq.onload = () => {
-    if (postReq.status !== 202) {
-      alert('There was an problem, please try again.');
+  const xhr: XMLHttpRequest = new XMLHttpRequest();
+  xhr.open('POST', '/api/addpost', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify(postObject));
+  xhr.onload = () => {
+    if (xhr.status !== 200) {
+      alert(`${JSON.parse(xhr.response).message}`);
+    } else {
+      const newPost: Postable = JSON.parse(xhr.response);
+      newPost.author = window.localStorage.getItem('user');
+      frontEndInsert(newPost);
     }
-    const newPost: Postable = JSON.parse(postReq.response);
-    newPost.author = window.localStorage.getItem('user');
-    frontEndInsert(newPost);
   };
 }

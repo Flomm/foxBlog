@@ -11,6 +11,7 @@ var GeneralPost = /** @class */ (function () {
         this.postDate = document.createElement('div');
         this.postMisc = document.createElement('div');
         this.postTitle = document.createElement('div');
+        this.titleText = document.createElement('span');
         this.postContent = document.createElement('div');
         this.likeBar = document.createElement('div');
         this.likeBarP = document.createElement('p');
@@ -27,11 +28,12 @@ var GeneralPost = /** @class */ (function () {
     GeneralPost.prototype.fillPost = function () {
         this.postAuthor.textContent = "Posted by: " + this.postInput.author;
         this.postDate.textContent = "On: " + new Date(this.postInput.timestamp * 1000).toLocaleString().split(',')[0];
-        this.postTitle.textContent = this.postInput.title;
+        this.titleText.textContent = this.postInput.title;
         this.postContent.textContent = this.postInput.content;
         this.likeBarP.textContent = "Score: " + this.postInput.score;
     };
     GeneralPost.prototype.createStructure = function () {
+        this.postTitle.appendChild(this.titleText);
         this.postSlot.appendChild(this.postTitle);
         this.postSlot.appendChild(this.postContent);
         this.postMisc.appendChild(this.postAuthor);
@@ -62,22 +64,22 @@ function initialPost(postObject) {
     postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
 }
 function visitorPostLoad() {
-    var newReq = new XMLHttpRequest();
-    newReq.onload = function () {
-        if (newReq.status === 200) {
-            var posts = newReq.response;
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.status !== 200) {
+            alert("" + JSON.parse(xhr.response).message);
+        }
+        else {
+            var posts = xhr.response;
             var parsed = JSON.parse(posts);
             for (var _i = 0, parsed_1 = parsed; _i < parsed_1.length; _i++) {
                 var p = parsed_1[_i];
                 initialPost(p);
             }
         }
-        else {
-            alert('There was a problem with the server. Please try again later.');
-        }
     };
-    newReq.open('GET', '/api/posts/visitor');
-    newReq.send();
+    xhr.open('GET', '/api/posts/visitor');
+    xhr.send();
 }
 exports["default"] = visitorPostLoad;
 

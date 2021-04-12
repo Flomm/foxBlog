@@ -11,7 +11,7 @@ export default class VotablePost extends GeneralPost {
     const xhr: XMLHttpRequest = new XMLHttpRequest();
     xhr.onload = () => {
       if (xhr.status !== 200) {
-        alert('Something went wrong, please try again.');
+        alert(`${JSON.parse(xhr.response).message}`);
       } else {
         const newPost: Postable = JSON.parse(xhr.response);
         this.postInput.score = newPost.score;

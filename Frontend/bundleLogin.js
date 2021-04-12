@@ -55,17 +55,12 @@ function checkLogin(inputs) {
         xhr_1.setRequestHeader('password', pw);
         xhr_1.send();
         xhr_1.onload = function () {
-            if (xhr_1.status === 500) {
-                alert('There is a problem with the server. Please try again later.');
-                return;
-            }
-            if (xhr_1.status === 400) {
-                alert('Invalid login or password.');
+            if (xhr_1.status !== 200) {
+                alert("" + JSON.parse(xhr_1.response).message);
                 loginInput.value = '';
                 pwInput.value = '';
-                return;
             }
-            if (xhr_1.status === 200) {
+            else {
                 window.localStorage.setItem('user', userName_1);
                 window.location.replace('./profile');
             }

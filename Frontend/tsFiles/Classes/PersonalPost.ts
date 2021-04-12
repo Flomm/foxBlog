@@ -119,7 +119,7 @@ export default class PersonalPost extends GeneralPost {
     const xhr: XMLHttpRequest = new XMLHttpRequest();
     xhr.onload = () => {
       if (xhr.status !== 200) {
-        alert('Something went wrong, please try again.');
+        alert(`${JSON.parse(xhr.response).message}`);
       } else {
         if (method === 'DELETE') {
           const postedMain: HTMLDivElement = document.querySelector('.posted-main');

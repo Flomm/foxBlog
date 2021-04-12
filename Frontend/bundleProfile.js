@@ -248,7 +248,7 @@ var PersonalPost = /** @class */ (function (_super) {
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
             if (xhr.status !== 200) {
-                alert('Something went wrong, please try again.');
+                alert("" + JSON.parse(xhr.response).message);
             }
             else {
                 if (method === 'DELETE') {
@@ -340,7 +340,7 @@ var VotablePost = /** @class */ (function (_super) {
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
             if (xhr.status !== 200) {
-                alert('Something went wrong, please try again.');
+                alert("" + JSON.parse(xhr.response).message);
             }
             else {
                 var newPost = JSON.parse(xhr.response);
@@ -487,17 +487,17 @@ exports["default"] = createSuccessDiv;
 exports.__esModule = true;
 var togglePostError_1 = require("./togglePostError");
 function formIsValid(inputs) {
-    var emptyField = [];
+    var invalidFields = [];
     inputs.forEach(function (input) {
         if (input.parentElement.classList.contains('err')) {
             togglePostError_1["default"](input);
         }
-        if (input.value === '') {
-            emptyField.push(input);
+        if (input.value.length < 5) {
+            invalidFields.push(input);
         }
     });
-    if (emptyField.length !== 0) {
-        emptyField.forEach(function (input) {
+    if (invalidFields.length !== 0) {
+        invalidFields.forEach(function (input) {
             if (!input.parentElement.classList.contains('err')) {
                 togglePostError_1["default"](input);
             }
@@ -549,17 +549,12 @@ var initiatePost_1 = require("./initiatePost");
 var createSuccessDiv_1 = require("./createSuccessDiv");
 var main = document.querySelector('.main');
 function loadPosts(endP) {
-    var newReq = new XMLHttpRequest();
-    newReq.onload = function () {
-        if (newReq.status === 500) {
-            createSuccessDiv_1["default"]('There was a problem with server. Please try again later.');
-            return;
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.status !== 200) {
+            createSuccessDiv_1["default"]("" + JSON.parse(xhr.response).message);
         }
-        if (newReq.status === 400) {
-            createSuccessDiv_1["default"]('Currently you have no posts.');
-            return;
-        }
-        if (newReq.status === 200) {
+        else {
             var postedMain = document.createElement('div');
             postedMain.classList.add('posted-main');
             var h2 = document.createElement('h2');
@@ -571,19 +566,16 @@ function loadPosts(endP) {
             }
             postedMain.appendChild(h2);
             main.appendChild(postedMain);
-            var posts = newReq.response;
-            var parsed = JSON.parse(posts);
-            for (var _i = 0, parsed_1 = parsed; _i < parsed_1.length; _i++) {
-                var p = parsed_1[_i];
+            var parsedPost = JSON.parse(xhr.response);
+            for (var _i = 0, parsedPost_1 = parsedPost; _i < parsedPost_1.length; _i++) {
+                var p = parsedPost_1[_i];
                 initiatePost_1["default"](p, endP);
             }
-            return;
         }
-        createSuccessDiv_1["default"]('There was a problem with the server. Please try again later.');
     };
-    newReq.open('GET', "/api/posts/" + endP);
-    newReq.setRequestHeader('user', window.localStorage.getItem('user'));
-    newReq.send();
+    xhr.open('GET', "/api/posts/" + endP);
+    xhr.setRequestHeader('user', window.localStorage.getItem('user'));
+    xhr.send();
 }
 exports["default"] = loadPosts;
 
@@ -631,17 +623,19 @@ exports["default"] = scrollToPost;
 exports.__esModule = true;
 var frontendInsert_1 = require("./frontendInsert");
 function sendPostToServer(postObject) {
-    var postReq = new XMLHttpRequest();
-    postReq.open('POST', '/api/addpost', true);
-    postReq.setRequestHeader('Content-Type', 'application/json');
-    postReq.send(JSON.stringify(postObject));
-    postReq.onload = function () {
-        if (postReq.status !== 202) {
-            alert('There was an problem, please try again.');
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/addpost', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(postObject));
+    xhr.onload = function () {
+        if (xhr.status !== 200) {
+            alert("" + JSON.parse(xhr.response).message);
         }
-        var newPost = JSON.parse(postReq.response);
-        newPost.author = window.localStorage.getItem('user');
-        frontendInsert_1["default"](newPost);
+        else {
+            var newPost = JSON.parse(xhr.response);
+            newPost.author = window.localStorage.getItem('user');
+            frontendInsert_1["default"](newPost);
+        }
     };
 }
 exports["default"] = sendPostToServer;
@@ -674,13 +668,13 @@ function showAccData() {
             numOfPosts: '',
             sumScore: ''
         };
-        if (xhr.status === 500) {
+        if (xhr.status !== 200) {
             accData = {
                 numOfPosts: 'server not found',
                 sumScore: 'server not found'
             };
         }
-        if (xhr.status === 200) {
+        else {
             accData = JSON.parse(xhr.response);
         }
         var accClass = new AccInfoDiv_1["default"]('Account information', ['Login: ', 'Account type: ', 'Rank: '], [userName, 'normal', 'Fox']);

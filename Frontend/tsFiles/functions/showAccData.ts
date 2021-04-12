@@ -15,13 +15,12 @@ export default function showAccData(): void {
       numOfPosts: '',
       sumScore: '',
     };
-    if (xhr.status === 500) {
+    if (xhr.status !== 200) {
       accData = {
         numOfPosts: 'server not found',
         sumScore: 'server not found',
       };
-    }
-    if (xhr.status === 200) {
+    } else {
       accData = JSON.parse(xhr.response);
     }
     const accClass: AccInfoDiv = new AccInfoDiv(

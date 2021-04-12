@@ -28,17 +28,11 @@ export default function checkLogin(inputs: HTMLInputElement[]): void {
     xhr.setRequestHeader('password', pw);
     xhr.send();
     xhr.onload = () => {
-      if (xhr.status === 500) {
-        alert('There is a problem with the server. Please try again later.');
-        return;
-      }
-      if (xhr.status === 400) {
-        alert('Invalid login or password.');
+      if (xhr.status !== 200) {
+        alert(`${JSON.parse(xhr.response).message}`);
         loginInput.value = '';
         pwInput.value = '';
-        return;
-      }
-      if (xhr.status === 200) {
+      } else {
         window.localStorage.setItem('user', userName);
         window.location.replace('./profile');
       }
