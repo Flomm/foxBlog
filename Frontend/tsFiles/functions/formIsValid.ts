@@ -1,17 +1,17 @@
 import togglePostError from './togglePostError';
 
 export default function formIsValid(inputs: HTMLInputElement[]) {
-  let emptyField: HTMLInputElement[] = [];
+  let invalidFields: HTMLInputElement[] = [];
   inputs.forEach((input) => {
     if (input.parentElement.classList.contains('err')) {
       togglePostError(input);
     }
-    if (input.value === '') {
-      emptyField.push(input);
+    if (input.value.length < 5) {
+      invalidFields.push(input);
     }
   });
-  if (emptyField.length !== 0) {
-    emptyField.forEach((input) => {
+  if (invalidFields.length !== 0) {
+    invalidFields.forEach((input) => {
       if (!input.parentElement.classList.contains('err')) {
         togglePostError(input);
       }

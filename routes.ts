@@ -174,52 +174,60 @@ app.delete('/api/posts/:id', (req: express.Request, res: express.Response) => {
 //Addpost
 app.post('/api/addpost', (req: express.Request, res: express.Response) => {
   const newPost: IPostable = req.body;
-  connection.query('SELECT id FROM users WHERE user_name=?', newPost.author, (err: Error, result) => {
-    if (err) {
-      res.status(500).send();
-      return console.error(err);
-    } else {
-      newPost.author_id = result[0].id;
-      delete newPost.author;
-      connection.query('INSERT INTO posts SET ?', newPost, (err: Error, result) => {
-        if (err) {
-          res.status(500).send();
-          return console.error(err);
-        }
-        const newId: number = result.insertId;
-        connection.query('SELECT * FROM posts WHERE id=?;', newId, (err: Error, result: IPostable[]) => {
+  if (newPost.content.length >= 5 && newPost.title.length >= 5) {
+    connection.query('SELECT id FROM users WHERE user_name=?', newPost.author, (err: Error, result) => {
+      if (err) {
+        res.status(500).send();
+        return console.error(err);
+      } else {
+        newPost.author_id = result[0].id;
+        delete newPost.author;
+        connection.query('INSERT INTO posts SET ?', newPost, (err: Error, result) => {
           if (err) {
             res.status(500).send();
             return console.error(err);
           }
-          res.status(202).send(result[0]);
+          const newId: number = result.insertId;
+          connection.query('SELECT * FROM posts WHERE id=?;', newId, (err: Error, result: IPostable[]) => {
+            if (err) {
+              res.status(500).send();
+              return console.error(err);
+            }
+            res.status(202).send(result[0]);
+          });
         });
-      });
-    }
-  });
+      }
+    });
+  } else {
+    res.status(400).send();
+  }
 });
 //Update post
 app.put('/api/posts/:id', (req: express.Request, res: express.Response) => {
   const postID: string = req.params.id;
-  const rbody: IUpdateData = req.body;
-  connection.query(
-    `UPDATE posts SET title = '${rbody.title}', content='${rbody.content}' WHERE id = ?`,
-    postID,
-    (err: Error, result) => {
-      if (err) {
-        res.sendStatus(500);
-        return console.error(err);
-      }
-      if (result.affectedRows === 0) return res.sendStatus(400);
-      connection.query('SELECT * FROM posts WHERE id = ?', postID, (err: Error, result: IPostable[]) => {
+  const updateData: IUpdateData = req.body;
+  if (updateData.content.length >= 5 && updateData.title.length >= 5) {
+    connection.query(
+      `UPDATE posts SET title = '${updateData.title}', content='${updateData.content}' WHERE id = ?`,
+      postID,
+      (err: Error, result) => {
         if (err) {
           res.sendStatus(500);
           return console.error(err);
         }
-        res.status(200).send(result[0]);
-      });
-    }
-  );
+        if (result.affectedRows === 0) return res.sendStatus(400);
+        connection.query('SELECT * FROM posts WHERE id = ?', postID, (err: Error, result: IPostable[]) => {
+          if (err) {
+            res.sendStatus(500);
+            return console.error(err);
+          }
+          res.status(200).send(result[0]);
+        });
+      }
+    );
+  } else {
+    res.status(400).send();
+  }
 });
 //Upvote
 app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) => {
@@ -315,7 +323,7 @@ app.put('/api/posts/:id/upvote', (req: express.Request, res: express.Response) =
     }
   });
 });
-
+//Downvote
 app.put('/api/posts/:id/downvote', (req: express.Request, res: express.Response) => {
   const postID = req.params.id;
   const userName: string = req.headers.user as string;
