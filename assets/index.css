@@ -63,6 +63,7 @@ h1 {
 
 .welcome {
   width: 90%;
+  text-align: center;
 }
 
 .login {
@@ -73,6 +74,10 @@ h1 {
 form {
   display: flex;
   flex-direction: column;
+}
+
+label[for='check'] {
+  font-size: small;
 }
 
 input {
@@ -131,4 +136,10 @@ footer {
   justify-content: center;
   align-items: center;
   user-select: none;
+}
+
+@media screen and (max-width: 670px) {
+  .login {
+    width: 90%;
+  }
 }
