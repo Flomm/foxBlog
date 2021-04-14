@@ -1,6 +1,7 @@
 :root {
   --darkgreen: rgb(7, 116, 61);
   --lightgreen: rgb(182, 235, 186);
+  --error: #df2e1a;
 }
 
 * {
@@ -85,11 +86,11 @@ input {
 }
 
 .err {
-  color: red;
+  color: var(--error);
 }
 
 .err + input {
-  border-color: red;
+  border-color: var(--error);
 }
 
 input[type='submit'] {

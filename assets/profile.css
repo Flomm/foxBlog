@@ -1,6 +1,7 @@
 :root {
   --darkgreen: rgb(7, 116, 61);
   --lightgreen: rgb(182, 235, 186);
+  --error: #df2e1a;
 }
 
 * {
@@ -76,7 +77,7 @@ input {
   border-radius: 5px;
   width: 50%;
   color: beige;
-  background-color: #df2e1a;
+  background-color: var(--error);
 }
 
 header {
@@ -263,7 +264,7 @@ img {
 }
 
 .down-vote {
-  color: red;
+  color: var(--error);
 }
 
 .likebar button:active {
@@ -280,7 +281,7 @@ img {
 
 .delete-btn {
   background-color: var(--darkgreen);
-  color: #df2e1a;
+  color: var(--error);
 }
 
 .edit-btn {
@@ -303,7 +304,7 @@ img {
 }
 
 .delete-btn:after {
-  background-color: #df2e1a;
+  background-color: var(--error);
   left: 100%;
 }
 
@@ -374,14 +375,14 @@ label {
 
 .label-slot.err:after {
   content: attr(err-text);
-  color: red;
+  color: var(--error);
   font-size: small;
   font-weight: bold;
 }
 
 .text-area.err textarea,
 .text-area.err input {
-  border-color: red;
+  border-color: var(--error);
 }
 
 textarea {
