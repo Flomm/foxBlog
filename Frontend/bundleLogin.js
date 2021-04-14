@@ -2,26 +2,22 @@
 "use strict";
 exports.__esModule = true;
 var checkLogin_1 = require("./tsFiles/functions/checkLogin");
+var togglePassword_1 = require("./tsFiles/functions/togglePassword");
 var loginForm = document.querySelector('form');
 var checkBox = document.querySelector('.check');
-var pwInput = document.querySelector('form').elements[1];
+var pwLabel = document.querySelector('label[for="check"]');
 window.onload = function () {
     loginForm.addEventListener('submit', function (event) {
         event.preventDefault();
         var inputs = Array.from(loginForm.querySelectorAll('input[size="10"]'));
         checkLogin_1["default"](inputs);
     });
-    checkBox.addEventListener('change', function () {
-        if (pwInput.type === 'password') {
-            pwInput.type = 'text';
-        }
-        else {
-            pwInput.type = 'password';
-        }
-    });
 };
+checkBox.addEventListener('click', function () {
+    togglePassword_1["default"](pwLabel);
+});
 
-},{"./tsFiles/functions/checkLogin":2}],2:[function(require,module,exports){
+},{"./tsFiles/functions/checkLogin":2,"./tsFiles/functions/togglePassword":3}],2:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function checkLogin(inputs) {
@@ -68,5 +64,26 @@ function checkLogin(inputs) {
     }
 }
 exports["default"] = checkLogin;
+
+},{}],3:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+function togglePassword(label) {
+    var icon = label.querySelector('i');
+    var pwInput = document.querySelector('form').elements[1];
+    if (pwInput.type === 'password') {
+        pwInput.type = 'text';
+        label.querySelector('span').textContent = 'Hide password';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    }
+    else {
+        pwInput.type = 'password';
+        label.querySelector('span').textContent = 'Show password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+exports["default"] = togglePassword;
 
 },{}]},{},[1]);
