@@ -49,7 +49,7 @@ wrapper > div {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 5%;
+  margin-bottom: 2%;
   background-color: var(--lightgreen);
   padding: 2%;
   border-radius: 5px;
@@ -62,7 +62,7 @@ h1 {
 }
 
 .welcome {
-  width: 90%;
+  width: 80%;
   text-align: center;
 }
 
@@ -76,13 +76,9 @@ form {
   flex-direction: column;
 }
 
-label[for='check'] {
-  font-size: small;
-}
-
 input {
   border-radius: 2px;
-  margin-bottom: 15%;
+  margin-bottom: 22px;
   padding: 2%;
   outline-color: var(--darkgreen);
   border: 1px solid var(--darkgreen);
@@ -110,6 +106,8 @@ input[type='submit']:hover {
 }
 
 a {
+  margin-top: 2%;
+  text-align: center;
   text-decoration: none;
   font-weight: bold;
   color: var(--darkgreen);
@@ -119,15 +117,32 @@ a:hover {
   text-decoration: underline;
 }
 
-p {
-  color: var(--darkgreen);
+form > div {
+  margin-bottom: 5%;
+}
+
+label[for='check'] {
   font-size: small;
+  position: relative;
+  user-select: none;
+}
+
+.check {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+label[for='check'] i {
+  width: 16.25px;
+  cursor: pointer;
 }
 
 footer {
   position: absolute;
   bottom: 0;
-  margin-top: 2%;
+  margin-top: 1%;
   height: 5%;
   width: 100%;
   background-color: var(--darkgreen);
@@ -138,8 +153,8 @@ footer {
   user-select: none;
 }
 
-@media screen and (max-width: 670px) {
+@media screen and (max-width: 900px) {
   .login {
-    width: 90%;
+    width: 80%;
   }
 }

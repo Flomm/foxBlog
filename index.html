@@ -8,6 +8,7 @@
     <link href="link" rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet" />
     <link rel="icon" href="./assets/fox.svg" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/4ecf49da3e.js" crossorigin="anonymous"></script>
     <title>The Fox Blog</title>
   </head>
   <body>
@@ -35,13 +36,16 @@
             type="submit"
           />
           <div>
-            <input class="check" id="check" type="checkbox" />
-            <label for="check">Show password</label>
+            <label for="check">
+              <input class="check" id="check" type="checkbox" />
+              <i class="fas fa-eye"></i>
+              <span> Show password </span></label
+            >
           </div>
-          <!-- <p><input class="check" type="checkbox" />&nbspShow password</p> -->
           <input type="submit" value="Log In" />
         </form>
         <a href="./visitor">Check out the posts as a visitor</a>
+        <a href="./visitor">Sign up</a>
       </div>
     </wrapper>
     <footer>2020 All foxes reserved</footer>
