@@ -2,6 +2,7 @@
 "use strict";
 exports.__esModule = true;
 var checkLogin_1 = require("./tsFiles/functions/checkLogin");
+var sendLogin_1 = require("./tsFiles/functions/sendLogin");
 var togglePassword_1 = require("./tsFiles/functions/togglePassword");
 var loginForm = document.querySelector('form');
 var checkBox = document.querySelector('.check');
@@ -10,19 +11,19 @@ window.onload = function () {
     loginForm.addEventListener('submit', function (event) {
         event.preventDefault();
         var inputs = Array.from(loginForm.querySelectorAll('input[size="10"]'));
-        checkLogin_1["default"](inputs);
+        if (checkLogin_1["default"](inputs)) {
+            sendLogin_1["default"](inputs);
+        }
     });
 };
 checkBox.addEventListener('click', function () {
     togglePassword_1["default"](pwLabel);
 });
 
-},{"./tsFiles/functions/checkLogin":2,"./tsFiles/functions/togglePassword":3}],2:[function(require,module,exports){
+},{"./tsFiles/functions/checkLogin":2,"./tsFiles/functions/sendLogin":3,"./tsFiles/functions/togglePassword":4}],2:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function checkLogin(inputs) {
-    var loginInput = document.querySelector('form').elements[0];
-    var pwInput = document.querySelector('form').elements[1];
     var emptyField = [];
     inputs.forEach(function (input) {
         var labelEl = document.querySelector("label[for=" + input.name + "]");
@@ -41,31 +42,38 @@ function checkLogin(inputs) {
                 labelEl.classList.toggle('err');
             }
         });
+        return false;
     }
-    else {
-        var userName_1 = loginInput.value;
-        var pw = pwInput.value;
-        var xhr_1 = new XMLHttpRequest();
-        xhr_1.open('GET', '/api/login', true);
-        xhr_1.setRequestHeader('user', userName_1);
-        xhr_1.setRequestHeader('password', pw);
-        xhr_1.send();
-        xhr_1.onload = function () {
-            if (xhr_1.status !== 200) {
-                alert("" + JSON.parse(xhr_1.response).message);
-                loginInput.value = '';
-                pwInput.value = '';
-            }
-            else {
-                window.localStorage.setItem('user', userName_1);
-                window.location.replace('./profile');
-            }
-        };
-    }
+    return true;
 }
 exports["default"] = checkLogin;
 
 },{}],3:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+function sendLogin(inputs) {
+    var userName = inputs[0].value;
+    var pw = inputs[1].value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/login', true);
+    xhr.setRequestHeader('user', userName);
+    xhr.setRequestHeader('password', pw);
+    xhr.send();
+    xhr.onload = function () {
+        if (xhr.status !== 200) {
+            alert("" + JSON.parse(xhr.response).message);
+            inputs[0].value = '';
+            inputs[1].value = '';
+        }
+        else {
+            window.localStorage.setItem('user', userName);
+            window.location.replace('./profile');
+        }
+    };
+}
+exports["default"] = sendLogin;
+
+},{}],4:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function togglePassword(label) {

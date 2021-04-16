@@ -1,4 +1,5 @@
 import checkLogin from './tsFiles/functions/checkLogin';
+import sendLogin from './tsFiles/functions/sendLogin';
 import togglePassword from './tsFiles/functions/togglePassword';
 const loginForm: HTMLFormElement = document.querySelector('form');
 const checkBox: HTMLInputElement = document.querySelector('.check');
@@ -8,7 +9,9 @@ window.onload = () => {
   loginForm.addEventListener('submit', (event: Event) => {
     event.preventDefault();
     const inputs: HTMLInputElement[] = Array.from(loginForm.querySelectorAll('input[size="10"]'));
-    checkLogin(inputs);
+    if (checkLogin(inputs)) {
+      sendLogin(inputs);
+    }
   });
 };
 
