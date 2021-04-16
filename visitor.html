@@ -21,7 +21,19 @@
         <a href="./">Back to login</a>
       </div>
       <div class="posted-main">
-        <h2>Posts</h2>
+        <div class="post-head">
+          <h2>Posts</h2>
+          <form class="sort-form">
+            <label for="sort-select">Sort by:</label>
+            <select name="select" id="sort-select">
+              <option value="1">Latest</option>
+              <option value="2">Oldest</option>
+              <option value="3">Best</option>
+              <option value="4">Worst</option>
+            </select>
+            <input type="submit" value="Sort" />
+          </form>
+        </div>
       </div>
     </wrapper>
     <footer>2020 All foxes reserved</footer>

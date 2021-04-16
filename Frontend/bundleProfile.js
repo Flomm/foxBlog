@@ -547,6 +547,7 @@ exports["default"] = initiatePost;
 exports.__esModule = true;
 var initiatePost_1 = require("./initiatePost");
 var createSuccessDiv_1 = require("./createSuccessDiv");
+var optionsString_1 = require("../other/optionsString");
 var main = document.querySelector('.main');
 function loadPosts(endP) {
     var xhr = new XMLHttpRequest();
@@ -557,6 +558,8 @@ function loadPosts(endP) {
         else {
             var postedMain = document.createElement('div');
             postedMain.classList.add('posted-main');
+            var posterHead = document.createElement('div');
+            posterHead.classList.add('post-head');
             var h2 = document.createElement('h2');
             if (endP === 'myPosts') {
                 h2.textContent = 'My posts';
@@ -564,7 +567,24 @@ function loadPosts(endP) {
             else {
                 h2.textContent = 'Posts';
             }
-            postedMain.appendChild(h2);
+            posterHead.appendChild(h2);
+            var selectForm = document.createElement('form');
+            selectForm.classList.add('sort-form');
+            var selectLabel = document.createElement('label');
+            selectLabel.setAttribute('for', 'sort-select');
+            selectLabel.textContent = 'Sort by:';
+            selectForm.appendChild(selectLabel);
+            var selector = document.createElement('select');
+            selector.setAttribute('name', 'select');
+            selector.setAttribute('id', 'sort-select');
+            selector.innerHTML = optionsString_1.options;
+            selectForm.appendChild(selector);
+            var submitBtn = document.createElement('input');
+            submitBtn.setAttribute('type', 'submit');
+            submitBtn.value = 'Sort';
+            selectForm.appendChild(submitBtn);
+            posterHead.appendChild(selectForm);
+            postedMain.appendChild(posterHead);
             main.appendChild(postedMain);
             var parsedPost = JSON.parse(xhr.response);
             for (var _i = 0, parsedPost_1 = parsedPost; _i < parsedPost_1.length; _i++) {
@@ -579,7 +599,7 @@ function loadPosts(endP) {
 }
 exports["default"] = loadPosts;
 
-},{"./createSuccessDiv":7,"./initiatePost":10}],12:[function(require,module,exports){
+},{"../other/optionsString":19,"./createSuccessDiv":7,"./initiatePost":10}],12:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var togglePostError_1 = require("./togglePostError");
@@ -717,5 +737,11 @@ exports.contentAttr = {
     cols: '30',
     placeholder: 'Write something about your favourite fox'
 };
+
+},{}],19:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+exports.options = void 0;
+exports.options = '<option value="1">Latest</option><option value="2">Oldest</option><option value="3">Best</option><option value="4">Worst</option>';
 
 },{}]},{},[1]);

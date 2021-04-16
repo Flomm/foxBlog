@@ -77,8 +77,47 @@ a:hover {
   padding: 3%;
 }
 
-.posted-main h2 {
-  color: var(--darkgreen);
+.post-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2%;
+}
+
+.post-head h2 {
+  margin-bottom: 0;
+}
+
+.sort-form {
+  width: 30%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+label[for='sort-select'] {
+  display: flex;
+  font-weight: bold;
+  justify-content: center;
+  align-self: center;
+  margin-right: 2%;
+}
+
+.sort-form select {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: var(--darkgreen);
+  color: beige;
+  margin-right: 2%;
+}
+
+.sort-form input {
+  cursor: pointer;
+  background-color: var(--lightgreen);
+  padding: 2%;
+  box-shadow: 2px 5px 16px 0px var(--darkgreen), 5px 5px 15px 5px rgba(0, 0, 0, 0);
+  border-radius: 5px;
+  border: none;
 }
 
 .posted-slot {
