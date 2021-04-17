@@ -57,38 +57,57 @@ exports["default"] = GeneralPost;
 "use strict";
 exports.__esModule = true;
 var GeneralPost_1 = require("../Classes/GeneralPost");
-function initialPost(postObject) {
+function visitorInitiatePost(postObject, postedMain) {
     var newPost = new GeneralPost_1["default"](postObject);
-    var postedMain = document.querySelector('.posted-main');
     var mainChilds = document.querySelectorAll('.posted-slot');
     postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
 }
-function visitorPostLoad() {
+exports["default"] = visitorInitiatePost;
+
+},{"../Classes/GeneralPost":1}],3:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+var visitorInitiatePost_1 = require("./visitorInitiatePost");
+var postedMain = document.querySelector('.posted-body');
+function visitorPostLoad(orderBy) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.status !== 200) {
             alert("" + JSON.parse(xhr.response).message);
         }
         else {
-            var posts = xhr.response;
-            var parsed = JSON.parse(posts);
+            var parsed = JSON.parse(xhr.response);
+            postedMain.innerHTML = '';
             for (var _i = 0, parsed_1 = parsed; _i < parsed_1.length; _i++) {
                 var p = parsed_1[_i];
-                initialPost(p);
+                visitorInitiatePost_1["default"](p, postedMain);
             }
         }
     };
     xhr.open('GET', '/api/posts/visitor');
+    xhr.setRequestHeader('sort', orderBy.split(' ')[0]);
+    var order = orderBy.split(' ')[1] !== '0' ? true : false;
+    xhr.setRequestHeader('order', JSON.stringify(order));
     xhr.send();
 }
 exports["default"] = visitorPostLoad;
 
-},{"../Classes/GeneralPost":1}],3:[function(require,module,exports){
+},{"./visitorInitiatePost":2}],4:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var visitorPostLoad_1 = require("./tsFiles/functions/visitorPostLoad");
+var selector = document.querySelector('select');
+var sortForm = document.querySelector('.sort-form');
 window.addEventListener('load', function () {
-    visitorPostLoad_1["default"]();
+    visitorPostLoad_1["default"]('timestamp ASC');
+});
+sortForm.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    visitorPostLoad_1["default"](selector.value);
+});
+selector.addEventListener('change', function () {
+    selector.blur();
+    sortForm.requestSubmit();
 });
 
-},{"./tsFiles/functions/visitorPostLoad":2}]},{},[3]);
+},{"./tsFiles/functions/visitorPostLoad":3}]},{},[4]);

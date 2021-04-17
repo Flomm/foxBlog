@@ -92,6 +92,7 @@ a:hover {
   width: 30%;
   display: flex;
   justify-content: flex-end;
+  flex-direction: row;
 }
 
 label[for='sort-select'] {
@@ -103,21 +104,23 @@ label[for='sort-select'] {
 }
 
 .sort-form select {
-  cursor: pointer;
-  outline: none;
+  border-radius: 5px;
   border: none;
   background-color: var(--darkgreen);
   color: beige;
   margin-right: 2%;
 }
 
-.sort-form input {
+.sort-form select:focus {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.sort-form option,
+.sort-form input,
+.sort-form select {
   cursor: pointer;
-  background-color: var(--lightgreen);
-  padding: 2%;
-  box-shadow: 2px 5px 16px 0px var(--darkgreen), 5px 5px 15px 5px rgba(0, 0, 0, 0);
-  border-radius: 5px;
-  border: none;
+  outline: none;
 }
 
 .posted-slot {

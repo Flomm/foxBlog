@@ -1,26 +1,24 @@
 import Postable from '../Interfaces/IPostable';
-import GeneralPost from '../Classes/GeneralPost';
+import visitorInitiatePost from './visitorInitiatePost';
 
-function initialPost(postObject: Postable): void {
-  const newPost: GeneralPost = new GeneralPost(postObject);
-  const postedMain = document.querySelector('.posted-main');
-  const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
-  postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
-}
+const postedMain: HTMLDivElement = document.querySelector('.posted-body');
 
-export default function visitorPostLoad(): void {
+export default function visitorPostLoad(orderBy: string): void {
   const xhr: XMLHttpRequest = new XMLHttpRequest();
   xhr.onload = () => {
     if (xhr.status !== 200) {
       alert(`${JSON.parse(xhr.response).message}`);
     } else {
-      const posts = xhr.response;
-      const parsed: Postable[] = JSON.parse(posts);
+      const parsed: Postable[] = JSON.parse(xhr.response);
+      postedMain.innerHTML = '';
       for (let p of parsed) {
-        initialPost(p);
+        visitorInitiatePost(p, postedMain);
       }
     }
   };
   xhr.open('GET', '/api/posts/visitor');
+  xhr.setRequestHeader('sort', orderBy.split(' ')[0]);
+  const order: boolean = orderBy.split(' ')[1] !== '0' ? true : false;
+  xhr.setRequestHeader('order', JSON.stringify(order));
   xhr.send();
 }
