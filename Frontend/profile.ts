@@ -1,4 +1,5 @@
 import showAccData from './tsFiles/functions/showAccData';
+import addPostedContainer from './tsFiles/functions/addPostedContainer';
 import loadPosts from './tsFiles/functions/loadPosts';
 import addPostForm from './tsFiles/functions/addPostForm';
 
@@ -19,13 +20,15 @@ accBtn.addEventListener('click', () => {
 
 myPostsBtn.addEventListener('click', () => {
   main.innerHTML = '';
-  loadPosts('myPosts');
+  addPostedContainer('myPosts', main);
+  loadPosts('myPosts', 'timestamp ASC');
 });
 
 addBtn.addEventListener('click', () => {
   main.innerHTML = '';
-  addPostForm();
-  loadPosts('');
+  addPostForm(main);
+  addPostedContainer('', main);
+  loadPosts('', 'timestamp ASC');
 });
 
 logoutBtn.addEventListener('click', () => {

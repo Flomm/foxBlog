@@ -1,2 +1,2 @@
 export const options: string =
-  '<option value="1">Latest</option><option value="2">Oldest</option><option value="3">Best</option><option value="4">Worst</option>';
+  '<option value="timestamp 1">Latest</option><option value="timestamp 0">Oldest</option><option value="score 1">Best</option><option value="score 0">Worst</option>';

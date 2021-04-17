@@ -80,6 +80,11 @@ input {
   background-color: var(--error);
 }
 
+.cancel-btn:hover {
+  background-color: beige;
+  color: var(--error);
+}
+
 header {
   user-select: none;
   z-index: 1;
@@ -207,6 +212,17 @@ img {
   margin-bottom: 0;
 }
 
+.post-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2%;
+}
+
+.post-head h2 {
+  margin-bottom: 0;
+}
+
 .sort-form {
   width: 30%;
   display: flex;
@@ -224,28 +240,21 @@ label[for='sort-select'] {
 
 .sort-form select {
   border-radius: 5px;
-  outline: none;
   border: none;
   background-color: var(--darkgreen);
   color: beige;
   margin-right: 2%;
 }
 
-.sort-form option,
-.sort-form input,
-.sort-form select {
-  cursor: pointer;
+.sort-form select:focus {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
-.sort-form input {
-  background-color: var(--lightgreen);
-  padding: 2%;
-  box-shadow: 2px 5px 16px 0px var(--darkgreen), 5px 5px 15px 5px rgba(0, 0, 0, 0);
-  border-radius: 5px;
-  border: none;
-}
-.sort-form input:hover {
-  opacity: 0.8;
+.sort-form option,
+.sort-form select {
+  cursor: pointer;
+  outline: none;
 }
 
 .posted-slot {

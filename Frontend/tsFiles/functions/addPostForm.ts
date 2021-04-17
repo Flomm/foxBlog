@@ -2,8 +2,7 @@ import postBlog from './postBlog';
 import setAttributes from './setAttributes';
 import { titleAttr, contentAttr } from '../other/attributeObjects';
 
-export default function addPostForm() {
-  const main: HTMLDivElement = document.querySelector('.main');
+export default function addPostForm(main: HTMLDivElement) {
   const submitMain: HTMLDivElement = document.createElement('div');
   submitMain.classList.add('submit-main');
   const titleSpan: HTMLSpanElement = document.createElement('span');
