@@ -99,7 +99,6 @@ app.get('/api/posts', (req: express.Request, res: express.Response) => {
   } else {
     sort = req.headers.sort as string;
     orderBool = JSON.parse(req.headers.order as string) as boolean;
-    console.log(orderBool);
   }
   const order: string = orderBool ? 'ASC' : 'DESC';
   if (!req.headers.user || !req.headers.sort) {
