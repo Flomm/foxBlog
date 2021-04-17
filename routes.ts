@@ -4,7 +4,16 @@ import AccData from './Backend/IAccData';
 import Vote from './Backend/IVote';
 import SetVoteScore from './Backend/ISetVoteScore';
 import countScore from './Backend/countScore';
-import { serverErr, loginErr, searchErr, noPostErr, noUserErr, authorErr, validErr } from './Backend/errorMessages';
+import {
+  serverErr,
+  loginErr,
+  searchErr,
+  noPostErr,
+  noUserErr,
+  authorErr,
+  validErr,
+  invaliReq,
+} from './Backend/errorMessages';
 import { connection } from './Backend/sqlConnect';
 import * as express from 'express';
 
@@ -35,6 +44,9 @@ app.get('/profile', (req: express.Request, res: express.Response) => {
 app.get('/api/login', (req: express.Request, res: express.Response) => {
   const userName: string = req.headers.user as string;
   const pw: string = req.headers.password as string;
+  if (!req.headers.user || !req.headers.password) {
+    return res.status(400).send(invaliReq);
+  }
   connection.query('SELECT user_name, pw FROM users WHERE user_name=?', userName, (err: Error, result) => {
     if (err) {
       res.status(500).send(serverErr);
@@ -49,12 +61,26 @@ app.get('/api/login', (req: express.Request, res: express.Response) => {
 });
 //Getposts
 app.get('/api/posts/visitor', (req: express.Request, res: express.Response) => {
+  let sort: string = '';
+  let orderBool: boolean;
+  if (typeof JSON.parse(req.headers.order as string) !== 'boolean') {
+    return res.status(400).send(invaliReq);
+  }
+  if (!req.headers.sort || !req.headers.order) {
+    sort = 'timestamp';
+    orderBool = true;
+  } else {
+    sort = req.headers.sort as string;
+    orderBool = JSON.parse(req.headers.order as string) as boolean;
+    console.log(orderBool);
+  }
+  const order: string = orderBool ? 'ASC' : 'DESC';
   connection.query(
-    'SELECT posts.id, title, content, timestamp, score, user_name as author FROM posts  INNER JOIN users ON users.id = posts.author_id WHERE is_deleted = 0',
+    `SELECT posts.id, title, content, timestamp, score, user_name as author FROM posts  INNER JOIN users ON users.id = posts.author_id WHERE is_deleted = 0 ORDER BY ?? ${order}`,
+    sort,
     (err: Error, result: IPostable[]) => {
       if (err) {
         res.status(500).send(serverErr);
-        return console.error(err);
       }
       res.send(result);
     }
@@ -62,10 +88,13 @@ app.get('/api/posts/visitor', (req: express.Request, res: express.Response) => {
 });
 //Get all for votes
 app.get('/api/posts', (req: express.Request, res: express.Response) => {
-  const userName: string = req.headers.user as string;
+  const orderBy: string = req.headers.sort as string;
+  if (!req.headers.user || !req.headers.sort) {
+    return res.status(400).send(invaliReq);
+  }
   connection.query(
     'SELECT posts.id, title, content, timestamp, score, user_name as author, vote FROM posts LEFT JOIN users ON users.id = posts.author_id LEFT JOIN votes ON posts.id = votes.post_id AND user=? WHERE is_deleted = 0',
-    userName,
+    req.headers.user,
     (err: Error, result: IPostable[]) => {
       if (err) {
         res.status(500).send(serverErr);
@@ -77,8 +106,11 @@ app.get('/api/posts', (req: express.Request, res: express.Response) => {
 });
 //Get my posts
 app.get('/api/posts/myPosts', (req: express.Request, res: express.Response) => {
-  const userName: string = req.headers.user as string;
-  connection.query('SELECT id FROM users WHERE user_name=?', userName, (err: Error, result) => {
+  const orderBy: string = req.headers.sort as string;
+  if (!req.headers.user || !req.headers.sort) {
+    return res.status(400).send(invaliReq);
+  }
+  connection.query('SELECT id FROM users WHERE user_name=?', req.headers.user, (err: Error, result) => {
     if (err) {
       res.status(500).send(serverErr);
       return console.error(err);
