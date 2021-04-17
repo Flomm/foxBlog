@@ -2,6 +2,7 @@
 "use strict";
 exports.__esModule = true;
 var showAccData_1 = require("./tsFiles/functions/showAccData");
+var addPostedContainer_1 = require("./tsFiles/functions/addPostedContainer");
 var loadPosts_1 = require("./tsFiles/functions/loadPosts");
 var addPostForm_1 = require("./tsFiles/functions/addPostForm");
 var userName = window.localStorage.getItem('user');
@@ -18,19 +19,21 @@ accBtn.addEventListener('click', function () {
 });
 myPostsBtn.addEventListener('click', function () {
     main.innerHTML = '';
-    loadPosts_1["default"]('myPosts');
+    addPostedContainer_1["default"]('myPosts', main);
+    loadPosts_1["default"]('myPosts', 'timestamp ASC');
 });
 addBtn.addEventListener('click', function () {
     main.innerHTML = '';
-    addPostForm_1["default"]();
-    loadPosts_1["default"]('');
+    addPostForm_1["default"](main);
+    addPostedContainer_1["default"]('', main);
+    loadPosts_1["default"]('', 'timestamp ASC');
 });
 logoutBtn.addEventListener('click', function () {
     window.localStorage.setItem('user', '');
     window.location.replace('./');
 });
 
-},{"./tsFiles/functions/addPostForm":6,"./tsFiles/functions/loadPosts":11,"./tsFiles/functions/showAccData":16}],2:[function(require,module,exports){
+},{"./tsFiles/functions/addPostForm":6,"./tsFiles/functions/addPostedContainer":7,"./tsFiles/functions/loadPosts":12,"./tsFiles/functions/showAccData":17}],2:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var AccInfoDiv = /** @class */ (function () {
@@ -252,7 +255,7 @@ var PersonalPost = /** @class */ (function (_super) {
             }
             else {
                 if (method === 'DELETE') {
-                    var postedMain = document.querySelector('.posted-main');
+                    var postedMain = document.querySelector('.posted-body');
                     postedMain.removeChild(_this.postSlot);
                 }
                 else {
@@ -311,7 +314,7 @@ var PersonalPost = /** @class */ (function (_super) {
 }(GeneralPost_1["default"]));
 exports["default"] = PersonalPost;
 
-},{"../functions/formIsValid":8,"../functions/setAttributes":15,"../other/attributeObjects":18,"./GeneralPost":3}],5:[function(require,module,exports){
+},{"../functions/formIsValid":9,"../functions/setAttributes":16,"../other/attributeObjects":19,"./GeneralPost":3}],5:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -416,8 +419,7 @@ exports.__esModule = true;
 var postBlog_1 = require("./postBlog");
 var setAttributes_1 = require("./setAttributes");
 var attributeObjects_1 = require("../other/attributeObjects");
-function addPostForm() {
-    var main = document.querySelector('.main');
+function addPostForm(main) {
     var submitMain = document.createElement('div');
     submitMain.classList.add('submit-main');
     var titleSpan = document.createElement('span');
@@ -471,18 +473,68 @@ function addPostForm() {
 }
 exports["default"] = addPostForm;
 
-},{"../other/attributeObjects":18,"./postBlog":12,"./setAttributes":15}],7:[function(require,module,exports){
+},{"../other/attributeObjects":19,"./postBlog":13,"./setAttributes":16}],7:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
-function createSuccessDiv(txt) {
+var optionsString_1 = require("../other/optionsString");
+var loadPosts_1 = require("./loadPosts");
+function addPostedContainer(endP, main) {
+    var postedMain = document.createElement('div');
+    postedMain.classList.add('posted-main');
+    var postBody = document.createElement('div');
+    postBody.classList.add('posted-body');
+    var posterHead = document.createElement('div');
+    posterHead.classList.add('post-head');
+    var h2 = document.createElement('h2');
+    if (endP === 'myPosts') {
+        h2.textContent = 'My posts';
+    }
+    else {
+        h2.textContent = 'Posts';
+    }
+    posterHead.appendChild(h2);
+    var selectForm = document.createElement('form');
+    selectForm.classList.add('sort-form');
+    var selectLabel = document.createElement('label');
+    selectLabel.setAttribute('for', 'sort-select');
+    selectLabel.textContent = 'Sort by:';
+    selectForm.appendChild(selectLabel);
+    var selector = document.createElement('select');
+    selector.setAttribute('name', 'select');
+    selector.setAttribute('id', 'sort-select');
+    selector.innerHTML = optionsString_1.options;
+    selectForm.appendChild(selector);
+    posterHead.appendChild(selectForm);
+    postedMain.appendChild(posterHead);
+    postedMain.appendChild(postBody);
+    //Listeners
+    selectForm.addEventListener('submit', function (ev) {
+        var selector = document.querySelector('select');
+        ev.preventDefault();
+        console.log("form " + selector.value);
+        loadPosts_1["default"](endP, selector.value);
+    });
+    selector.addEventListener('change', function () {
+        console.log(selector.value);
+        selector.blur();
+        selectForm.requestSubmit();
+    });
+    main.appendChild(postedMain);
+}
+exports["default"] = addPostedContainer;
+
+},{"../other/optionsString":20,"./loadPosts":12}],8:[function(require,module,exports){
+"use strict";
+exports.__esModule = true;
+function createSuccessDiv(txt, parent) {
     var notSuccesDiv = document.createElement('div');
     notSuccesDiv.textContent = txt;
     notSuccesDiv.classList.add('data');
-    document.querySelector('.main').appendChild(notSuccesDiv);
+    parent.appendChild(notSuccesDiv);
 }
 exports["default"] = createSuccessDiv;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var togglePostError_1 = require("./togglePostError");
@@ -508,98 +560,68 @@ function formIsValid(inputs) {
 }
 exports["default"] = formIsValid;
 
-},{"./togglePostError":17}],9:[function(require,module,exports){
+},{"./togglePostError":18}],10:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var VotablePost_1 = require("../Classes/VotablePost");
 var scrollToPost_1 = require("./scrollToPost");
 function frontEndInsert(newPostInput) {
     var newPost = new VotablePost_1["default"](newPostInput);
-    var postedMain = document.querySelector('.posted-main');
-    var mainChilds = document.querySelectorAll('.posted-slot');
+    var postedBody = document.querySelector('.posted-body');
+    var mainChilds = postedBody.querySelectorAll('.posted-slot');
     var newPostSlot = newPost.makePost();
-    postedMain.insertBefore(newPostSlot, mainChilds[0]);
+    postedBody.insertBefore(newPostSlot, mainChilds[0]);
     scrollToPost_1["default"](newPostSlot);
 }
 exports["default"] = frontEndInsert;
 
-},{"../Classes/VotablePost":5,"./scrollToPost":13}],10:[function(require,module,exports){
+},{"../Classes/VotablePost":5,"./scrollToPost":14}],11:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var PersonalPost_1 = require("../Classes/PersonalPost");
 var VotablePost_1 = require("../Classes/VotablePost");
-function initiatePost(postObject, endP) {
-    var postedMain = document.querySelector('.posted-main');
+function initiatePost(postObject, endP, postBody) {
     var mainChilds = document.querySelectorAll('.posted-slot');
     if (endP === 'myPosts') {
         var newPost = new PersonalPost_1["default"](postObject);
-        postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+        postBody.insertBefore(newPost.makePost(), mainChilds[0]);
     }
     else {
         var newPost = new VotablePost_1["default"](postObject);
-        postedMain.insertBefore(newPost.makePost(), mainChilds[0]);
+        postBody.insertBefore(newPost.makePost(), mainChilds[0]);
     }
 }
 exports["default"] = initiatePost;
 
-},{"../Classes/PersonalPost":4,"../Classes/VotablePost":5}],11:[function(require,module,exports){
+},{"../Classes/PersonalPost":4,"../Classes/VotablePost":5}],12:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var initiatePost_1 = require("./initiatePost");
 var createSuccessDiv_1 = require("./createSuccessDiv");
-var optionsString_1 = require("../other/optionsString");
-var main = document.querySelector('.main');
-function loadPosts(endP) {
+function loadPosts(endP, orderBy) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
+        var postBody = document.querySelector('.posted-body');
+        postBody.innerHTML = '';
         if (xhr.status !== 200) {
-            createSuccessDiv_1["default"]("" + JSON.parse(xhr.response).message);
+            return createSuccessDiv_1["default"]("" + JSON.parse(xhr.response).message, postBody);
         }
-        else {
-            var postedMain = document.createElement('div');
-            postedMain.classList.add('posted-main');
-            var posterHead = document.createElement('div');
-            posterHead.classList.add('post-head');
-            var h2 = document.createElement('h2');
-            if (endP === 'myPosts') {
-                h2.textContent = 'My posts';
-            }
-            else {
-                h2.textContent = 'Posts';
-            }
-            posterHead.appendChild(h2);
-            var selectForm = document.createElement('form');
-            selectForm.classList.add('sort-form');
-            var selectLabel = document.createElement('label');
-            selectLabel.setAttribute('for', 'sort-select');
-            selectLabel.textContent = 'Sort by:';
-            selectForm.appendChild(selectLabel);
-            var selector = document.createElement('select');
-            selector.setAttribute('name', 'select');
-            selector.setAttribute('id', 'sort-select');
-            selector.innerHTML = optionsString_1.options;
-            selectForm.appendChild(selector);
-            var submitBtn = document.createElement('input');
-            submitBtn.setAttribute('type', 'submit');
-            submitBtn.value = 'Sort';
-            selectForm.appendChild(submitBtn);
-            posterHead.appendChild(selectForm);
-            postedMain.appendChild(posterHead);
-            main.appendChild(postedMain);
-            var parsedPost = JSON.parse(xhr.response);
-            for (var _i = 0, parsedPost_1 = parsedPost; _i < parsedPost_1.length; _i++) {
-                var p = parsedPost_1[_i];
-                initiatePost_1["default"](p, endP);
-            }
+        var parsedPost = JSON.parse(xhr.response);
+        for (var _i = 0, parsedPost_1 = parsedPost; _i < parsedPost_1.length; _i++) {
+            var p = parsedPost_1[_i];
+            initiatePost_1["default"](p, endP, postBody);
         }
     };
     xhr.open('GET', "/api/posts/" + endP);
     xhr.setRequestHeader('user', window.localStorage.getItem('user'));
+    xhr.setRequestHeader('sort', orderBy.split(' ')[0]);
+    var order = orderBy.split(' ')[1] !== '0' ? true : false;
+    xhr.setRequestHeader('order', JSON.stringify(order));
     xhr.send();
 }
 exports["default"] = loadPosts;
 
-},{"../other/optionsString":19,"./createSuccessDiv":7,"./initiatePost":10}],12:[function(require,module,exports){
+},{"./createSuccessDiv":8,"./initiatePost":11}],13:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var togglePostError_1 = require("./togglePostError");
@@ -624,13 +646,13 @@ function postBlog(inputs) {
 }
 exports["default"] = postBlog;
 
-},{"./formIsValid":8,"./sendPostToServer":14,"./togglePostError":17}],13:[function(require,module,exports){
+},{"./formIsValid":9,"./sendPostToServer":15,"./togglePostError":18}],14:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function scrollToPost(post) {
     var headerHeight = 50;
     var screenHalf = window.screen.height / 2;
-    var y = post.getBoundingClientRect().top + window.scrollY - headerHeight - screenHalf;
+    var y = post.getBoundingClientRect().bottom + window.scrollY - headerHeight - screenHalf;
     window.scroll({
         top: y,
         behavior: 'smooth'
@@ -638,7 +660,7 @@ function scrollToPost(post) {
 }
 exports["default"] = scrollToPost;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var frontendInsert_1 = require("./frontendInsert");
@@ -660,7 +682,7 @@ function sendPostToServer(postObject) {
 }
 exports["default"] = sendPostToServer;
 
-},{"./frontendInsert":9}],15:[function(require,module,exports){
+},{"./frontendInsert":10}],16:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function setAttributes(elem, attr) {
@@ -670,7 +692,7 @@ function setAttributes(elem, attr) {
 }
 exports["default"] = setAttributes;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 var AccInfoDiv_1 = require("../Classes/AccInfoDiv");
@@ -708,7 +730,7 @@ function showAccData() {
 }
 exports["default"] = showAccData;
 
-},{"../Classes/AccInfoDiv":2}],17:[function(require,module,exports){
+},{"../Classes/AccInfoDiv":2}],18:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 function togglePostError(input) {
@@ -718,7 +740,7 @@ function togglePostError(input) {
 }
 exports["default"] = togglePostError;
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 exports.contentAttr = exports.titleAttr = void 0;
@@ -738,10 +760,10 @@ exports.contentAttr = {
     placeholder: 'Write something about your favourite fox'
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 exports.__esModule = true;
 exports.options = void 0;
-exports.options = '<option value="1">Latest</option><option value="2">Oldest</option><option value="3">Best</option><option value="4">Worst</option>';
+exports.options = '<option value="timestamp 1">Latest</option><option value="timestamp 0">Oldest</option><option value="score 1">Best</option><option value="score 0">Worst</option>';
 
 },{}]},{},[1]);

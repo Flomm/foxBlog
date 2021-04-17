@@ -90,7 +90,6 @@ app.get('/api/posts/visitor', (req: express.Request, res: express.Response) => {
 app.get('/api/posts', (req: express.Request, res: express.Response) => {
   let sort: string = '';
   let orderBool: boolean;
-  console.log(req.headers);
   if (typeof JSON.parse(req.headers.order as string) !== 'boolean') {
     return res.status(400).send(invaliReq);
   }
@@ -133,7 +132,6 @@ app.get('/api/posts/myPosts', (req: express.Request, res: express.Response) => {
     orderBool = JSON.parse(req.headers.order as string) as boolean;
   }
   const order: string = orderBool ? 'ASC' : 'DESC';
-  console.log(`${sort}, ${order}`);
   if (!req.headers.user || !req.headers.sort) {
     return res.status(400).send(invaliReq);
   }
@@ -157,7 +155,6 @@ app.get('/api/posts/myPosts', (req: express.Request, res: express.Response) => {
         if (result.length === 0) {
           return res.status(400).send(noPostErr);
         }
-        console.log(result);
         res.status(200).send(result);
       }
     );

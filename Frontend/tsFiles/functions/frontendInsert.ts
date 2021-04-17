@@ -4,9 +4,9 @@ import scrollToPost from './scrollToPost';
 
 export default function frontEndInsert(newPostInput: Postable) {
   const newPost: VotablePost = new VotablePost(newPostInput);
-  const postedMain = document.querySelector('.posted-main');
-  const mainChilds: NodeList = document.querySelectorAll('.posted-slot');
+  const postedBody = document.querySelector('.posted-body');
+  const mainChilds: NodeList = postedBody.querySelectorAll('.posted-slot');
   const newPostSlot: HTMLDivElement = newPost.makePost();
-  postedMain.insertBefore(newPostSlot, mainChilds[0]);
+  postedBody.insertBefore(newPostSlot, mainChilds[0]);
   scrollToPost(newPostSlot);
 }

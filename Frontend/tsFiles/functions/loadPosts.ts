@@ -11,12 +11,10 @@ export default function loadPosts(endP: string, orderBy: string): void {
       return createSuccessDiv(`${JSON.parse(xhr.response).message}`, postBody);
     }
     const parsedPost: Postable[] = JSON.parse(xhr.response);
-    console.log(parsedPost);
     for (let p of parsedPost) {
       initiatePost(p, endP, postBody);
     }
   };
-  console.log(orderBy);
   xhr.open('GET', `/api/posts/${endP}`);
   xhr.setRequestHeader('user', window.localStorage.getItem('user'));
   xhr.setRequestHeader('sort', orderBy.split(' ')[0]);

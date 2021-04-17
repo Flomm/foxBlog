@@ -122,7 +122,7 @@ export default class PersonalPost extends GeneralPost {
         alert(`${JSON.parse(xhr.response).message}`);
       } else {
         if (method === 'DELETE') {
-          const postedMain: HTMLDivElement = document.querySelector('.posted-main');
+          const postedMain: HTMLDivElement = document.querySelector('.posted-body');
           postedMain.removeChild(this.postSlot);
         } else {
           const response: IUpdateData = JSON.parse(xhr.response);
