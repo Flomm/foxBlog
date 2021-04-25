@@ -7,13 +7,14 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
+html,
 body {
-  height: 100vh;
+  min-height: 100%;
   font-family: 'Courier Prime', monospace;
   background-color: beige;
-  position: relative;
 }
 
 header {
@@ -26,25 +27,28 @@ header {
   align-items: center;
   padding-left: 10%;
   background-color: var(--darkgreen);
-  height: 9%;
+  height: 70px;
   border-bottom: 1px solid black;
   font-size: 3vw;
   color: beige;
   text-shadow: 5px 9px 20px rgba(0, 0, 0, 0.15);
 }
 
-wrapper {
-  padding-top: 4%;
-  margin-bottom: 2%;
-  height: 90.8%;
-  width: 100%;
+.wrapper {
+  padding-top: 70px;
+  padding-bottom: 40px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-wrapper > div {
+.wrapper > div {
   text-align: justify;
   display: flex;
   flex-direction: column;
@@ -64,6 +68,9 @@ h1 {
 
 .welcome {
   width: 80%;
+}
+
+.welcome p {
   text-align: center;
 }
 
@@ -143,8 +150,7 @@ label[for='check'] i {
 footer {
   position: absolute;
   bottom: 0;
-  margin-top: 1%;
-  height: 5%;
+  height: 40px;
   width: 100%;
   background-color: var(--darkgreen);
   color: bisque;
@@ -155,6 +161,14 @@ footer {
 }
 
 @media screen and (max-width: 900px) {
+  header {
+    height: 50px;
+  }
+
+  .wrapper {
+    padding-top: 50px;
+  }
+
   .login {
     width: 80%;
   }
