@@ -10,10 +10,16 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   height: 100%;
+  position: relative;
+}
+
+body {
   font-family: 'Courier Prime', monospace;
   background-color: beige;
+  padding-top: 110px;
 }
 
 button,
@@ -87,7 +93,7 @@ input {
 
 header {
   user-select: none;
-  z-index: 1;
+  z-index: 2;
   position: fixed;
   top: 0;
   left: 0;
@@ -96,7 +102,7 @@ header {
   align-items: center;
   padding-left: 10%;
   background-color: var(--darkgreen);
-  height: 10%;
+  height: 70px;
   border-width: 1px;
   border-bottom-style: solid;
   border-color: black;
@@ -106,9 +112,11 @@ header {
 }
 
 nav {
-  position: absolute;
-  top: 10%;
+  z-index: 1;
+  position: fixed;
+  top: 70px;
   width: 100%;
+  height: 40px;
   padding-left: 2%;
   padding-right: 2%;
   display: flex;
@@ -147,8 +155,7 @@ nav button:active {
 }
 
 .main {
-  padding-top: 12%;
-  width: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -156,9 +163,8 @@ nav button:active {
 }
 
 .img-holder {
-  margin-top: 1%;
   background-color: var(--lightgreen);
-  width: 50%;
+  width: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -184,6 +190,7 @@ img {
 .data div {
   padding: 5%;
   display: flex;
+  text-align: center;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -197,7 +204,7 @@ img {
   border: var(--darkgreen) solid;
   border-width: 20px;
   border-radius: 5px;
-  margin: 2% 5%;
+  margin: 4% 5%;
   padding: 3%;
 }
 
@@ -404,8 +411,10 @@ label[for='sort-select'] {
 }
 
 .submit-main {
+  margin-top: 2%;
   padding: 2% 10%;
-  width: 80%;
+  width: 90%;
+  border-radius: 5px;
   background-color: var(--lightgreen);
 }
 
@@ -467,16 +476,25 @@ textarea {
   color: var(--darkgreen);
 }
 
-footer {
-  user-select: none;
-  position: fixed;
-  bottom: 0;
-  margin-top: 2%;
-  height: 5%;
-  width: 100%;
-  background-color: var(--darkgreen);
-  color: bisque;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+@media screen and (max-width: 635px) {
+  header {
+    height: 50px;
+  }
+
+  nav {
+    height: 20px;
+    top: 50px;
+  }
+
+  .posted-main {
+    margin: 4% 0%;
+  }
+
+  .submit-main {
+    width: 100%;
+  }
+
+  .sort-form {
+    width: 50%;
+  }
 }
