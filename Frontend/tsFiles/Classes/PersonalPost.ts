@@ -32,14 +32,17 @@ export default class PersonalPost extends GeneralPost {
     confirmBox.appendChild(newP2);
     yesBtn.addEventListener('click', () => {
       document.querySelector('body').removeChild(confirmBox);
+      document.querySelector('nav').classList.remove('shady');
       wrapper.classList.remove('shady');
       this.xhrCall('DELETE', `/api/posts/${this.postInput.id}`);
     });
     noBtn.addEventListener('click', () => {
       document.querySelector('body').removeChild(confirmBox);
+      document.querySelector('nav').classList.remove('shady');
       wrapper.classList.remove('shady');
     });
     document.querySelector('body').insertBefore(confirmBox, wrapper);
+    document.querySelector('nav').classList.add('shady');
     wrapper.classList.add('shady');
   }
 
@@ -99,6 +102,7 @@ export default class PersonalPost extends GeneralPost {
       if (formIsValid(inputFields)) {
         this.xhrCall('PUT', `/api/posts/${this.postInput.id}`);
         document.querySelector('body').removeChild(editBox);
+        document.querySelector('nav').classList.remove('shady');
         wrapper.classList.remove('shady');
       }
     });
@@ -107,11 +111,13 @@ export default class PersonalPost extends GeneralPost {
     cancelBtn.innerText = 'Cancel';
     cancelBtn.addEventListener('click', () => {
       document.querySelector('body').removeChild(editBox);
+      document.querySelector('nav').classList.remove('shady');
       wrapper.classList.remove('shady');
     });
     editForm.appendChild(cancelBtn);
     editBox.appendChild(editForm);
     document.querySelector('body').insertBefore(editBox, wrapper);
+    document.querySelector('nav').classList.add('shady');
     wrapper.classList.add('shady');
   }
 

@@ -166,14 +166,17 @@ var PersonalPost = /** @class */ (function (_super) {
         confirmBox.appendChild(newP2);
         yesBtn.addEventListener('click', function () {
             document.querySelector('body').removeChild(confirmBox);
+            document.querySelector('nav').classList.remove('shady');
             wrapper.classList.remove('shady');
             _this.xhrCall('DELETE', "/api/posts/" + _this.postInput.id);
         });
         noBtn.addEventListener('click', function () {
             document.querySelector('body').removeChild(confirmBox);
+            document.querySelector('nav').classList.remove('shady');
             wrapper.classList.remove('shady');
         });
         document.querySelector('body').insertBefore(confirmBox, wrapper);
+        document.querySelector('nav').classList.add('shady');
         wrapper.classList.add('shady');
     };
     PersonalPost.prototype.showEditBox = function () {
@@ -231,6 +234,7 @@ var PersonalPost = /** @class */ (function (_super) {
             if (formIsValid_1["default"](inputFields)) {
                 _this.xhrCall('PUT', "/api/posts/" + _this.postInput.id);
                 document.querySelector('body').removeChild(editBox);
+                document.querySelector('nav').classList.remove('shady');
                 wrapper.classList.remove('shady');
             }
         });
@@ -239,11 +243,13 @@ var PersonalPost = /** @class */ (function (_super) {
         cancelBtn.innerText = 'Cancel';
         cancelBtn.addEventListener('click', function () {
             document.querySelector('body').removeChild(editBox);
+            document.querySelector('nav').classList.remove('shady');
             wrapper.classList.remove('shady');
         });
         editForm.appendChild(cancelBtn);
         editBox.appendChild(editForm);
         document.querySelector('body').insertBefore(editBox, wrapper);
+        document.querySelector('nav').classList.add('shady');
         wrapper.classList.add('shady');
     };
     PersonalPost.prototype.xhrCall = function (method, endpoint) {
