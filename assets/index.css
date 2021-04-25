@@ -169,6 +169,10 @@ footer {
     padding-top: 50px;
   }
 
+  footer {
+    display: none;
+  }
+
   .login {
     width: 80%;
   }
